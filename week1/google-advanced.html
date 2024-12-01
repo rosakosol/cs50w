@@ -5,18 +5,36 @@
         <title>Search</title>
     </head>
     <body>
-        <div class="page-links">
-            <a href="google.html">Google Search</a>
-        </div>
-        <div class="main">
+        <div class="advanced-page-links">
             <div class="logo-container">
                 <img src="logo.png" id="small-logo"/>
             </div>
-            <h1>Advanced Search</h1>
-            <div class="form-container">
-                <form action="https://www.google.com/search">
-                    <div class="column-container">
-                        <input class="search" type="text" name="q">
+            <a href="index.html">Google Search</a>
+        </div>
+        <div class="advanced-main">
+            <div class="h1-container">
+                <h1>Advanced Search</h1>
+            </div>
+            <div class="advanced-form-container">
+                <form action="https://www.google.com/search" id="advanced-form">
+                    <h2>Find pages with...</h2>
+                    <div class="input-container">
+                        <label for="as_q">all these words:</label>
+                        <input type="text" name="as_q">
+                    </div>
+                    <div class="input-container">
+                        <label for="as_epq">this exact word or phrase:</label>
+                        <input type="text" name="as_epq">
+                    </div>
+                    <div class="input-container">
+                        <label for="as_oq">any of these words:</label>
+                        <input type="text" name="as_oq">
+                    </div>
+                    <div class="input-container">
+                        <label for="as_eq">none of these words:</label>
+                        <input type="text" name="as_eq">
+                    </div>
+                    <div class="advanced-btn-container">
                         <input class="button advanced-btn" type="submit" value="Advanced Search">
                     </div>
                 </form>
