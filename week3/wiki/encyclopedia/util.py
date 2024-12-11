@@ -17,19 +17,19 @@ def list_entries():
     
 def new_entry(title, content):
     """
-    Saves an encyclopedia entry, given its title and Markdown
+    Creates a new encyclopedia entry, given its title and Markdown
     content. If an existing entry with the same title already exists,
-    it is replaced.
+    an error is raised.
     """
     filename = f"entries/{title}.md"
     if default_storage.exists(filename):
-        sys.exit(1)
+        sys.exit("Error: File already exists with that title!")
     
-    # Add title to md file
-    md_title = f"#{title}\n\n"
-    new_content = md_title + content
-    
-    default_storage.save(filename, ContentFile(new_content))
+    else:
+        # Add title to md file
+        md_title = f"#{title}\n\n"
+        new_content = md_title + content
+        default_storage.save(filename, ContentFile(new_content))
 
 
 def save_entry(title, content):

@@ -3,12 +3,14 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from . import util
+import sys
 import markdown
 
 
 class NewTaskForm(forms.Form):
     title = forms.CharField(
-        label="Entry Title"
+        label="Entry Title",
+        required=False
     )
     edit_content = forms.CharField(
         label='Content',
@@ -23,6 +25,38 @@ def index(request):
     return render(request, "encyclopedia/index.html", {
         "entries": util.list_entries()
     })
+    
+    
+def search(request):
+    query = request.POST.get("q")
+    entries = util.list_entries()
+    
+    # If query read
+    if query:
+        # If query matches entry 
+        if any(query.lower() == entry.lower() for entry in entries):
+            
+            # Render the matching entry
+            content = util.get_entry(query)
+            if content:
+                html_content = markdown.markdown(content)
+                return render(request, 'encyclopedia/entry.html', {
+                    "entries": util.list_entries(),
+                    "content": html_content,
+                    "title": query
+                })
+            
+        # Otherwise if query doesn't match entry, show results page for substring
+        else:
+            
+
+            return render(request, "encyclopedia/search.html", {
+            "entries": util.list_entries()
+            })
+    else:     
+        # If query not read, raise error
+        sys.exit("Query could not be read.")
+    
     
 # Function to create a new entry page
 def new(request):
@@ -68,7 +102,7 @@ def edit(request, title):
         # If POST request, then use the submitted form data
         if request.method == "POST":
             # Create a form variable and save user content
-            form = NewTaskForm(request.POST, initial={'edit_content': content})
+            form = NewTaskForm(request.POST, initial={'title': title, 'edit_content': content})
             # If form is valid, save new entry
             if form.is_valid():
                 new_content = form.cleaned_data["edit_content"]
@@ -90,7 +124,7 @@ def edit(request, title):
                     "form": form
                 })
         # Render empty form        
-        form = NewTaskForm(initial={'edit_content': content})
+        form = NewTaskForm(initial={'title': title, 'edit_content': content})
         
         return render(request, "encyclopedia/edit.html", {
             "entries": util.list_entries(),
