@@ -48,14 +48,19 @@ def search(request):
             
         # Otherwise if query doesn't match entry, show results page for substring
         else:
+            results = []
             
-
+            # Add entry that has substring to results
+            for entry in entries:
+                if query.lower() in entry.lower():
+                    results.append(entry)
+            
             return render(request, "encyclopedia/search.html", {
-            "entries": util.list_entries()
+            "entries": results
             })
     else:     
-        # If query not read, raise error
-        sys.exit("Query could not be read.")
+        # If no query
+        sys.exit("No query read.")
     
     
 # Function to create a new entry page

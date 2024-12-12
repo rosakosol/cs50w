@@ -8,7 +8,11 @@
     <h1>Search</h1>
 
     <div>
-
+        <ul>
+            {% for entry in entries %}
+            <a href="{{ entry }}"><li>{{ entry }}</li></a>
+            {% endfor %}
+        </ul>
     </div>
 
 {% endblock %}
