@@ -78,10 +78,15 @@ def new(request):
             new_content = "\n".join([line.lstrip() for line in new_content.splitlines() if line.strip()])
             
             # Save the new markdown file
-            util.new_entry(title, new_content)
-            
-            # Redirect to updated entry page
-            return HttpResponseRedirect(reverse("entry", args=[title]))
+            if util.new_entry(title, new_content) != False:
+                # Redirect to updated entry page
+                return HttpResponseRedirect(reverse("entry", args=[title]))
+            else:
+                # If entry does not exist, render custom 404 error page
+                return render(request, 'encyclopedia/exist.html', {
+                    'title': title.capitalize(),
+                    "entries": util.list_entries(),
+                })
             
         # Else if form invalid, return the submitted form
         else:
