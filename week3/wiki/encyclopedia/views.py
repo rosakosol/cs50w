@@ -154,7 +154,9 @@ def entry(request, title):
             "content": html_content,
             "title": title
         })
-    # If entry does not exist, render custom 404 error page
-    return render(request, 'encyclopedia/404.html', {
-        'title': title.capitalize()
-    })
+    else:
+        # If entry does not exist, render custom 404 error page
+        return render(request, 'encyclopedia/404.html', {
+            'title': title.capitalize(),
+            "entries": util.list_entries(),
+        })
