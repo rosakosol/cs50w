@@ -5,6 +5,7 @@ from django.urls import reverse
 from . import util
 import sys
 import markdown
+import random
 
 
 class NewTaskForm(forms.Form):
@@ -103,6 +104,15 @@ def new(request):
         "entries": util.list_entries(),
         "form": form
     })
+    
+# Function to render a random entry
+def random_page(request):
+    entries = util.list_entries()
+    if entries:
+        title = random.choice(entries)
+        content = util.get_entry(title)
+        if content:
+            return HttpResponseRedirect(reverse("entry", args=[title]))
     
 
 # Function that allows user to edit entry
