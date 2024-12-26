@@ -16,4 +16,6 @@ def flight(request, flight_id):
         "passengers": flight.passengers.all()
     })
 
+def book(request, flight_id):
+    
 
