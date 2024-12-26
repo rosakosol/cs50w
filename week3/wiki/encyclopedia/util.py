@@ -23,7 +23,7 @@ def new_entry(title, content):
     """
     filename = f"entries/{title}.md"
     if default_storage.exists(filename):
-        sys.exit("Error: File already exists with that title!")
+        return False
     
     else:
         # Add title to md file

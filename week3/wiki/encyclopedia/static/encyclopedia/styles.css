@@ -1,10 +1,8 @@
-* {
-    outline: 1px solid red;
-}
 
 body {
     margin: 0;
     background-color: white;
+    box-sizing: border-box;
 }
 
 code {
@@ -12,8 +10,35 @@ code {
 }
 
 h1 {
-    margin-top: 0px;
-    padding-top: 20px;
+    margin-top: 10px;
+}
+
+.logo-container {
+    margin-bottom: 20px;
+}
+
+.logo-container img {
+    width: 100%;
+}
+
+.search-container {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+ul li {
+    padding: 5px;
+}
+
+.sidebar-item {
+    padding: 5px 0;
+}
+
+
+p, li, a {
+    font-family:'Segoe UI', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
 }
 
 textarea {
@@ -29,14 +54,20 @@ textarea {
     width: 100%;
     font-size: 15px;
     line-height: 15px;
+    background-color: var(--background-color-base, #fff);
+    color: var(--color-base, #202122);
+    border-color: var(--border-color-interactive, #72777d);
+    box-shadow: inset 0 0 0 1px var(--box-shadow-color-transparent, transparent);
+}
+
+input[type=submit] {
+    background-color: var(--background-color-interactive-subtle, #f8f9fa);
+    color: var(--color-base, #202122);
+    border-color: var(--border-color-interactive, #72777d);
 }
 
 .sidebar {
     background-color: #f0f0f0;
     height: 100vh;
-    padding: 20px;
-}
-
-.sidebar h2 {
-    margin-top: 5px;
+    padding: 40px;
 }

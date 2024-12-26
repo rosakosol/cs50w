@@ -11,20 +11,26 @@
     <body>
         <div class="row">
             <div class="sidebar col-lg-2 col-md-3">
-                <h2>Wiki</h2>
+                <div class="logo-container">
+                    <img src="{% static 'encyclopedia/logo-graphic.png' %}" alt="Wikipedia Graphic Logo"/>
+                    <img src="{% static 'encyclopedia/wordmark.svg' %}" alt="Wikipedia"/>
+                    <img src="{% static 'encyclopedia/tagline.svg' %}" alt="The Free Encyclopedia"/>
+                </div>
                 <form action="{% url 'search' %}" method="post">
                     {% csrf_token %}
-                    <input class="search" type="text" name="q" placeholder="Search Encyclopedia">
-                    <input type="submit" value="Search">
+                    <div class="search-container">
+                        <input class="search" type="text" name="q" placeholder="Search Encyclopedia">
+                        <input type="submit" value="Search">
+                    </div>
                 </form>
-                <div>
+                <div class="sidebar-item">
                     <a href="{% url 'index' %}">Home</a>
                 </div>
-                <div>
+                <div class="sidebar-item">
                     <a href="{% url 'new' %}">Create New Page</a>
                 </div>
-                <div>
-                    <a href="{{ entries|random }}">Random page</a>
+                <div class="sidebar-item">
+                    <a href="{% url 'random_page' %}">Random Page</a>
                 </div>
                 {% block nav %}
                 {% endblock %}
