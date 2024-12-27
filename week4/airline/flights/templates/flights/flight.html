@@ -20,6 +20,22 @@
 
 </ul>
 
+<h2>Add Passenger</h2>
+
+<form action="{% url 'book' flight.id %}" method="post">
+    {% csrf_token %}
+    <select name="passenger" required>
+        {% if non_passengers %}
+            {% for passenger in non_passengers %}
+                <option value="{{ passenger.id }}">{{ passenger }}</option>
+            {% endfor %}
+        {% else %}
+            <option value="">No available passengers</option>
+        {% endif %}
+    </select>    
+    <input type="submit">
+</form>
+
 <a href="{% url 'index' %}">Back to Flight List</a>
 {% endblock %}
 
