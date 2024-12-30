@@ -2,6 +2,11 @@
 
 {% block body %}
     <h2>Active Listings</h2>
-
-    TODO
+    {% for user in instance %}
+        {% if user.image %}
+            <img src="{{ user.image.url }}" width="150">
+        {% else %}
+            <p>No image available</p>
+        {% endif %}
+    {% endfor %}
 {% endblock %}

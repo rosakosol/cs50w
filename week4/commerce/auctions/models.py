@@ -1,9 +1,13 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django import forms
 
 
 class User(AbstractUser):
-    pass
+    image = models.ImageField(upload_to='images/%Y/%m/%d/', null=True, blank=True)
+
+
+
 
 
 class Listing(models.Model):
