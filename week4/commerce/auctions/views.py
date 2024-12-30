@@ -7,8 +7,29 @@ from django.urls import reverse
 from .models import User
 
 
+# Display active listings when user is logged in
 def index(request):
     return render(request, "auctions/index.html")
+
+# Create a new listing
+def create_listing(request):
+    pass
+
+
+# Display listing page
+def listing(request):
+    pass
+    # If user is signed in
+    
+
+# Watchlist of listings
+def watchlist(request):
+    pass
+
+# Display all categories of listings
+def categories(request):
+    pass
+
 
 
 def login_view(request):
