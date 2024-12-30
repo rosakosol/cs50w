@@ -9,10 +9,11 @@ from .models import User
 
 # Display active listings when user is logged in
 def index(request):
-    instance = User.objects.all()
+    # Get the current logged-in user
+    user = request.user
     
     return render(request, "auctions/index.html", {
-        "instance": instance
+        "user": user 
     })
 
 # Create a new listing

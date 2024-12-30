@@ -12,6 +12,13 @@
         <div>
             {% if user.is_authenticated %}
                 Signed in as <strong>{{ user.username }}</strong>.
+                {% if user.image %}
+                    <!-- Display the image of the logged-in user -->
+                    <img src="{{ user.image.url }}" width="150" alt="User Image">
+                {% else %}
+                    <!-- Display a message when no image is available -->
+                    <p>No image available</p>
+                {% endif %}
             {% else %}
                 Not signed in.
             {% endif %}
