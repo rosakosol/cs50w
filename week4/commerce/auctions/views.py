@@ -4,17 +4,20 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User
+from .models import User, Listing
 
 
 # Display active listings when user is logged in
 def index(request):
     # Get the current logged-in user
     user = request.user
+    listings = Listing.objects.all()
     
     return render(request, "auctions/index.html", {
-        "user": user 
+        "user": user,
+        "listings": listings
     })
+        
 
 # Create a new listing
 def create_listing(request):
@@ -22,10 +25,16 @@ def create_listing(request):
 
 
 # Display listing page
-def listing(request):
-    pass
-    # If user is signed in
+def listing_page(request, listing_id):
+    # Get the current logged-in user
+    user = request.user
     
+    listing = Listing.objects.get(pk=listing_id)
+    
+    return render(request, "auctions/listing.html", {
+        "listing": listing
+    })
+        
 
 # Watchlist of listings
 def watchlist(request):

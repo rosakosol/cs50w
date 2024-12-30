@@ -3,4 +3,17 @@
 {% block body %}
     <h2>Active Listings</h2>
 
+    {% for item in listings %}
+        {% if item.is_active %}
+            <h3>{{ item.name }}</h3>
+            <h4>{{ item.current_highest_bid }}</h4>
+            <p>{{ item.description }}</p>
+            {% if item.image %}
+                <!-- Display the image of the logged-in user -->
+                <img src="{{ item.image.url }}" width="150" alt="Listing Image">
+            {% endif %}
+            
+        {% endif %}
+    {% endfor %}
+
 {% endblock %}
