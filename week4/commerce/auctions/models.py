@@ -6,14 +6,14 @@ class User(AbstractUser):
     pass
 
 
-class Listings(models.Model):
+class Listing(models.Model):
     pass
 
 
-class Bids(models.Model):
+class Bid(models.Model):
     pass
 
-class Comments(models.Model):
+class Comment(models.Model):
     pass
 
 
