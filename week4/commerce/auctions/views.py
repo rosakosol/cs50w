@@ -24,6 +24,20 @@ def create_listing(request):
     pass
 
 
+def create_bid(request, listing_id):
+    listing = Listing.objects.get(pk=listing_id)
+    highest_bid = listing.current_highest_bid()
+    
+    if request.method == "POST":
+        form = BidForm(request.POST)
+        if form.is_valid():
+            bid = form.save()
+            if bid.current > highest_bid and bid.current >= listing.starting_bid:
+                bid.save()
+                return HttpResponseRedirect(reverse("index"))
+            else:
+                return HttpResponse("Your bid must be higher than the current bid.")
+
 # Display listing page
 def listing_page(request, listing_id):
     # Get the current logged-in user

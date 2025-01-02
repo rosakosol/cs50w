@@ -3,17 +3,28 @@
 {% block body %}
     <h2>Active Listings</h2>
 
+    <!-- Loop through each active listing -->
     {% for item in listings %}
         {% if item.is_active %}
-            <h3>{{ item.name }}</h3>
-            <h4>{{ item.current_highest_bid }}</h4>
-            <p>{{ item.description }}</p>
-            {% if item.image %}
-                <!-- Display the image of the logged-in user -->
-                <img src="{{ item.image.url }}" width="150" alt="Listing Image">
-            {% endif %}
-            
+
+            <!-- Item details -->
+             <div class="item-container">
+                {% if item.image %}
+
+                <!-- Display the item picture -->
+                <img src="{{ item.image.url }}" width="150" alt="Listing Image" class="item-img">
+                {% else %}
+                    <p>No image available</p>
+                {% endif %}
+
+                <div class="item-details">
+                    <h3>{{ item.name }}</h3>
+                    <h4>Current Bid: ${{ item.current_highest_bid }}</h4>
+                </div>
+                <hr>
+                <p>Description: {{ item.description }}</p>
+
+            </div>
         {% endif %}
     {% endfor %}
-
 {% endblock %}

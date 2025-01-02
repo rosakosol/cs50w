@@ -1,3 +1,134 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
 body {
-    padding: 10px;
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+/* Fonts */
+.poetsen-one-regular {
+    font-family: "Poetsen One", serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+/* * {
+    outline: 1px solid red;
+} */
+  
+
+body {
+    padding: 50px;
+}
+
+/* Main Logo/Wordmark */
+h1 {
+    color: #ff4500;
+    font-weight: bold;
+    font-family: 'Poetsen One';
+    font-size: 48px;
+}
+
+h2, h3, h4, p {
+    margin: 10px 0;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+/* User Profile */
+.user-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.user-img {
+    width: 70px;
+}
+
+/* Auction Item  */
+.item-container {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(0, 0, 0, .1);
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.item-details {
+    display: flex;
+    justify-content: space-between;
+}
+
+.item-img {
+    height: 300px;
+}
+
+/* Header Nav */
+.nav-item:first-child {
+    margin-left: 0px;
+}
+
+.nav-item {
+    background-color: #ff4500;
+    border-radius: 10px;
+    margin: 8px 10px;
+    width: 150px;
+    text-align: center;
+}
+
+.nav-link {
+    color: white;
+}
+
+a:hover {
+    color: white;
+}
+
+hr {
+    width: 100%;
 }

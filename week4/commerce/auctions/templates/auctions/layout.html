@@ -3,44 +3,64 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>{% block title %}Auctions{% endblock %}</title>
+        <title>{% block title %}PlushBuy{% endblock %}</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Leckerli+One&family=Poetsen+One&display=swap" rel="stylesheet">
+        <link rel="icon" type="image/x-icon" href="media/images/favicon.ico">
     </head>
     <body>
-        <h1>Auctions</h1>
-        <div>
-            {% if user.is_authenticated %}
-                Signed in as <strong>{{ user.username }}</strong>.
-                {% if user.image %}
-                    <!-- Display the image of the logged-in user -->
-                    <img src="{{ user.image.url }}" width="150" alt="User Image">
+        <!-- Header -->
+         <header>
+            <div>
+                <h1>PlushBuy</h1>
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
+                    </li>
+
+                    <!-- If user is logged in -->
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                        </li>
+
+                    <!-- Else user can login or sign up -->
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'register' %}">Register</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+            <div class="user-container">
+                <!-- If user is logged in -->
+                {% if user.is_authenticated %}
+                    <p>Signed in as <strong>{{ user.username }}</strong></p>
+                    {% if user.image %}
+                        <!-- Display the image of the logged in user -->
+                        <img src="{{ user.image.url }}" alt="User Image" class="user-img">
+                    {% else %}
+                        <!-- If user doesn't have a profile pic -->
+                        <p>No image available</p>
+                    {% endif %}
                 {% else %}
-                    <!-- Display a message when no image is available -->
-                    <p>No image available</p>
+                    Not signed in.
                 {% endif %}
-            {% else %}
-                Not signed in.
-            {% endif %}
-        </div>
-        <ul class="nav">
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
-            </li>
-            {% if user.is_authenticated %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
-                </li>
-            {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'login' %}">Log In</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'register' %}">Register</a>
-                </li>
-            {% endif %}
-        </ul>
+            </div>
+
+        </header>
         <hr>
+
+
+
+
+
         {% block body %}
         {% endblock %}
     </body>
