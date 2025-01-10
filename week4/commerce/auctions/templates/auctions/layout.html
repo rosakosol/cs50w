@@ -63,18 +63,21 @@
                     Not signed in.
                 {% endif %}
             </div>
-            <!-- Breadcrumb Nav -->
-            <nav>
-                <ol class="breadcrumb">
-                  <li class="breadcrumb-item"><a href="/">Active Listings</a></li>
-                  <li class="breadcrumb-item"><a href="{% url 'categories' %}">Categories</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">{{ category.name }}</li>
-                </ol>
-              </nav>
-
-
         </header>
         <hr>
+        <!-- Breadcrumb Nav -->
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Active Listings</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'categories' %}">Categories</a></li>
+                {% if category %}
+                    <li class="breadcrumb-item"><a href="{% url 'category_listings' category.name %}" alt="">{{ category.name }}</a></li>
+                {% endif %}
+                {% if listing %}
+                    <li class="breadcrumb-item">{{ listing.name }}</li>
+                {% endif %}
+            </ol>
+        </nav>
 
 
 

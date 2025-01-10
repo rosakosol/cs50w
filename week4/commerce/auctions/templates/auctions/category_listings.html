@@ -6,9 +6,9 @@
     <!-- Loop through each category -->
     <ul>
         {% for listing in listings %}
-            <li><a href="{{ listing }}" alt="">{{ listing.name }}</a></li>
+            <li><a href="{% url 'listing_page' listing.id %}" alt="Listing name">{{ listing.name }}</a></li>
         {% empty %}
             <li>No listings available for this category.</li>
         {% endfor %}
-    <ul>
+    </ul>
 {% endblock %}

@@ -43,6 +43,10 @@ def listing_page(request, listing_id):
     # Get the current logged-in user
     user = request.user
     
+    # Get listing by unique id
+    listing = Listing.objects.get(pk=listing_id)
+    category = listing.category
+    
     # If user is logged in:
         # User can add item to watchlist
         
@@ -54,10 +58,12 @@ def listing_page(request, listing_id):
         
         # User can add comments to listing page
     
-    listing = Listing.objects.get(pk=listing_id)
+
     
     return render(request, "auctions/listing.html", {
-        "listing": listing
+        "user": user,
+        "listing": listing,
+        "category": category
     })
         
 # Display a list of all listing categories, clicking on name of category should take user to page with all active listings under category
