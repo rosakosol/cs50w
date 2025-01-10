@@ -17,10 +17,12 @@ class Listing(models.Model):
     name = models.CharField(max_length=64, default="Listing")
     description = models.TextField(null=True)
     starting_bid = models.DecimalField(max_digits=10, decimal_places=2, default=0.01)
+    winning_bidder = models.ForeignKey(User, on_delete=models.CASCADE, related_name="winning_bidder_listings", null=True)
     is_active = models.BooleanField(default=True)
     image_url = models.URLField(max_length=200, null=True, blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='listings', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_listings', default=1)
     
     def __str__(self):
         return self.name
@@ -49,4 +51,12 @@ class Comment(models.Model):
     def __str__(self):
         return f"Comment by {self.user} on {self.listing}"
 
+class CommentForm(forms.Form):
+    content = forms.CharField(
+        label='',
+        widget=forms.Textarea(attrs={
+            'rows': 10,
+            'cols': 80
+        })
+    )
 

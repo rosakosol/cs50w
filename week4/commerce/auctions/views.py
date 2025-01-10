@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.core.paginator import Paginator
 
-from .models import User, Listing, Category, Bid, Comment
+from .models import User, Listing, Category, Bid, Comment, CommentForm
 
 
 # Display active listings when user is logged in
@@ -47,14 +47,15 @@ def listing_page(request, listing_id):
     # Get listing by unique id
     listing = Listing.objects.get(pk=listing_id)
     category = listing.category
-    comments = listing.comments.all()
+    comments = listing.comments.all().order_by('-created_at')
     
     # Pagination for comments
     paginator = Paginator(comments, 3)  # Show 10 comments per page
-    page_number = request.GET.get('page')  # Get the page number from the URL query string
+    page_number = request.GET.get("page")  # Get the page number from the URL query string
     page_obj = paginator.get_page(page_number)  # Get the page of comments
     
     # If user is logged in:
+    if user.is_authenticated:
         # User can add item to watchlist
         
         # If item is already on watchlist, clicking the button will remove it from watchlist
@@ -64,16 +65,43 @@ def listing_page(request, listing_id):
         # If user is signed in on a inactive listing page, and user is the winning bidder, page should display message that indicates so
         
         # User can add comments to listing page
-    
+        if request.method == "POST":
+            # Create form variable and save user comment
+            form = CommentForm(request.POST)
+            
+            if form.is_valid():
+                new_comment = Comment()
+                new_comment.content = form.cleaned_data["content"]
+                new_comment.user = user
+                new_comment.listing = listing  
+                new_comment.save()              
+                return HttpResponseRedirect(reverse("listing_page", args=[listing_id]))  # Redirect to the same page to show the new comment
+        else:
+            form = CommentForm()  # Display an empty form
+    else:
+        form = None
+            
 
-    
     return render(request, "auctions/listing.html", {
         "user": user,
         "listing": listing,
         "category": category,
         "comments": comments,
-        "page_obj": page_obj
+        "page_obj": page_obj,
+        "form": form
     })
+
+# Close auctions if user is the creator of listing
+def update_listing_status(request, listing_id, current_highest_bid):
+    listing = Listing.objects.get(pk=listing_id)
+    
+    # Close auction by setting listing status to inactive
+    listing.is_active = False
+    listing.winning_bidder = listing.current_highest_bid().user
+    
+    listing.save()
+    
+    return HttpResponseRedirect(reverse("listing_page", args=[listing_id]))
         
 # Display a list of all listing categories, clicking on name of category should take user to page with all active listings under category
 def categories(request):
