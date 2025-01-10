@@ -50,7 +50,7 @@ def listing_page(request, listing_id):
     comments = listing.comments.all()
     
     # Pagination for comments
-    paginator = Paginator(comments, 10)  # Show 10 comments per page
+    paginator = Paginator(comments, 3)  # Show 10 comments per page
     page_number = request.GET.get('page')  # Get the page number from the URL query string
     page_obj = paginator.get_page(page_number)  # Get the page of comments
     
