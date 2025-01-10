@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User, Listing
+from .models import User, Listing, Category, Bid, Comment
 
 
 # Display active listings when user is logged in
@@ -62,7 +62,13 @@ def listing_page(request, listing_id):
         
 # Display a list of all listing categories, clicking on name of category should take user to page with all active listings under category
 def categories(request):
-    pass
+    user = request.user
+    listings = Listing.objects.all()
+    
+    return render(request, "auctions/categories.html", {
+        "user": user,
+        "listings": listings
+    })
 
 
 # Watchlist where logged in users can see their saved items, clicking on any listing should take them to listing page
