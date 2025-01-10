@@ -43,21 +43,41 @@ def listing_page(request, listing_id):
     # Get the current logged-in user
     user = request.user
     
+    # If user is logged in:
+        # User can add item to watchlist
+        
+        # If item is already on watchlist, clicking the button will remove it from watchlist
+        
+        # If user is creator of listing, they can close the auction which makes highest bidder the winner of the auction and renders the listing inactive
+        
+        # If user is signed in on a inactive listing page, and user is the winning bidder, page should display message that indicates so
+        
+        # User can add comments to listing page
+    
     listing = Listing.objects.get(pk=listing_id)
     
     return render(request, "auctions/listing.html", {
         "listing": listing
     })
         
-
-# Watchlist of listings
-def watchlist(request):
-    pass
-
-# Display all categories of listings
+# Display a list of all listing categories, clicking on name of category should take user to page with all active listings under category
 def categories(request):
     pass
 
+
+# Watchlist where logged in users can see their saved items, clicking on any listing should take them to listing page
+def watchlist(request):
+    pass
+
+
+# If user is logged in, they can create a new listing
+    # Title
+    # Description
+    # Starting bid
+    # Provide url for image (optional)
+    # Category (optional)
+def create_listing(request):
+    pass
 
 
 def login_view(request):

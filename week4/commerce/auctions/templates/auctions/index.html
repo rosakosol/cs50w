@@ -9,21 +9,23 @@
 
             <!-- Item details -->
              <div class="item-container">
-                {% if item.image %}
-
-                <!-- Display the item picture -->
-                <img src="{{ item.image.url }}" width="150" alt="Listing Image" class="item-img">
-                {% else %}
-                    <p>No image available</p>
-                {% endif %}
-
-                <div class="item-details">
-                    <h3>{{ item.name }}</h3>
-                    <h4>Current Bid: ${{ item.current_highest_bid }}</h4>
+                <div class="item-img">
+                    {% if item.image %}
+                        <!-- Display the item picture -->
+                        <img src="{{ item.image.url }}" width="150" alt="Listing Image">
+                    {% else %}
+                        <p>No image available</p>
+                    {% endif %}
                 </div>
-                <hr>
-                <p>Description: {{ item.description }}</p>
-
+                <div class="item-details">
+                    <div class="item-main-desc">
+                        <h3>{{ item.name }}</h3>
+                        <h4>Current Bid: ${{ item.current_highest_bid }}</h4>
+                    </div>
+                    <hr class="item-hr">
+                    <p>Category:</p>
+                    <p>Description: {{ item.description }}</p>
+                </div>
             </div>
         {% endif %}
     {% endfor %}

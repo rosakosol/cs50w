@@ -93,30 +93,41 @@ header {
 /* Auction Item  */
 .item-container {
     display: flex;
-    flex-direction: column;
     border: 1px solid rgba(0, 0, 0, .1);
     border-radius: 10px;
     padding: 20px;
-}
-
-.item-details {
-    display: flex;
-    justify-content: space-between;
+    margin: 10px 0;
+    width: 100%;
+    
 }
 
 .item-img {
     height: 300px;
+    margin-right: 20px;
+    flex-grow: 1;
 }
+
+.item-details {
+    flex-grow: 2;
+}
+
+.item-main-desc {
+    display: flex;
+    justify-content: space-between;
+}
+
+.item-hr {
+    margin: 0;
+}
+
+
 
 /* Header Nav */
-.nav-item:first-child {
-    margin-left: 0px;
-}
-
 .nav-item {
     background-color: #ff4500;
     border-radius: 10px;
     margin: 8px 10px;
+    margin-left: 0px;
     width: 150px;
     text-align: center;
 }
