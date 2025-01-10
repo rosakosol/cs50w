@@ -64,10 +64,29 @@ def listing_page(request, listing_id):
 def categories(request):
     user = request.user
     listings = Listing.objects.all()
+    categories = Category.objects.all()
     
     return render(request, "auctions/categories.html", {
         "user": user,
-        "listings": listings
+        "listings": listings,
+        "categories": categories
+    })
+
+# Display all active listings for a given category
+def category_listings(request, category_name):
+    user = request.user
+
+    # Get category by name
+    category = Category.objects.get(name=category_name)
+     
+    # Fetch active listings for the category
+    if category:
+        listings = category.listings.filter(is_active=True)
+
+    # Pass the listings to the template
+    return render(request, "auctions/category_listings.html", {
+        "listings": listings,
+        "category": category
     })
 
 

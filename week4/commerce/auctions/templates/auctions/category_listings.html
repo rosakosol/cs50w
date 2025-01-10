@@ -1,0 +1,14 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>{{ category.name }}</h2>
+
+    <!-- Loop through each category -->
+    <ul>
+        {% for listing in listings %}
+            <li><a href="{{ listing }}" alt="">{{ listing.name }}</a></li>
+        {% empty %}
+            <li>No listings available for this category.</li>
+        {% endfor %}
+    <ul>
+{% endblock %}

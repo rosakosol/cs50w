@@ -10,9 +10,9 @@
             <!-- Item details -->
              <div class="item-container">
                 <div class="item-img">
-                    {% if item.image %}
+                    {% if item.image_url %}
                         <!-- Display the item picture -->
-                        <img src="{{ item.image.url }}" width="150" alt="Listing Image">
+                        <img src="{{ item.image_url }}" width="300" alt="Listing Image">
                     {% else %}
                         <p>No image available</p>
                     {% endif %}
@@ -23,7 +23,7 @@
                         <h4>Current Bid: ${{ item.current_highest_bid }}</h4>
                     </div>
                     <hr class="item-hr">
-                    <p>Category:</p>
+                    <p>Category: {{ item.category }}</p>
                     <p>Description: {{ item.description }}</p>
                 </div>
             </div>

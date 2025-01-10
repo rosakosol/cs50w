@@ -6,7 +6,7 @@
     <!-- Loop through each category -->
     <ul>
         {% for category in categories %}
-            <li>{{ category.name }}</li>
+            <a href="{% url 'category_listings' category.name %}" alt=""><li>{{ category.name }}</li></a>
         {% endfor %}
     <ul>
 {% endblock %}
