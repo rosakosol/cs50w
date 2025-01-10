@@ -3,6 +3,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.core.paginator import Paginator
 
 from .models import User, Listing, Category, Bid, Comment
 
@@ -46,6 +47,12 @@ def listing_page(request, listing_id):
     # Get listing by unique id
     listing = Listing.objects.get(pk=listing_id)
     category = listing.category
+    comments = listing.comments.all()
+    
+    # Pagination for comments
+    paginator = Paginator(comments, 10)  # Show 10 comments per page
+    page_number = request.GET.get('page')  # Get the page number from the URL query string
+    page_obj = paginator.get_page(page_number)  # Get the page of comments
     
     # If user is logged in:
         # User can add item to watchlist
@@ -63,7 +70,9 @@ def listing_page(request, listing_id):
     return render(request, "auctions/listing.html", {
         "user": user,
         "listing": listing,
-        "category": category
+        "category": category,
+        "comments": comments,
+        "page_obj": page_obj
     })
         
 # Display a list of all listing categories, clicking on name of category should take user to page with all active listings under category

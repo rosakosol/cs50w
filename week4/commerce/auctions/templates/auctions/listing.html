@@ -3,4 +3,40 @@
 {% block body %}
     <h2>{{ listing.name }}</h2>
 
+    <!-- Listing details -->
+    <div class="listing-container">
+        <div class="row">
+            <div class="listing-img">
+                {% if listing.image_url %}
+                    <!-- Display the item picture -->
+                    <img src="{{ listing.image_url }}" width="300" alt="Listing Image">
+                {% else %}
+                    <p>No image available</p>
+                {% endif %}
+            </div>
+            <div class="listing-details">
+                <div class="listing-main-desc">
+                    <h3><a href="{% url 'listing_page' listing.id %}">{{ listing.name }}</a></h3>
+                    <h4>Current Bid: ${{ listing.current_highest_bid }}</h4>
+                </div>
+                <hr class="listing-hr">
+                <p>Category: <a href="{% url 'category_listings' listing.category.name %}">{{ listing.category }}</a></p>
+                <p>Description: {{ listing.description }}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="listing-comments">
+                <h5>Comments</h5>
+                {% for comment in page_obj %}
+                    <div class="comment">
+                        <small>{{ comment.user }} on {{ comment.created_at }}</small>
+                        <p>{{ comment.content }}</p>
+                    </div>
+                {% empty %}
+                    <p>No comments yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
 {% endblock %}

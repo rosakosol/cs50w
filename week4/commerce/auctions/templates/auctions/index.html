@@ -4,27 +4,28 @@
     <h2>Active Listings</h2>
 
     <!-- Loop through each active listing -->
-    {% for item in listings %}
-        {% if item.is_active %}
-
-            <!-- Item details -->
-             <div class="item-container">
-                <div class="item-img">
-                    {% if item.image_url %}
-                        <!-- Display the item picture -->
-                        <img src="{{ item.image_url }}" width="300" alt="Listing Image">
-                    {% else %}
-                        <p>No image available</p>
-                    {% endif %}
-                </div>
-                <div class="item-details">
-                    <div class="item-main-desc">
-                        <h3>{{ item.name }}</h3>
-                        <h4>Current Bid: ${{ item.current_highest_bid }}</h4>
+    {% for listing in listings %}
+        {% if listing.is_active %}
+            <!-- Listing details -->
+             <div class="listing-container">
+                <div class="row">
+                    <div class="listing-img">
+                        {% if listing.image_url %}
+                            <!-- Display the item picture -->
+                            <img src="{{ listing.image_url }}" width="300" alt="Listing Image">
+                        {% else %}
+                            <p>No image available</p>
+                        {% endif %}
                     </div>
-                    <hr class="item-hr">
-                    <p>Category: {{ item.category }}</p>
-                    <p>Description: {{ item.description }}</p>
+                    <div class="listing-details">
+                        <div class="listing-main-desc">
+                            <h3><a href="{% url 'listing_page' listing.id %}">{{ listing.name }}</a></h3>
+                            <h4>Current Bid: ${{ listing.current_highest_bid }}</h4>
+                        </div>
+                        <hr class="listing-hr">
+                        <p>Category: <a href="{% url 'category_listings' listing.category.name %}">{{ listing.category }}</a></p>
+                        <p>Description: {{ listing.description }}</p>
+                    </div>
                 </div>
             </div>
         {% endif %}

@@ -19,7 +19,7 @@ class Listing(models.Model):
     starting_bid = models.DecimalField(max_digits=10, decimal_places=2, default=0.01)
     is_active = models.BooleanField(default=True)
     image_url = models.URLField(max_length=200, null=True, blank=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="listings", null=True, blank=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='listings', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
@@ -35,7 +35,7 @@ class Bid(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bids', default=1)
     current = models.DecimalField(default=0.01, max_digits=10, decimal_places=2)
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="bids", default=1)
-    created_at = models.DateTimeField(default=timezone.now)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Bid of {self.current} by {self.user} on {self.listing}"
@@ -44,7 +44,7 @@ class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name='comments', default=1)
     content = models.TextField(null=True)
-    created_at = models.DateTimeField(default=timezone.now)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Comment by {self.user} on {self.listing}"

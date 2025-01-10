@@ -73,10 +73,19 @@ h2, h3, h4, p {
     margin: 10px 0;
 }
 
+a:hover {
+    color: #007bff;
+    text-decoration: none;
+}
+
 header {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
+}
+
+.breadcrumb-item a:hover {
+    color: #007bff;
 }
 
 /* User Profile */
@@ -91,8 +100,9 @@ header {
 }
 
 /* Auction Item  */
-.item-container {
+.listing-container {
     display: flex;
+    flex-direction: column;
     border: 1px solid rgba(0, 0, 0, .1);
     border-radius: 10px;
     padding: 20px;
@@ -101,26 +111,37 @@ header {
     
 }
 
-.item-img {
+.listing-img {
     height: 300px;
     margin-right: 20px;
     flex-grow: 1;
 }
 
-.item-details {
+.listing-details {
     flex-grow: 2;
 }
 
-.item-main-desc {
+.listing-main-desc {
     display: flex;
     justify-content: space-between;
 }
 
-.item-hr {
+.listing-main-desc a {
+    color: #007bff;
+}
+
+.listing-comments {
+    flex-grow: 1;
+}
+
+.listing-hr {
     margin: 0;
 }
 
-
+.row {
+    display: flex;
+    margin: 0px;
+}
 
 /* Header Nav */
 .nav-item {
@@ -136,7 +157,8 @@ header {
     color: white;
 }
 
-a:hover {
+
+.nav-item a:hover {
     color: white;
 }
 
