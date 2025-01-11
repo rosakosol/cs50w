@@ -29,8 +29,8 @@ class Listing(models.Model):
     
     def current_highest_bid(self):
         # self.bids is a reverse relationship to Bid model -> gets all bids linked to listing
-        highest_bid = self.bids.order_by('-current').first()
-        return highest_bid.current if highest_bid else self.starting_bid
+        # Get the highest bid object (not just the amount)
+        return self.bids.all().order_by('-current').first()
 
     
 class Bid(models.Model):
@@ -40,7 +40,21 @@ class Bid(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Bid of {self.current} by {self.user} on {self.listing}"
+        return f"{self.current} by {self.user}"
+    
+    
+class BidForm(forms.Form):
+    bid_amount = forms.DecimalField(
+        label='Bid Amount',
+        max_digits=10,  # Adjust the total digits allowed (including the decimal part)
+        decimal_places=2,  # Ensure only 2 decimal places
+        widget=forms.NumberInput(attrs={
+            'placeholder': 'Enter bid amount',
+            'min': '0.01',
+            'step': '0.01'
+        })
+    )
+
 
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
