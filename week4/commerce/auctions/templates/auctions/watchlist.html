@@ -5,8 +5,8 @@
 
     <!-- Loop through each category -->
     <ul>
-        {% for listing in watchlist %}
-            <a href="{% url 'listing_page' listing.id %}" alt=""><li>{{ listing.name }}</li></a>
+        {% for item in watchlist %}
+            <a href="{% url 'listing_page' item.listing.id %}" alt=""><li>{{ item.listing.name }}</li></a>
         {% endfor %}
     </ul>
 

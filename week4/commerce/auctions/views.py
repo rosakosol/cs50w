@@ -44,20 +44,18 @@ def listing_page(request, listing_id):
     # If user is logged in:
     if user.is_authenticated:
         if request.method == "POST":
-            
-            
             watchlist_form = WatchlistForm(request.POST)
             if watchlist_form.is_valid():
                 action = watchlist_form.cleaned_data["action"]
 
                 if action == "add":
                     # Check if listing is already in user's watchlist
-                    
-                    if not Watchlist.objects.filter(user=request.user, listing=listing).exists():
-                        Watchlist.objects.create(user=request.user, listing=listing)
+                    if not Watchlist.objects.filter(user=user, listing=listing).exists():
+                        Watchlist.objects.create(user=user, listing=listing)
                         
                 # Handle removing the listing from the watchlist
                 elif action == 'remove':
+                    
                     watchlist_item = Watchlist.objects.filter(user=request.user, listing=listing).first()
                     if watchlist_item:
                         watchlist_item.delete()
@@ -181,8 +179,11 @@ def watchlist(request):
     user = request.user
     listings = Listing.objects.all()
     
-    # Display watchlist
-    watchlist = Watchlist.objects.all()
+    if user.is_authenticated:
+        # Display watchlist
+        watchlist = Watchlist.objects.filter(user=user)
+    else:
+        watchlist = []
     
     return render(request, "auctions/watchlist.html", {
         "user": user,

@@ -35,7 +35,7 @@ class Listing(models.Model):
 class Watchlist(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="watchlist")
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="watched_by")
-    added_at = models.DateTimeField(auto_now_add=True)  # Track when the listing was added to the watchlist
+    added_at = models.DateTimeField(auto_now_add=True) 
     
 class WatchlistForm(forms.Form):
     listing_id = forms.IntegerField(widget=forms.HiddenInput())
