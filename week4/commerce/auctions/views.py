@@ -1,11 +1,12 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
+from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.core.paginator import Paginator
 
-from .models import User, Listing, Category, Bid, BidForm, Comment, CommentForm
+from .models import User, Listing, Category, Bid, BidForm, Comment, CommentForm, Watchlist, WatchlistForm
 
 
 # Display active listings when user is logged in
@@ -25,80 +26,6 @@ def create_listing(request):
     pass
 
 
-def create_bid(request, listing_id):
-    # Get the current logged-in user
-    user = request.user
-    listing = Listing.objects.get(pk=listing_id)
-    category = listing.category
-    comments = listing.comments.all().order_by('-created_at')
-    highest_bid = listing.current_highest_bid()
-    
-    # Pagination for comments
-    paginator = Paginator(comments, 3)  # Show 10 comments per page
-    page_number = request.GET.get("page")  # Get the page number from the URL query string
-    page_obj = paginator.get_page(page_number)  # Get the page of comments
-    
-    # If user is logged in:
-    if user.is_authenticated:
-        if request.method == "POST":
-            # Create form variable and save user comment
-            comment_form = CommentForm(request.POST)
-            
-            if comment_form.is_valid():
-                new_comment = Comment()
-                new_comment.content = comment_form.cleaned_data["content"]
-                new_comment.user = user
-                new_comment.listing = listing  
-                new_comment.save()              
-                return HttpResponseRedirect(reverse("listing_page", args=[listing_id]))  # Redirect to the same page to show the new comment
-
-            bid_form = BidForm(request.POST)
-    
-            if bid_form.is_valid():
-                bid = Bid()
-                bid.current = bid_form.cleaned_data["bid_amount"]
-                # Ensure the bid is higher than the current bid
-                if bid.current > highest_bid and bid.current >= listing.starting_bid:
-                    bid.user = user
-                    bid.listing = listing  # Associate the bid with the listing
-                    bid.save()
-                    listing.refresh_from_db()
-                    
-                    return render(request, 'auctions/listing.html', {
-                        "user": user,
-                        "listing": listing,
-                        "category": category,
-                        "comments": comments,
-                        "page_obj": page_obj,
-                        "bid_form": bid_form,
-                        "comment_form": comment_form,
-                        'success_message': 'Your bid has been placed successfully.'
-                    })
-                else:
-                    return render(request, 'auctions/listing.html', {
-                        "user": user,
-                        "listing": listing,
-                        "category": category,
-                        "comments": comments,
-                        "page_obj": page_obj,
-                        "bid_form": bid_form,
-                        "comment_form": comment_form,
-                        'error_message': 'Your bid must be higher than the current bid.'
-                    })
-        else:
-            form = BidForm()  # Display an empty form on GET request
-        
-        return render(request, 'auctions/listing.html', {
-            "user": user,
-            "listing": listing,
-            "category": category,
-            "comments": comments,
-            "page_obj": page_obj,
-            "bid_form": bid_form,
-            "comment_form": comment_form
-        })
-        
-
 # Display listing page
 def listing_page(request, listing_id):
     # Get the current logged-in user
@@ -116,40 +43,90 @@ def listing_page(request, listing_id):
     
     # If user is logged in:
     if user.is_authenticated:
-        # User can add item to watchlist
-        
-        # If item is already on watchlist, clicking the button will remove it from watchlist
-        
-        # If user is creator of listing, they can close the auction which makes highest bidder the winner of the auction and renders the listing inactive
-        
-        # If user is signed in on a inactive listing page, and user is the winning bidder, page should display message that indicates so
-        
-        # User can add comments to listing page
         if request.method == "POST":
-            # Create form variable and save user comment
-            comment_form = CommentForm(request.POST)
             
+            
+            watchlist_form = WatchlistForm(request.POST)
+            if watchlist_form.is_valid():
+                action = watchlist_form.cleaned_data["action"]
+
+                if action == "add":
+                    # Check if listing is already in user's watchlist
+                    
+                    if not Watchlist.objects.filter(user=request.user, listing=listing).exists():
+                        Watchlist.objects.create(user=request.user, listing=listing)
+                        
+                # Handle removing the listing from the watchlist
+                elif action == 'remove':
+                    watchlist_item = Watchlist.objects.filter(user=request.user, listing=listing).first()
+                    if watchlist_item:
+                        watchlist_item.delete()
+                        
+
+                # After the action, render the same listing page with the updated data
+                return HttpResponseRedirect(reverse("listing_page", args=[listing_id]))
+            
+            
+            comment_form = CommentForm(request.POST)
             if comment_form.is_valid():
                 new_comment = Comment()
                 new_comment.content = comment_form.cleaned_data["content"]
                 new_comment.user = user
-                new_comment.listing = listing  
+                new_comment.listing = listing
                 new_comment.save()              
                 return HttpResponseRedirect(reverse("listing_page", args=[listing_id]))  # Redirect to the same page to show the new comment
-        else:
-            comment_form = CommentForm()  # Display an empty form
-    else:
-        comment_form = None
 
-    return render(request, "auctions/listing.html", {
+            bid_form = BidForm(request.POST)  # Bind form with POST data
+            if bid_form.is_valid():
+                bid = Bid()
+                bid.current = bid_form.cleaned_data["bid_amount"]
+                highest_bid = listing.current_highest_bid()
+                
+                # If bid is valid
+                if bid.current > highest_bid.current and bid.current >= listing.starting_bid:
+                    bid.user = user
+                    bid.listing = listing
+                    bid.save()
+                    listing.refresh_from_db()
+                    bid_message = "Your bid has been placed successfully!"
+                    # Refresh the bid form
+                    bid_form = BidForm()
+                    
+                # Else if bid is invalid
+                else:
+                    bid_message = "Your bid must be higher than the current bid."
+                    # Refresh the bid form
+                    bid_form = BidForm()
+            else:
+                # Refresh the bid form
+                bid_form = BidForm()
+        else:
+            bid_form = BidForm()
+            comment_form = CommentForm() 
+            watchlist_Form = WatchlistForm()
+            bid_message = None
+            is_watched = Watchlist.objects.filter(user=request.user, listing=listing).exists()
+
+    # If user isn't signed in, they cannot bid or write comments
+    else:
+        bid_form = None
+        comment_form = None
+        bid_message = None
+        is_watched = Watchlist.objects.filter(user=request.user, listing=listing).exists()
+    
+    return render(request, 'auctions/listing.html', {
         "user": user,
         "listing": listing,
         "category": category,
         "comments": comments,
         "page_obj": page_obj,
-        "comment_form": comment_form
+        "bid_form": bid_form,
+        "comment_form": comment_form,
+        "bid_message": bid_message,
+        "is_watched": is_watched
     })
 
+        
 # Close auctions if user is the creator of listing
 def update_listing_status(request, listing_id):
     listing = Listing.objects.get(pk=listing_id)
@@ -160,6 +137,7 @@ def update_listing_status(request, listing_id):
     if winning_bid:
         listing.winning_bidder = winning_bid.user
         listing.save()
+        messages.success(request, "The auction has been closed.")
     else:
         # Handle case where there are no bids
         listing.winning_bidder = None
@@ -199,7 +177,18 @@ def category_listings(request, category_name):
 
 # Watchlist where logged in users can see their saved items, clicking on any listing should take them to listing page
 def watchlist(request):
-    pass
+    # Get the current logged-in user
+    user = request.user
+    listings = Listing.objects.all()
+    
+    # Display watchlist
+    watchlist = Watchlist.objects.all()
+    
+    return render(request, "auctions/watchlist.html", {
+        "user": user,
+        "listings": listings,
+        "watchlist": watchlist
+    })
 
 
 # If user is logged in, they can create a new listing

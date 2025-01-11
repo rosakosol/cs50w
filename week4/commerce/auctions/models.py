@@ -32,6 +32,15 @@ class Listing(models.Model):
         # Get the highest bid object (not just the amount)
         return self.bids.all().order_by('-current').first()
 
+class Watchlist(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="watchlist")
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="watched_by")
+    added_at = models.DateTimeField(auto_now_add=True)  # Track when the listing was added to the watchlist
+    
+class WatchlistForm(forms.Form):
+    listing_id = forms.IntegerField(widget=forms.HiddenInput())
+    action = forms.ChoiceField(choices=[('add', 'Add'), ('remove', 'Remove')], widget=forms.HiddenInput())
+
     
 class Bid(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bids', default=1)

@@ -13,9 +13,23 @@ class CategoryAdmin(admin.ModelAdmin):
 
 # Admin able to view and edit listing creation date, end date, duration, price, location
 class ListingAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'category', 'starting_bid', 'created_at', 'is_active', 'image_url')
+    list_display = ('id', 'name', 'category', 'starting_bid', 'winning_bidder', 'winning_bid', 'created_at', 'is_active', 'image_url')
     search_fields = ('name', 'category_name')
     ordering = ('created_at',) 
+    
+    def winning_bidder(self, obj):
+        """Returns the user who placed the winning bid for the listing."""
+        highest_bid = obj.current_highest_bid()
+        return highest_bid.user if highest_bid else None
+    winning_bidder.short_description = 'Winning Bidder'
+
+    def winning_bid(self, obj):
+        """Returns the current highest bid amount."""
+        highest_bid = obj.current_highest_bid()
+        return highest_bid.current if highest_bid else None
+    winning_bid.short_description = 'Winning Bid'
+    
+
     
 # Admin able to view history of all bids on a listing from date
 class BidAdmin(admin.ModelAdmin):
