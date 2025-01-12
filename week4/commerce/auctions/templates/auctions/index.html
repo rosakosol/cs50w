@@ -23,7 +23,9 @@
                             <h4>Current Bid: ${{ listing.current_highest_bid }}</h4>
                         </div>
                         <hr class="listing-hr">
-                        <p>Category: <a href="{% url 'category_listings' listing.category.name %}">{{ listing.category }}</a></p>
+                        {% if listing.category %}
+                            <p>Category: <a href="{% url 'category_listings' listing.category.name %}">{{ listing.category }}</a></p>
+                        {% endif %}
                         <p>Description: {{ listing.description }}</p>
                     </div>
                 </div>

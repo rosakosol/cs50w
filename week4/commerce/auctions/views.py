@@ -52,6 +52,7 @@ def listing_page(request, listing_id):
                     # Check if listing is already in user's watchlist
                     if not Watchlist.objects.filter(user=user, listing=listing).exists():
                         Watchlist.objects.create(user=user, listing=listing)
+                        messages.success(request, "Item added to watchlist.")
                         
                 # Handle removing the listing from the watchlist
                 elif action == 'remove':
@@ -59,6 +60,7 @@ def listing_page(request, listing_id):
                     watchlist_item = Watchlist.objects.filter(user=request.user, listing=listing).first()
                     if watchlist_item:
                         watchlist_item.delete()
+                        messages.error(request, "Item removed from watchlist.")
                         
 
                 # After the action, render the same listing page with the updated data
@@ -132,10 +134,11 @@ def update_listing_status(request, listing_id):
     # Close auction by setting listing status to inactive
     listing.is_active = False
     winning_bid = listing.current_highest_bid()
-    if winning_bid:
+    
+    if winning_bid != listing.starting_bid:
         listing.winning_bidder = winning_bid.user
         listing.save()
-        messages.success(request, "The auction has been closed.")
+        messages.warning(request, "The auction has been closed.")
     else:
         # Handle case where there are no bids
         listing.winning_bidder = None

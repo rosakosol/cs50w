@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django import forms
 from django.utils import timezone
+from django.core.exceptions import ValidationError
 
 class User(AbstractUser):
     image = models.ImageField(upload_to='images/%Y/%m/%d/', null=True, blank=True)
@@ -36,6 +37,14 @@ class Listing(models.Model):
             # If there are no other bids other than the starting bid
             return self.starting_bid
 
+
+# Custom Validator for starting bids using Create New Listing Form
+def validate_bid(value):
+    if value >= 0.01:
+        return value
+    else:
+        raise ValidationError("Bid must be at least $0.01.")
+
 class CreateForm(forms.Form):
     name = forms.CharField(max_length=64)
     description = forms.CharField(
@@ -44,7 +53,11 @@ class CreateForm(forms.Form):
             'rows': 10,
             'cols': 80
         }))
-    starting_bid = forms.DecimalField(max_digits=10, decimal_places=2)
+    starting_bid = forms.DecimalField(
+        max_digits=10, 
+        decimal_places=2,
+        validators=[validate_bid]
+    )
     image_url = forms.URLField(max_length=200, required=False)
     category = forms.ModelChoiceField(
         queryset=Category.objects.all(),
