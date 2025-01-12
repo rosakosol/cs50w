@@ -6,7 +6,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.core.paginator import Paginator
 
-from .models import User, Listing, Category, Bid, BidForm, Comment, CommentForm, Watchlist, WatchlistForm
+from .models import User, Listing, Category, Bid, BidForm, Comment, CommentForm, Watchlist, WatchlistForm, CreateForm
 
 
 # Display active listings when user is logged in
@@ -199,7 +199,31 @@ def watchlist(request):
     # Provide url for image (optional)
     # Category (optional)
 def create_listing(request):
-    pass
+    user = request.user
+    listings = Listing.objects.all()
+    
+    if user.is_authenticated:
+        if request.method == "POST":
+            create_form = CreateForm(request.POST)
+            if create_form.is_valid():
+                new_listing = Listing()
+                new_listing.name = create_form.cleaned_data["name"]
+                new_listing.description = create_form.cleaned_data["description"]
+                new_listing.starting_bid = create_form.cleaned_data["starting_bid"]
+                new_listing.image_url = create_form.cleaned_data["image_url"]
+                new_listing.creator = user
+                new_listing.category = create_form.cleaned_data["category"]
+                new_listing.save()              
+                return HttpResponseRedirect(reverse("listing_page", args=[new_listing.id]))  # Redirect to the same page to show the new comment
+        
+        else:
+            create_form = CreateForm()
+        
+    return render(request, "auctions/create_listing.html", {
+        "user": user,
+        "create_form": create_form,
+    })
+        
 
 
 def login_view(request):

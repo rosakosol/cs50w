@@ -29,8 +29,31 @@ class Listing(models.Model):
     
     def current_highest_bid(self):
         # self.bids is a reverse relationship to Bid model -> gets all bids linked to listing
-        # Get the highest bid object (not just the amount)
-        return self.bids.all().order_by('-current').first()
+        highest_bid = self.bids.all().order_by('-current').first()
+        if highest_bid:
+            return highest_bid
+        else:
+            # If there are no other bids other than the starting bid
+            return self.starting_bid
+
+class CreateForm(forms.Form):
+    name = forms.CharField(max_length=64)
+    description = forms.CharField(
+        label='Content',
+        widget=forms.Textarea(attrs={
+            'rows': 10,
+            'cols': 80
+        }))
+    starting_bid = forms.DecimalField(max_digits=10, decimal_places=2)
+    image_url = forms.URLField(max_length=200, required=False)
+    category = forms.ModelChoiceField(
+        queryset=Category.objects.all(),
+        empty_label="Select a category",
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        required=False
+    )
+    
+    
 
 class Watchlist(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="watchlist")
