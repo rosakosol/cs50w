@@ -45,6 +45,14 @@ table {
 	border-spacing: 0;
 }
 
+label {
+    width: 500px;
+}
+
+button {
+    width: 200px;
+}
+
 /* Fonts */
 .poetsen-one-regular {
     font-family: "Poetsen One", serif;
@@ -52,9 +60,9 @@ table {
     font-style: normal;
 }
 
-* {
+/* * {
     outline: 1px solid red;
-}
+} */
   
 
 body {
@@ -82,6 +90,10 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
+}
+
+ul li {
+    margin: 20px 0;
 }
 
 .breadcrumb-item a:hover {
@@ -113,6 +125,7 @@ header {
 
 .listing-img {
     width: 300px;
+    min-height: 300px;
     margin-right: 20px;
 }
 
@@ -130,7 +143,12 @@ header {
 }
 
 .listing-comments {
-    flex-grow: 1;
+    height: 300px;
+    width: 100%;
+    background-color: beige;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px 0;
 }
 
 .listing-hr {
@@ -141,6 +159,58 @@ header {
     display: flex;
     margin: 0px;
 }
+
+.listing-comments div {
+    margin: 20px 0;
+}
+
+.comment small {
+    font-style: italic;
+    color:rgba(0, 0, 0, .5)
+}
+
+.pagination {
+    margin: 20px 0;
+}
+
+.page-link {
+    padding: 0 10px;
+    background-color: transparent;
+    color: black;
+}
+
+.page-item {
+    margin: 0 20px 0 0;
+}
+
+.page-item:last-child .page-link {
+    margin-left: 20px;
+}
+
+.add-bid-form {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.add-bid-form label {
+    width: 100px;
+}
+
+.add-bid-form input {
+    margin: 0 20px;
+}
+
+
+#comment-form div {
+    margin: 20px 0;
+}
+
+.add-watchlist-form {
+    margin: 20px 0;
+}
+
+
 
 /* Header Nav */
 .nav-item {
@@ -192,4 +262,30 @@ hr {
 
 .messages li.error {
     background-color: #ffe3e3;
+}
+
+/* Create New Listing Form */
+.create-listing-form {
+    display: flex;
+    flex-direction: column;
+    max-width: 800px;
+}
+
+
+.create-listing-form div {
+    width: 100%;
+    margin: 20px 0;
+    display: flex;
+}
+
+.create-listing-form input {
+    width: 100%;
+}
+
+.create-listing-form textarea {
+    width: 100%;
+}
+
+.create-listing-form [type=submit] {
+    width: 200px;
 }

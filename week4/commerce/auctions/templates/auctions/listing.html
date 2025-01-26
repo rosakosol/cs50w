@@ -20,17 +20,49 @@
                 {% else %}
                     <p>No image available</p>
                 {% endif %}
+
+                {% if user.is_authenticated %}
+                    <!-- Add/remove listing to watchlist -->
+                    <form action="{% url 'listing_page' listing.id %}" method="post" class="add-watchlist-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="listing_id" value="{{ listing.id }}">
+                        {% if is_watched %}
+                            <!-- If the user is watching the listing, show the "Remove from Watchlist" button -->
+                            <button type="submit" name="action" value="remove" class="btn btn-danger">Remove from Watchlist</button>
+                        {% else %}
+                            <!-- If the user is not watching the listing, show the "Add to Watchlist" button -->
+                            <button type="submit" name="action" value="add" class="btn btn-success">Add to Watchlist</button>
+                        {% endif %}
+                    </form>
+                {% endif %}
             </div>
             <div class="listing-details">
                 <div class="listing-main-desc">
                     <h3><a href="{% url 'listing_page' listing.id %}">{{ listing.name }}</a></h3>
+                    {% if listing.current_highest_bid %}
                     <h4>Current Bid: ${{ listing.current_highest_bid }}</h4>
+                    {% else %}
+                        <h4>Starting Bid: ${{ listing.starting_bid }}</h4>
+                    {% endif %}
                 </div>
                 <hr class="listing-hr">
                 {% if listing.category %}
                     <p>Category: <a href="{% url 'category_listings' listing.category.name %}">{{ listing.category }}</a></p>
                 {% endif %}
                 <p>Description: {{ listing.description }}</p>
+
+                {% if user.is_authenticated %}
+                    <!-- Allow user to bid on item -->
+                    {% if listing.is_active %}
+                        {% if bid_form %}
+                            <form action="{% url 'listing_page' listing.id %}" method="post" class="add-bid-form">
+                                {% csrf_token %}
+                                {{ bid_form }}
+                                <button class="btn btn-secondary" type="submit">Add Bid</button>
+                            </form>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
             </div>
         </div>
         <div class="row">
@@ -73,71 +105,41 @@
                     {% endif %}
                     </ul>
                 </nav>
-
-                <!-- If user is logged in -->
-                {% if user.is_authenticated %}
-                    <!-- Add/remove listing to watchlist -->
-                    <form action="{% url 'listing_page' listing.id %}" method="post">
-                        {% csrf_token %}
-                        <input type="hidden" name="listing_id" value="{{ listing.id }}">
-                        {% if is_watched %}
-                            <!-- If the user is watching the listing, show the "Remove from Watchlist" button -->
-                            <button type="submit" name="action" value="remove">Remove from Watchlist</button>
-                        {% else %}
-                            <!-- If the user is not watching the listing, show the "Add to Watchlist" button -->
-                            <button type="submit" name="action" value="add">Add to Watchlist</button>
-                        {% endif %}
-                    </form>
-
-                    <!-- Close auction if creator of active listing -->
-                    {% if listing.creator == user %}
-                        {% if listing.is_active %}
-                            <form action="{% url 'update_listing_status' listing.id %}" method="post" >
-                                {% csrf_token %}
-                                <button class="btn btn-secondary" type="submit">Close Auction</button>
-                            </form>
-                        {% endif %}
-                    <!-- Allow user to bid on item -->
-                    {% else %}
-                        {% if listing.is_active %}
-                            {% if bid_form %}
-                                <form action="{% url 'listing_page' listing.id %}" method="post" >
-                                    {% csrf_token %}
-                                    {{ bid_form }}
-                                    <button class="btn btn-secondary" type="submit">Add Bid</button>
-                                </form>
-                            {% endif %}
-                        {% endif %}
-
-                            <!-- Display success or error messages -->
-                        {% if bid_message %}
-                            <p>{{ bid_message }}</p>
-                        {% endif %}
-                    {% endif %}
-
-                    <!-- If winning bidder, display message -->
-                    {% if listing.winning_bidder == user and listing.is_active is False %}
-                        <div class="alert alert-success" role="alert">
-                            You have won this auction!
-                        </div>
-                    {% endif %}
-
-                    <!-- Add comment -->
-                    {% if comment_form %}
-                    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#comment-form" aria-expanded="false" aria-controls="comment-form">
-                        Add a Comment
-                    </button>
-                        <div class="collapse" id="comment-form">
-                            <form action="{% url 'listing_page' listing.id %}" method="post">
-                                {% csrf_token %}
-                                {{ comment_form }}
-                                <input type="submit" value="Submit">
-                            </form>
-                        </div>
-                    {% endif %}
-                {% endif %}
             </div>
         </div>
+        
+        <!-- If user is logged in -->
+        {% if user.is_authenticated %}
+            <!-- Add comment -->
+            {% if comment_form %}
+                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#comment-form" aria-expanded="false" aria-controls="comment-form">
+                    Add a Comment
+                </button>
+                <div class="collapse" id="comment-form">
+                    <form action="{% url 'listing_page' listing.id %}" method="post">
+                        {% csrf_token %}
+                        {{ comment_form }}
+                        <input type="submit" value="Submit" class="btn btn-primary">
+                    </form>
+                </div>
+            {% endif %}
+            <!-- Close auction if creator of active listing -->
+            {% if listing.creator == user %}
+                {% if listing.is_active %}
+                    <form action="{% url 'update_listing_status' listing.id %}" method="post" >
+                        {% csrf_token %}
+                        <button class="btn btn-secondary" type="submit">Close Auction</button>
+                    </form>
+                {% endif %}
+            {% endif %}
+
+            <!-- If winning bidder, display message -->
+            {% if listing.winning_bidder == user and listing.is_active is False %}
+                <div class="alert alert-success" role="alert">
+                    You have won this auction!
+                </div>
+            {% endif %}
+        {% endif %}
     </div>
 
 {% endblock %}

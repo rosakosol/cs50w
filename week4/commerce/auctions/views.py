@@ -20,12 +20,6 @@ def index(request):
         "listings": listings
     })
         
-
-# Create a new listing
-def create_listing(request):
-    pass
-
-
 # Display listing page
 def listing_page(request, listing_id):
     # Get the current logged-in user
@@ -88,31 +82,33 @@ def listing_page(request, listing_id):
                     bid.listing = listing
                     bid.save()
                     listing.refresh_from_db()
-                    bid_message = "Your bid has been placed successfully!"
+                    messages.success(request, "Your bid has been placed successfully!")
                     # Refresh the bid form
                     bid_form = BidForm()
                     
                 # Else if bid is invalid
                 else:
-                    bid_message = "Your bid must be higher than the current bid."
+                    messages.error(request, "Your bid must be higher than the current bid!")
                     # Refresh the bid form
                     bid_form = BidForm()
             else:
                 # Refresh the bid form
                 bid_form = BidForm()
+                
+        # If user is logged in, spin up empty forms
         else:
             bid_form = BidForm()
             comment_form = CommentForm() 
             watchlist_Form = WatchlistForm()
-            bid_message = None
-            is_watched = Watchlist.objects.filter(user=request.user, listing=listing).exists()
+        
+        # Initialise is_watched attribute after POST request but before page rendered regardless of user status
+        is_watched = Watchlist.objects.filter(user=request.user, listing=listing).exists()
 
     # If user isn't signed in, they cannot bid or write comments
     else:
         bid_form = None
         comment_form = None
-        bid_message = None
-        is_watched = Watchlist.objects.filter(user=request.user, listing=listing).exists()
+        is_watched = False
     
     return render(request, 'auctions/listing.html', {
         "user": user,
@@ -122,7 +118,6 @@ def listing_page(request, listing_id):
         "page_obj": page_obj,
         "bid_form": bid_form,
         "comment_form": comment_form,
-        "bid_message": bid_message,
         "is_watched": is_watched
     })
 
