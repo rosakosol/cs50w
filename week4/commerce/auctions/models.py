@@ -34,8 +34,8 @@ class Listing(models.Model):
         if highest_bid:
             return highest_bid
         else:
-            # If there are no other bids other than the starting bid
-            return self.starting_bid
+            # If there are no other bids other than the starting bid, return False
+            return False
 
 
 # Custom Validator for starting bids using Create New Listing Form

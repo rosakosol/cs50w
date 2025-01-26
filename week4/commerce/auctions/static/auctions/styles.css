@@ -112,9 +112,8 @@ header {
 }
 
 .listing-img {
-    height: 300px;
+    width: 300px;
     margin-right: 20px;
-    flex-grow: 1;
 }
 
 .listing-details {

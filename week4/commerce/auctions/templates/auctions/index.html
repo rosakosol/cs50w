@@ -20,7 +20,11 @@
                     <div class="listing-details">
                         <div class="listing-main-desc">
                             <h3><a href="{% url 'listing_page' listing.id %}">{{ listing.name }}</a></h3>
-                            <h4>Current Bid: ${{ listing.current_highest_bid }}</h4>
+                            {% if listing.current_highest_bid %}
+                                <h4>Current Bid: ${{ listing.current_highest_bid }}</h4>
+                            {% else %}
+                                <h4>Starting Bid: ${{ listing.starting_bid }}</h4>
+                            {% endif %}
                         </div>
                         <hr class="listing-hr">
                         {% if listing.category %}
