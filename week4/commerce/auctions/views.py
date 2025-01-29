@@ -31,7 +31,7 @@ def listing_page(request, listing_id):
     comments = listing.comments.all().order_by('-created_at')
     
     # Pagination for comments
-    paginator = Paginator(comments, 3)  # Show 10 comments per page
+    paginator = Paginator(comments, 3)  # Show 3 comments per page
     page_number = request.GET.get("page")  # Get the page number from the URL query string
     page_obj = paginator.get_page(page_number)  # Get the page of comments
     
@@ -42,6 +42,7 @@ def listing_page(request, listing_id):
             if watchlist_form.is_valid():
                 action = watchlist_form.cleaned_data["action"]
 
+                # If adding item to watchlist
                 if action == "add":
                     # Check if listing is already in user's watchlist
                     if not Watchlist.objects.filter(user=user, listing=listing).exists():
@@ -61,16 +62,19 @@ def listing_page(request, listing_id):
                 return HttpResponseRedirect(reverse("listing_page", args=[listing_id]))
             
             
+            # Add comment submitted from form
             comment_form = CommentForm(request.POST)
             if comment_form.is_valid():
                 new_comment = Comment()
                 new_comment.content = comment_form.cleaned_data["content"]
                 new_comment.user = user
                 new_comment.listing = listing
-                new_comment.save()              
-                return HttpResponseRedirect(reverse("listing_page", args=[listing_id]))  # Redirect to the same page to show the new comment
+                new_comment.save()           
+                # Redirect to the same page to show the new comment   
+                return HttpResponseRedirect(reverse("listing_page", args=[listing_id]))  
 
-            bid_form = BidForm(request.POST)  # Bind form with POST data
+            # Add bid submitted from form
+            bid_form = BidForm(request.POST)
             if bid_form.is_valid():
                 bid = Bid()
                 bid.current = bid_form.cleaned_data["bid_amount"]
@@ -202,6 +206,8 @@ def create_listing(request):
     
     if user.is_authenticated:
         if request.method == "POST":
+            
+            # Create Listing Form
             create_form = CreateForm(request.POST)
             if create_form.is_valid():
                 new_listing = Listing()
@@ -212,7 +218,8 @@ def create_listing(request):
                 new_listing.creator = user
                 new_listing.category = create_form.cleaned_data["category"]
                 new_listing.save()              
-                return HttpResponseRedirect(reverse("listing_page", args=[new_listing.id]))  # Redirect to the same page to show the new comment
+                # Redirect to the same page to show the new comment
+                return HttpResponseRedirect(reverse("listing_page", args=[new_listing.id]))  
         
         else:
             create_form = CreateForm()
@@ -223,7 +230,7 @@ def create_listing(request):
     })
         
 
-
+# Login page
 def login_view(request):
     if request.method == "POST":
 
@@ -244,11 +251,12 @@ def login_view(request):
         return render(request, "auctions/login.html")
 
 
+# Logout and redirect to index
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
 
-
+# Register page
 def register(request):
     if request.method == "POST":
         username = request.POST["username"]

@@ -24,7 +24,7 @@
                         <a class="nav-link" href="{% url 'categories' %}">Categories</a>
                     </li>
 
-                    <!-- If user is logged in -->
+                    <!-- If user is logged in, they see watchlist, create new listing and logout -->
                     {% if user.is_authenticated %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'watchlist' %}">Watchlist</a>
@@ -78,11 +78,6 @@
                 {% endif %}
             </ol>
         </nav>
-
-
-
-
-
         {% block body %}
         {% endblock %}
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

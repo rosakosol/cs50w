@@ -2,7 +2,6 @@
 
 {% block body %}
     <h2>{{ listing.name }}</h2>
-
     <!-- Listing details -->
     {% if messages %}
     <div class="messages">
@@ -36,11 +35,14 @@
                     </form>
                 {% endif %}
             </div>
+            <!-- Listing Details -->
             <div class="listing-details">
                 <div class="listing-main-desc">
                     <h3><a href="{% url 'listing_page' listing.id %}">{{ listing.name }}</a></h3>
+                    
+                    <!-- If the listing has a bid, show it otherwise revert to starting bid -->
                     {% if listing.current_highest_bid %}
-                    <h4>Current Bid: ${{ listing.current_highest_bid }}</h4>
+                        <h4>Current Bid: ${{ listing.current_highest_bid }}</h4>
                     {% else %}
                         <h4>Starting Bid: ${{ listing.starting_bid }}</h4>
                     {% endif %}
@@ -51,6 +53,7 @@
                 {% endif %}
                 <p>Description: {{ listing.description }}</p>
 
+                <!-- If user is logged in -->
                 {% if user.is_authenticated %}
                     <!-- Allow user to bid on item -->
                     {% if listing.is_active %}
@@ -110,7 +113,7 @@
         
         <!-- If user is logged in -->
         {% if user.is_authenticated %}
-            <!-- Add comment -->
+            <!-- Add Comment Form -->
             {% if comment_form %}
                 <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#comment-form" aria-expanded="false" aria-controls="comment-form">
                     Add a Comment
@@ -123,7 +126,7 @@
                     </form>
                 </div>
             {% endif %}
-            <!-- Close auction if creator of active listing -->
+            <!-- Close auction button if creator of active listing -->
             {% if listing.creator == user %}
                 {% if listing.is_active %}
                     <form action="{% url 'update_listing_status' listing.id %}" method="post" >

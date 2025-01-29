@@ -3,7 +3,7 @@
 {% block body %}
     <h2>{{ listing.name }}</h2>
 
-    <!-- Listing details -->
+    <!-- Listing Details -->
     <div class="listing-container">
         <div class="row">
             <div class="listing-img">
@@ -65,6 +65,7 @@
                     </ul>
                 </nav>
 
+                <!-- Form to add a new comment -->
                 <div>
                     <form action="{% url 'new_comment' %}" method="post">
                         {% csrf_token %}

@@ -2,7 +2,6 @@
 
 {% block body %}
     <h2>Active Listings</h2>
-
     <!-- Loop through each active listing -->
     {% for listing in listings %}
         {% if listing.is_active %}
@@ -17,9 +16,12 @@
                             <p>No image available</p>
                         {% endif %}
                     </div>
+                    <!-- Listing Details -->
                     <div class="listing-details">
                         <div class="listing-main-desc">
                             <h3><a href="{% url 'listing_page' listing.id %}">{{ listing.name }}</a></h3>
+
+                            <!-- If the listing has a bid, show it otherwise revert to starting bid -->
                             {% if listing.current_highest_bid %}
                                 <h4>Current Bid: ${{ listing.current_highest_bid }}</h4>
                             {% else %}
