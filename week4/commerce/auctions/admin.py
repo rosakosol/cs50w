@@ -19,19 +19,21 @@ class ListingAdmin(admin.ModelAdmin):
     ordering = ('created_at',) 
     
     def winning_bidder(self, obj):
-        highest_bid = obj.current_highest_bid()
+        if obj.current_highest_bid():
+            highest_bid = obj.current_highest_bid()
         
-        if highest_bid != obj.starting_bid:
-            return highest_bid.user
+            if highest_bid != obj.starting_bid:
+                return highest_bid.user
         else:
             return "N/A"
     winning_bidder.short_description = 'Winning Bidder'
 
     def winning_bid(self, obj):
-        highest_bid = obj.current_highest_bid()
+        if obj.current_highest_bid():
+            highest_bid = obj.current_highest_bid()
         
-        if highest_bid != obj.starting_bid:
-            return highest_bid.current
+            if highest_bid != obj.starting_bid:
+                return highest_bid.current
         else:
             return "N/A"
     winning_bid.short_description = 'Winning Bid'
