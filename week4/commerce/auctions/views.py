@@ -28,7 +28,7 @@ def listing_page(request, listing_id):
     # Get listing by unique id
     listing = Listing.objects.get(pk=listing_id)
     category = listing.category
-    comments = listing.comments.all().order_by('-created_at')
+    comments = listing.comments.all().order_by("-created_at")
     
     # Pagination for comments
     paginator = Paginator(comments, 3)  # Show 3 comments per page
@@ -50,7 +50,7 @@ def listing_page(request, listing_id):
                         messages.success(request, "Item added to watchlist.")
                         
                 # Handle removing the listing from the watchlist
-                elif action == 'remove':
+                elif action == "remove":
                     
                     watchlist_item = Watchlist.objects.filter(user=request.user, listing=listing).first()
                     if watchlist_item:
@@ -114,7 +114,7 @@ def listing_page(request, listing_id):
         comment_form = None
         is_watched = False
     
-    return render(request, 'auctions/listing.html', {
+    return render(request, "auctions/listing.html", {
         "user": user,
         "listing": listing,
         "category": category,

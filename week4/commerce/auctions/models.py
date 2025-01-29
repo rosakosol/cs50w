@@ -5,7 +5,7 @@ from django.utils import timezone
 from django.core.exceptions import ValidationError
 
 class User(AbstractUser):
-    image = models.ImageField(upload_to='images/%Y/%m/%d/', null=True, blank=True)
+    image = models.ImageField(upload_to="images/%Y/%m/%d/", null=True, blank=True)
     
         
 class Category(models.Model):
@@ -21,16 +21,16 @@ class Listing(models.Model):
     winning_bidder = models.ForeignKey(User, on_delete=models.CASCADE, related_name="winning_bidder_listings", null=True)
     is_active = models.BooleanField(default=True)
     image_url = models.URLField(max_length=200, null=True, blank=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='listings', null=True, blank=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="listings", null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_listings', default=1)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name="created_listings", default=1)
     
     def __str__(self):
         return self.name
     
     def current_highest_bid(self):
         # self.bids is a reverse relationship to Bid model -> gets all bids linked to listing
-        highest_bid = self.bids.all().order_by('-current').first()
+        highest_bid = self.bids.all().order_by("-current").first()
         if highest_bid:
             return highest_bid
         else:
@@ -48,10 +48,10 @@ def validate_bid(value):
 class CreateForm(forms.Form):
     name = forms.CharField(max_length=64)
     description = forms.CharField(
-        label='Content',
+        label="Content",
         widget=forms.Textarea(attrs={
-            'rows': 10,
-            'cols': 80
+            "rows": 10,
+            "cols": 80
         }))
     starting_bid = forms.DecimalField(
         max_digits=10, 
@@ -62,7 +62,7 @@ class CreateForm(forms.Form):
     category = forms.ModelChoiceField(
         queryset=Category.objects.all(),
         empty_label="Select a category",
-        widget=forms.Select(attrs={'class': 'form-control'}),
+        widget=forms.Select(attrs={"class": "form-control"}),
         required=False
     )
     
@@ -75,11 +75,11 @@ class Watchlist(models.Model):
     
 class WatchlistForm(forms.Form):
     listing_id = forms.IntegerField(widget=forms.HiddenInput())
-    action = forms.ChoiceField(choices=[('add', 'Add'), ('remove', 'Remove')], widget=forms.HiddenInput())
+    action = forms.ChoiceField(choices=[("add", "Add"), ("remove", "Remove")], widget=forms.HiddenInput())
 
     
 class Bid(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bids', default=1)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bids", default=1)
     current = models.DecimalField(default=0.01, max_digits=10, decimal_places=2)
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="bids", default=1)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -90,20 +90,20 @@ class Bid(models.Model):
     
 class BidForm(forms.Form):
     bid_amount = forms.DecimalField(
-        label='Bid Amount',
+        label="Bid Amount",
         max_digits=10,  # Adjust the total digits allowed (including the decimal part)
         decimal_places=2,  # Ensure only 2 decimal places
         widget=forms.NumberInput(attrs={
-            'placeholder': 'Enter bid amount',
-            'min': '0.01',
-            'step': '0.01'
+            "placeholder": "Enter bid amount",
+            "min": "0.01",
+            "step": "0.01"
         })
     )
 
 
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
-    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name='comments', default=1)
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="comments", default=1)
     content = models.TextField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -112,10 +112,10 @@ class Comment(models.Model):
 
 class CommentForm(forms.Form):
     content = forms.CharField(
-        label='',
+        label="",
         widget=forms.Textarea(attrs={
-            'rows': 10,
-            'cols': 80
+            "rows": 10,
+            "cols": 80
         })
     )
 
