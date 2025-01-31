@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Exchange</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelector("form").onsubmit = function() {
+                // Fetch data from API
+                const apiKey = "a29ea031ecd9960963a306c5b749e93f";
+                const url = `https://api.exchangeratesapi.io/latest?access_key=${apiKey}`;
+
+                fetch(url)
+                // Then convert response into a JSON object
+                .then(response => response.json())
+
+                // Then print out data to console
+                .then(data => {
+                    const currency = document.querySelector("#currency").value;
+                    const rate = data.rates[currency];
+
+                    if (rate !== undefined) {
+                        document.querySelector("#result").innerHTML = `1 USD is equal to ${rate.toFixed(3)} AUD`
+                    } else {
+                        document.querySelector("#result").innerHTML = "Invalid currency";
+                    }
+                })
+                return false;
+            }
+            
+
+        })
+    </script>
+</head>
+<body>
+    <form>
+        <input id="currency" placeholder="Currency" type="text">
+        <input type="submit" value="Convert">
+    </form>
+    <div id="result">
+
+    </div>
+</body>
+</html>
