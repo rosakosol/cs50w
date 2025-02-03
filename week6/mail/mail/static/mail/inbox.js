@@ -34,6 +34,7 @@ function compose_email() {
           body: body
       })
     })
+    
     .then(response => response.json())
     .then(result => {
         // Print result
@@ -47,13 +48,12 @@ function load_mailbox(mailbox) {
   // Show the mailbox and hide other views
   document.querySelector('#emails-view').style.display = 'block';
   document.querySelector('#compose-view').style.display = 'none';
+  document.querySelector('#single-email-view').style.display = 'none';
 
   // Show the mailbox name
   document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
 
   // Get emails
-  console.log(mailbox)
-
   fetch(`/emails/${mailbox}`, {
     method: 'GET', 
   })
@@ -62,9 +62,6 @@ function load_mailbox(mailbox) {
   .then(response => response.json())
 
   .then(data => {
-    // Handle the received emails
-    console.log('Emails in', mailbox, ':', data);
-
     const emailContainer = document.querySelector('#emails-view');
 
     data.forEach((email) => {
@@ -73,41 +70,112 @@ function load_mailbox(mailbox) {
       emailElement.classList.add('email-container');
       emailContainer.appendChild(emailElement);
 
+      // If in sent mailbox, do not show sender
+      if (mailbox === "sent") {
+        const recipientsElement = document.createElement('p');
+        recipientsElement.classList.add('email-from-to');
+        recipientsElement.textContent = `To: ${email.recipients}`;
+        emailElement.appendChild(recipientsElement);
+      }
+
+  
+      // If in inbox mailbox, show sender
+      if (mailbox === "inbox") {
+        const senderElement = document.createElement('p');
+        senderElement.classList.add('email-from-to');
+        senderElement.textContent = `${email.sender}`;
+        emailElement.appendChild(senderElement);
+      }
+
+      // Display subject
+      const subjectElement = document.createElement('p');  
+      subjectElement.classList.add('email-subject');
+      subjectElement.textContent = `Subject: ${email.subject}`;
+      emailElement.appendChild(subjectElement);
+
+      
       // Display time stamp
       const timeElement = document.createElement('h5');  
       timeElement.textContent = email.timestamp;
       emailElement.appendChild(timeElement);
 
-      // Display subject
-      const subjectElement = document.createElement('h4');  
-      subjectElement.textContent = `Subject: ${email.subject}`;
-      emailElement.appendChild(subjectElement);
+      // Add event listener to load email when clicked
+      emailElement.addEventListener('click', () => load_single_email(email));
+    }); 
+  });
+}
 
-      // Display body
-      const bodyElement = document.createElement('p');  
-      bodyElement.textContent = `Body: ${email.body}`;
-      emailElement.appendChild(bodyElement);
+// Load single email details when clicked and mark as read
+function load_single_email(email) {
+  // Show the email detail view and hide other views
+  document.querySelector('#emails-view').style.display = 'none';
+  document.querySelector('#single-email-view').style.display = 'block';
 
-      // If in inbox mailbox, show sender an recipients
-      if (mailbox === "inbox") {
-        
-      }
+  const emailDetailContainer = document.querySelector('#single-email-view');
+  // Clear view
+  emailDetailContainer.innerHTML = ''
 
-      // If in sent mailbox, do not show sender
-      if (mailbox === "sent") {
-        const recipientsElement = document.createElement('p');
-        recipientsElement.textContent = `Recipients: ${email.recipients}`;
-        emailElement.appendChild(recipientsElement);
-      }
-
-
-
-
-    });
-
-    
+  // Mark email as read
+  fetch(`/emails/${email.id}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+      read: true
+    })
   })
 
+  // Check if email was marked as read successfully
+  .then(response => {
+    if (response.ok) return response.json();
+    else return {};
+  })
 
+  .then(result => {
+      // Print result
+      console.log(result);
+  })
 
+  // Check if email is archived/unarchived
+  
+
+  // Create separate div for each email
+  const emailElement = document.createElement('div');
+  emailElement.classList.add('single-email-container');
+  emailDetailContainer.appendChild(emailElement);
+
+  // Display time stamp
+  const timeElement = document.createElement('h5');  
+  timeElement.textContent = email.timestamp;
+  emailElement.appendChild(timeElement);
+
+  // Sender
+  const senderElement = document.createElement('p');
+  senderElement.classList.add('email-from-to');
+  senderElement.textContent = `${email.sender}`;
+  emailElement.appendChild(senderElement);
+
+  // Recipients
+  const recipientsElement = document.createElement('p');
+  recipientsElement.classList.add('email-from-to');
+  recipientsElement.textContent = `To: ${email.recipients}`;
+  emailElement.appendChild(recipientsElement);
+
+  // Display subject
+  const subjectElement = document.createElement('p');  
+  subjectElement.classList.add('email-subject');
+  subjectElement.textContent = `Subject: ${email.subject}`;
+  emailElement.appendChild(subjectElement);
+
+  // Reply button
+  const replyElement = document.createElement('button');
+  replyElement.classList.add('btn', 'btn-sm', 'btn-outline-primary');
+  replyElement.textContent = 'Reply';
+  replyElement.addEventListener('click', () => replyToEmail(email));
+
+  emailElement.appendChild(replyElement);
+
+  // Body
+  const bodyElement = document.createElement('p');
+  bodyElement.classList.add('email-body');
+  bodyElement.textContent = `${email.body}`;
+  emailElement.appendChild(bodyElement);
 }

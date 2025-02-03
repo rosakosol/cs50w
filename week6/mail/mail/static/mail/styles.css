@@ -23,9 +23,33 @@ h5 {
     color: rgba(0, 0, 0, 0.5);
 }
 
+.email-from-to {
+    font-weight: bold;
+    width: 25%;
+}
+
+.email-subject {
+    font-weight: bold;
+    width: 50%;
+}
+
+.email-body {
+    margin: 20px 0;
+}
+
 .email-container {
     border: 2px solid rgba(122, 136, 141, 0.26);
     border-radius: 10px;
     margin: 10px 0;
     padding: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.email-container:hover {
+    cursor: pointer;
+}
+
+.single-email-container {
+    display: block;
 }
