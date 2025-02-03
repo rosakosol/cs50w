@@ -23,6 +23,10 @@ h5 {
     color: rgba(0, 0, 0, 0.5);
 }
 
+button {
+    margin: 15px 0;
+}
+
 .email-from-to {
     font-weight: bold;
     width: 25%;
@@ -31,10 +35,6 @@ h5 {
 .email-subject {
     font-weight: bold;
     width: 50%;
-}
-
-.email-body {
-    margin: 20px 0;
 }
 
 .email-container {

@@ -22,6 +22,9 @@ function compose_email() {
   document.querySelector('#compose-body').value = '';
 
   document.querySelector("#compose-form").onsubmit = function() {
+    // Stop default behaviour after form submission which is to reload webpage
+    preventDefault();
+
     const recipients = document.querySelector("#compose-recipients").value;
     const subject = document.querySelector("#compose-subject").value;
     const body = document.querySelector("#compose-body").value;
@@ -39,7 +42,11 @@ function compose_email() {
     .then(result => {
         // Print result
         console.log(result);
+
+        // If successful then reload sent inbox
+        load_mailbox('sent');
     });
+
   };
 }
 
@@ -63,6 +70,9 @@ function load_mailbox(mailbox) {
 
   .then(data => {
     const emailContainer = document.querySelector('#emails-view');
+
+    // Print result
+    console.log(data);
 
     data.forEach((email) => {
       // Create separate div for each email
@@ -123,24 +133,41 @@ function load_single_email(email) {
     })
   })
 
-  // Check if email was marked as read successfully
-  .then(response => {
-    if (response.ok) return response.json();
-    else return {};
+  // Get the email and check if it was marked as read
+  fetch(`/emails/${email.id}`, {
+    method: 'GET',
   })
 
-  .then(result => {
-      // Print result
-      console.log(result);
+  .then(response => response.json())
+  .then(data => {
+    if (data.read) {
+      console.log("Email marked as read.")
+    } else {
+      console.log("Error: Email could not be marked as read!")
+    }
   })
-
-  // Check if email is archived/unarchived
-  
 
   // Create separate div for each email
   const emailElement = document.createElement('div');
   emailElement.classList.add('single-email-container');
   emailDetailContainer.appendChild(emailElement);
+
+  // Archive or unarchive email
+  if (email.archived) {
+    // Create unarchive button
+    const unarchiveElement = document.createElement('button');
+    unarchiveElement.classList.add('btn', 'btn-sm', 'btn-outline-primary');
+    unarchiveElement.textContent = 'Unarchive';
+    unarchiveElement.addEventListener('click', () => archive_email(email));
+    emailElement.appendChild(unarchiveElement);
+  } else {
+    // Create archive button
+    const archiveElement = document.createElement('button');
+    archiveElement.classList.add('btn', 'btn-sm', 'btn-outline-primary');
+    archiveElement.textContent = 'Archive';
+    archiveElement.addEventListener('click', () => archive_email(email));
+    emailElement.appendChild(archiveElement);
+  }
 
   // Display time stamp
   const timeElement = document.createElement('h5');  
@@ -169,8 +196,7 @@ function load_single_email(email) {
   const replyElement = document.createElement('button');
   replyElement.classList.add('btn', 'btn-sm', 'btn-outline-primary');
   replyElement.textContent = 'Reply';
-  replyElement.addEventListener('click', () => replyToEmail(email));
-
+  replyElement.addEventListener('click', () => reply_email(email));
   emailElement.appendChild(replyElement);
 
   // Body
@@ -178,4 +204,31 @@ function load_single_email(email) {
   bodyElement.classList.add('email-body');
   bodyElement.textContent = `${email.body}`;
   emailElement.appendChild(bodyElement);
+}
+
+function reply_email(email) {
+
+}
+
+function archive_email(email) {
+  // Mark email as archived if unarchived
+  if (email.archived) {
+    fetch(`/emails/${email.id}`, {
+      method: 'PUT',
+      body: JSON.stringify({
+        archived: true
+      })
+    })
+  } 
+  // Mark email as unarchived if archived
+  else {
+    fetch(`/emails/${email.id}`, {
+      method: 'PUT',
+      body: JSON.stringify({
+        archived: false
+      })
+    })
+  }
+  load_mailbox('inbox');
+
 }
