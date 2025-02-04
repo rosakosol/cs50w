@@ -94,14 +94,17 @@ function load_mailbox(mailbox) {
           emailElement.appendChild(senderElement);
         }
 
+        if (email.read) {
+          emailElement.classList.add('read-email');
+        }
 
-        // Display subject
+        // Subject
         const subjectElement = document.createElement('p');  
         subjectElement.classList.add('email-subject');
         subjectElement.textContent = `Subject: ${email.subject}`;
         emailElement.appendChild(subjectElement);
         
-        // Display time stamp
+        // Time stamp
         const timeElement = document.createElement('h5');  
         timeElement.textContent = email.timestamp;
         emailElement.appendChild(timeElement);
@@ -139,9 +142,10 @@ function load_single_email(email) {
   .then(response => response.json())
   .then(data => {
     if (data.read) {
-      console.log("Email marked as read.")
+      console.log("Email marked as read.");
+      return email;
     } else {
-      console.log("Error: Email could not be marked as read!")
+      console.log("Error: Email could not be marked as read!");
     }
   })
 
@@ -150,24 +154,29 @@ function load_single_email(email) {
   emailElement.classList.add('single-email-container');
   emailDetailContainer.appendChild(emailElement);
 
-  // Archive or unarchive email
-  if (email.archived) {
-    // Create unarchive button
-    const unarchiveElement = document.createElement('button');
-    unarchiveElement.classList.add('btn', 'btn-sm', 'btn-outline-primary');
-    unarchiveElement.textContent = 'Unarchive';
-    unarchiveElement.addEventListener('click', () => archive_email(email));
-    emailElement.appendChild(unarchiveElement);
-  } else {
-    // Create archive button
-    const archiveElement = document.createElement('button');
-    archiveElement.classList.add('btn', 'btn-sm', 'btn-outline-primary');
-    archiveElement.textContent = 'Archive';
-    archiveElement.addEventListener('click', () => archive_email(email));
-    emailElement.appendChild(archiveElement);
+  // Check if email is in sent inbox by comparing sender with current user
+  var userEmail = document.querySelector('h2').getAttribute('data-email');
+ 
+  // Show archive or unarchive buttons if email is not in sent inbox
+  if (email.sender != userEmail) {
+    if (email.archived) {
+      // Create unarchive button
+      const unarchiveElement = document.createElement('button');
+      unarchiveElement.classList.add('btn', 'btn-sm', 'btn-outline-primary');
+      unarchiveElement.textContent = 'Unarchive';
+      unarchiveElement.addEventListener('click', () => archive_email(email));
+      emailElement.appendChild(unarchiveElement);
+    } else {
+      // Create archive button
+      const archiveElement = document.createElement('button');
+      archiveElement.classList.add('btn', 'btn-sm', 'btn-outline-primary');
+      archiveElement.textContent = 'Archive';
+      archiveElement.addEventListener('click', () => archive_email(email));
+      emailElement.appendChild(archiveElement);
+    }
   }
 
-  // Display time stamp
+  // Time stamp
   const timeElement = document.createElement('h5');  
   timeElement.textContent = email.timestamp;
   emailElement.appendChild(timeElement);
@@ -184,7 +193,7 @@ function load_single_email(email) {
   recipientsElement.textContent = `To: ${email.recipients}`;
   emailElement.appendChild(recipientsElement);
 
-  // Display subject
+  // Subject
   const subjectElement = document.createElement('p');  
   subjectElement.classList.add('email-subject');
   subjectElement.textContent = `Subject: ${email.subject}`;
@@ -205,7 +214,42 @@ function load_single_email(email) {
 }
 
 function reply_email(email) {
+  // Show compose view and hide other views
+  document.querySelector('#single-email-view').style.display = 'none';
+  document.querySelector('#compose-view').style.display = 'block';
 
+  // Clear out composition fields
+  document.querySelector('#compose-recipients').value = email.sender;
+  document.querySelector('#compose-subject').value = `Re: ${email.subject}`;
+  document.querySelector('#compose-body').value = `On ${email.timestamp} ${email.sender} wrote: ${email.body}\n\n`;
+
+  document.querySelector("#compose-form").onsubmit = function() {
+    // Stop default behaviour after form submission which is to reload webpage
+    event.preventDefault();
+
+    const recipients = document.querySelector("#compose-recipients").value;
+    const subject = document.querySelector("#compose-subject").value;
+    const body = document.querySelector("#compose-body").value;
+
+    fetch('/emails', {
+      method: 'POST',
+      body: JSON.stringify({
+          recipients: recipients,
+          subject: subject,
+          body: body
+      })
+    })
+    
+    .then(response => response.json())
+    .then(result => {
+        // Print result
+        console.log(result);
+
+        // If successful then reload sent inbox
+        load_mailbox('sent');
+    });
+
+  };
 }
 
 function archive_email(email) {
@@ -253,7 +297,6 @@ function archive_email(email) {
       }
     })
   }
-
 
   // Reload inbox
   load_mailbox('inbox');

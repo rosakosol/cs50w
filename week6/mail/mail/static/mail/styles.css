@@ -53,3 +53,7 @@ button {
 .single-email-container {
     display: block;
 }
+
+.read-email {
+    background: gray;
+}
