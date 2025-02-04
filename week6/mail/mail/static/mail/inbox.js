@@ -80,37 +80,35 @@ function load_mailbox(mailbox) {
       emailElement.classList.add('email-container');
       emailContainer.appendChild(emailElement);
 
-      // If in sent mailbox, do not show sender
-      if (mailbox === "sent") {
-        const recipientsElement = document.createElement('p');
-        recipientsElement.classList.add('email-from-to');
-        recipientsElement.textContent = `To: ${email.recipients}`;
-        emailElement.appendChild(recipientsElement);
+      if ((!email.archived && mailbox === "inbox") || (!email.archived && mailbox === "sent") || (email.archived && mailbox === "archive"))  {
+        // If in sent mailbox, do not show sender
+        if (mailbox === "sent") {
+          const recipientsElement = document.createElement('p');
+          recipientsElement.classList.add('email-from-to');
+          recipientsElement.textContent = `To: ${email.recipients}`;
+          emailElement.appendChild(recipientsElement);
+        } else {
+          const senderElement = document.createElement('p');
+          senderElement.classList.add('email-from-to');
+          senderElement.textContent = `${email.sender}`;
+          emailElement.appendChild(senderElement);
+        }
+
+
+        // Display subject
+        const subjectElement = document.createElement('p');  
+        subjectElement.classList.add('email-subject');
+        subjectElement.textContent = `Subject: ${email.subject}`;
+        emailElement.appendChild(subjectElement);
+        
+        // Display time stamp
+        const timeElement = document.createElement('h5');  
+        timeElement.textContent = email.timestamp;
+        emailElement.appendChild(timeElement);
+
+        // Add event listener to load email when clicked
+        emailElement.addEventListener('click', () => load_single_email(email));
       }
-
-  
-      // If in inbox mailbox, show sender
-      if (mailbox === "inbox") {
-        const senderElement = document.createElement('p');
-        senderElement.classList.add('email-from-to');
-        senderElement.textContent = `${email.sender}`;
-        emailElement.appendChild(senderElement);
-      }
-
-      // Display subject
-      const subjectElement = document.createElement('p');  
-      subjectElement.classList.add('email-subject');
-      subjectElement.textContent = `Subject: ${email.subject}`;
-      emailElement.appendChild(subjectElement);
-
-      
-      // Display time stamp
-      const timeElement = document.createElement('h5');  
-      timeElement.textContent = email.timestamp;
-      emailElement.appendChild(timeElement);
-
-      // Add event listener to load email when clicked
-      emailElement.addEventListener('click', () => load_single_email(email));
     }); 
   });
 }
@@ -212,12 +210,25 @@ function reply_email(email) {
 
 function archive_email(email) {
   // Mark email as archived if unarchived
-  if (email.archived) {
+  if (!email.archived) {
     fetch(`/emails/${email.id}`, {
       method: 'PUT',
       body: JSON.stringify({
         archived: true
       })
+    })
+
+    fetch(`/emails/${email.id}`, {
+      method: 'GET',
+    })
+  
+    .then(response => response.json())
+    .then(data => {
+      if (data.archived) {
+        console.log("Email marked as archived.")
+      } else {
+        console.log("Error: Email could not be marked as archived!")
+      }
     })
   } 
   // Mark email as unarchived if archived
@@ -228,7 +239,22 @@ function archive_email(email) {
         archived: false
       })
     })
-  }
-  load_mailbox('inbox');
 
+    fetch(`/emails/${email.id}`, {
+      method: 'GET',
+    })
+  
+    .then(response => response.json())
+    .then(data => {
+      if (!data.archived) {
+        console.log("Email marked as unarchived.")
+      } else {
+        console.log("Error: Email could not be marked as unarchived!")
+      }
+    })
+  }
+
+
+  // Reload inbox
+  load_mailbox('inbox');
 }
