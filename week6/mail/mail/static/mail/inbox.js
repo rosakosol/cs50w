@@ -23,7 +23,7 @@ function compose_email() {
 
   document.querySelector("#compose-form").onsubmit = function() {
     // Stop default behaviour after form submission which is to reload webpage
-    preventDefault();
+    event.preventDefault();
 
     const recipients = document.querySelector("#compose-recipients").value;
     const subject = document.querySelector("#compose-subject").value;
@@ -273,6 +273,9 @@ function archive_email(email) {
       } else {
         console.log("Error: Email could not be marked as archived!")
       }
+
+      // Reload inbox
+      load_mailbox('inbox');
     })
   } 
   // Mark email as unarchived if archived
@@ -295,9 +298,11 @@ function archive_email(email) {
       } else {
         console.log("Error: Email could not be marked as unarchived!")
       }
+
+      // Reload inbox
+      load_mailbox('inbox');
     })
   }
 
-  // Reload inbox
-  load_mailbox('inbox');
+
 }
