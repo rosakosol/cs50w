@@ -32,9 +32,6 @@ def index(request):
     else:
         post_form = None
         
-        
-    
-        
     return render(request, "network/index.html", {
         "user": user,
         "post_form": post_form,
@@ -65,7 +62,20 @@ def like_post(request, post_id):
     like_count = post.likes.count()
     return JsonResponse({"like_count": like_count, "liked": liked})
 
-
+def profile_view(request, user_id):
+    user = request.user
+    followers = user.followers.count()
+    following = user.following.count()
+    
+    # If not user profile, display follow/unfollow button
+    
+    
+    
+    return render(request, "network/profile.html", {
+        "user": user,
+        "followers": followers,
+        "following": following
+    })
 
 
 def login_view(request):
