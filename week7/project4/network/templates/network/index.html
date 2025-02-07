@@ -1,5 +1,51 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-    TODO
+<h2>All Posts</h2>
+
+{% comment %} Only show New Post Form is user is logged in {% endcomment %}
+{% if user.is_authenticated %}
+    <div class="create-post-container">
+        <!-- Create Post Form -->
+        <form action="{% url 'index' %}" method="post" class="create-listing-form" enctype="multipart/form-data">
+            {% csrf_token %}
+            <h4>New Post</h4>
+            {{ post_form }}
+            <input type="submit" value="Submit" class="btn btn-primary">
+        </form>
+    </div>
+
+    {% comment %} Display all posts {% endcomment %}
+    <div class="all-posts-container">
+        {% for post in posts %}
+            <div class="post-container">
+                <div class="post-details" id="post-{{ post.id }}">
+                    <img src="{{ post.author.profile_picture.url }}" class="profile-img">
+                    <h5>{{ post.author }}</h5>
+                    <h5>{{ post.created_at }}</h5>
+                    <h5>{{ post.content }}</h5>
+                </div>
+
+                {% comment %} Only display like button if user is not author {% endcomment %}
+                {% if user.username != post.author %}
+                    <button class="like-btn" data-post-id="{{ post.id }}">
+                        {% if user in post.likes.all %}
+                            <p>Unlike</p>
+                        {% else %}
+                            <p>Like</p>
+                        {% endif %}
+                    </button>
+                {% endif %}
+
+                {% comment %} Display likecount {% endcomment %}
+                <div class="like-count" id="like-count-{{ post.id }}">
+                    {{ post.likes.count }}
+                </div>
+                <img src="{{ post.image.url }}" class="post-img">
+            </div>
+        {% endfor %}
+
+
+    </div>
+{% endif %}
 {% endblock %}

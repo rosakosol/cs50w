@@ -1,14 +1,67 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
+from django.core.paginator import Paginator
 
-from .models import User
+from .models import User, Post, PostForm, Follow, Like
 
 
 def index(request):
-    return render(request, "network/index.html")
+    user = request.user
+    posts = Post.objects.all()
+    
+    if user.is_authenticated:
+            if request.method == "POST":
+                post_form = PostForm(request.POST, request.FILES)
+                if post_form.is_valid():
+                    new_post = Post()
+                    new_post.author = user
+                    new_post.content = post_form.cleaned_data["content"]
+                    new_post.image = post_form.cleaned_data["image"]
+                    new_post.save()
+                    
+                    return HttpResponseRedirect(reverse("index"))
+                
+            else:
+                post_form = PostForm()
+    else:
+        post_form = None
+        
+        
+    
+        
+    return render(request, "network/index.html", {
+        "user": user,
+        "post_form": post_form,
+        "posts": posts
+    })
+
+def like_post(request, post_id):
+    user = request.user
+    post = None
+    
+    try:
+        post = Post.objects.get(pk=post_id)
+    except Post.DoesNotExist:
+        print("Post does not exist.")
+        return False
+    
+    # Check if user has already liked post
+    like_exists = Like.objects.filter(post=post, user=user).first()
+    
+    if like_exists:
+        like_exists.delete()
+        liked = False
+    else:
+        Like.objects.create(post=post, user=user)
+        liked = True
+    
+    like_count = post.likes.count()
+    return JsonResponse({"like_count": like_count, "liked": liked})
+
+
 
 
 def login_view(request):
