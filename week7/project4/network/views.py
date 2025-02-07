@@ -11,6 +11,9 @@ from .models import User, Post, PostForm, Follow, Like
 def index(request):
     user = request.user
     posts = Post.objects.all()
+    paginator = Paginator(posts, 10)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
     
     if user.is_authenticated:
             if request.method == "POST":
@@ -35,7 +38,8 @@ def index(request):
     return render(request, "network/index.html", {
         "user": user,
         "post_form": post_form,
-        "posts": posts
+        "posts": posts,
+        "page_obj": page_obj
     })
 
 def like_post(request, post_id):
