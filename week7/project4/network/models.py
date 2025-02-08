@@ -11,14 +11,10 @@ class User(AbstractUser):
     
 
 class Post(models.Model):
-    author = models.CharField(blank=True, null=True, default=None, max_length=64)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts', null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    content = models.TextField(default=None, null=True)
+    content = models.TextField(blank=True, default=None, null=True)
     image = models.ImageField(upload_to="images/Post/%d/%m/%y")
-    
-    def __str__(self):
-        return f"Post by {self.author.username} at {self.created_at}"
-    
     
 class PostView(ListView):
     paginate_by = 10

@@ -26,7 +26,7 @@
                         <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
                     </li>
                     <li class="nav-item profile-details">
-                        <a class="nav-link" href="#"><strong>{{ user.username }}</strong></a>
+                        <a class="nav-link" href="{% url 'profile' user.username %}"><strong>{{ user.username }}</strong></a>
                         <img src="{{ user.profile_picture.url }}" class="profile-img">
                     </li>
                 {% else %}

@@ -62,12 +62,13 @@ def like_post(request, post_id):
     like_count = post.likes.count()
     return JsonResponse({"like_count": like_count, "liked": liked})
 
-def profile_view(request, user_id):
+def profile_view(request, username):
     user = request.user
     followers = user.followers.count()
     following = user.following.count()
     
     # If not user profile, display follow/unfollow button
+    
     
     
     
