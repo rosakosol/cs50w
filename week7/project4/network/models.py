@@ -33,8 +33,8 @@ class PostForm(forms.ModelForm):
     
 
 class Follow(models.Model):
-    users = models.ForeignKey(User, on_delete=models.CASCADE, related_name='following')
-    follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name='followers')
+    users = models.ForeignKey(User, on_delete=models.CASCADE, related_name='followers')
+    follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name='following')
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):

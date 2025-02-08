@@ -1,8 +1,20 @@
 {% extends "network/layout.html" %}
 
+
 {% block body %}
-    <h2>{{ user.username }}</h2>
-    <p>{{ followers }}</p>
-    <p>{{ following }}</p>
+    <h2>{{ profile_user.username }}</h2>
+    <p class="follow-count" id="follow-count-{{ profile_user.username }}">Followers: {{ profile_user.followers.count }}</p>
+    <p>Following: {{ profile_user.following.count }}</p>
+
+    {% if user.username != profile_user.username %}
+    {% csrf_token %}
+    <button class="follow-btn" data-profile-username="{{ profile_user.username }}">
+        {% if is_following %}
+            <p>Unfollow</p>
+        {% else %}
+            <p>Follow</p>
+        {% endif %}
+    </button>
+{% endif %}
 
 {% endblock %}

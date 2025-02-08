@@ -15,6 +15,7 @@ def index(request):
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
     
+    # If user is logged in, show new post form
     if user.is_authenticated:
             if request.method == "POST":
                 post_form = PostForm(request.POST, request.FILES)
@@ -43,42 +44,77 @@ def like_post(request, post_id):
     user = request.user
     post = None
     
+    # Exception handling if post does not exist
     try:
         post = Post.objects.get(pk=post_id)
-    except Post.DoesNotExist:
+    except:
         print("Post does not exist.")
         return False
     
     # Check if user has already liked post
     like_exists = Like.objects.filter(post=post, user=user).first()
     
+    # If post already liked, delete the like
     if like_exists:
         like_exists.delete()
         liked = False
+        
+    # Else create a new Like object
     else:
         Like.objects.create(post=post, user=user)
         liked = True
     
+    # Count number of likes on post
     like_count = post.likes.count()
-    return JsonResponse({"like_count": like_count, "liked": liked})
-
-def profile_view(request, username):
-    user = request.user
-    followers = user.followers.count()
-    following = user.following.count()
     
-    # If not user profile, display follow/unfollow button
-    
-    
-    
-    
-    return render(request, "network/profile.html", {
-        "user": user,
-        "followers": followers,
-        "following": following
+    return JsonResponse({
+        "like_count": like_count, 
+        "liked": liked
     })
 
+def profile_view(request, username):
+    # Get User instance from profile username
+    profile_user = User.objects.get(username=username)
+    
+    # Check if user is following profile user
+    is_following = Follow.objects.filter(users=profile_user, follower=request.user).exists()
 
+    return render(request, "network/profile.html", {
+        "profile_user": profile_user,
+        "is_following": is_following,
+    })
+
+def follow_user(request, username):
+    user = request.user
+    profile_user = None
+    
+    # Exception handling if profile user does not exist
+    try:
+        profile_user = User.objects.get(username=username)
+        following_username = Follow.objects.filter(users=profile_user, follower=user)
+    except:
+        print("Profile does not exist.")
+        return False
+    
+    
+    # If user already following, then delete follow from list
+    if following_username.exists():
+        following_username.delete()
+        followed = False
+        
+    # Else create a new Follow object
+    else:
+        Follow.objects.create(users=profile_user, follower=user)
+        followed = True
+
+    # Get the follower count for the profile user
+    follow_count = profile_user.followers.count()
+    
+    return JsonResponse({
+        "follow_count": follow_count, 
+        "followed": followed
+    })
+    
 def login_view(request):
     if request.method == "POST":
 
