@@ -1,4 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Button to add new posts, will show/hide the new post form
+    const newPostButton = document.querySelector('#new-post-btn');
+
+    if (newPostButton) {
+        newPostButton.addEventListener('click', create_new_post);
+    }
 
     // Function to like post
     const likeButtons = document.querySelectorAll('.like-btn');
@@ -57,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Get the follow count element
                 const followCountElement = document.getElementById(`follow-count-${profileUsername}`);
-                const buttonText = this.querySelector('p');
+                const buttonText = this;
     
                 // Update the button text based on whether it's followed or not
                 if (data.followed) {
@@ -75,3 +81,28 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 });
+
+// Function to fade in/out the new post view on the index page
+function create_new_post() {
+    const createPostContainer = document.querySelector('#create-post-view');
+    const allPostsContainer = document.querySelector('.all-posts-container');
+
+    // If view is open, fade it out
+    if (createPostContainer.classList.contains('fade-in-down') || createPostContainer.classList.contains(''))  {
+        createPostContainer.classList.remove('fade-in-down');
+        createPostContainer.classList.add('fade-out-up');
+
+        allPostsContainer.style.marginTop = '0';
+        setTimeout(function() {
+            createPostContainer.style.display = 'none';
+        })
+
+    // Otherwise fade in new post view
+    } else {
+        createPostContainer.style.display = 'block';
+        createPostContainer.classList.remove('fade-out-up');
+        createPostContainer.classList.add('fade-in-down');
+        allPostsContainer.style.marginTop = '200px';
+
+    }
+}

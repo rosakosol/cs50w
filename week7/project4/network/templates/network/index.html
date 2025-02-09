@@ -5,7 +5,7 @@
 
 {% comment %} Only show New Post Form is user is logged in {% endcomment %}
 {% if user.is_authenticated %}
-    <div class="create-post-container">
+    <div id="create-post-view">
         <!-- Create Post Form -->
         <form action="{% url 'index' %}" method="post" class="create-listing-form" enctype="multipart/form-data">
             {% csrf_token %}
@@ -14,6 +14,7 @@
             <input type="submit" value="Submit" class="btn btn-primary">
         </form>
     </div>
+    {% endif %}
 
     {% comment %} Display all posts {% endcomment %}
     <div class="all-posts-container">
@@ -28,11 +29,11 @@
 
                 {% comment %} Only display like button if user is not author {% endcomment %}
                 {% if user.username != post.user%}
-                    <button class="like-btn" data-post-id="{{ post.id }}">
+                    <button class="btn btn-primary like-btn" data-post-id="{{ post.id }}">
                         {% if user in post.likes.all %}
-                            <p>Unlike</p>
+                            Unlike
                         {% else %}
-                            <p>Like</p>
+                            Like
                         {% endif %}
                     </button>
                 {% endif %}
@@ -66,5 +67,4 @@
             {% endif %}
         </span>
     </div>
-{% endif %}
 {% endblock %}
