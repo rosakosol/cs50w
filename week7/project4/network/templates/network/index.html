@@ -17,7 +17,7 @@
 
     {% comment %} Display all posts {% endcomment %}
     <div class="all-posts-container">
-        {% for post in posts %}
+        {% for post in page_obj %}
             <div class="post-container">
                 <div class="post-details" id="post-{{ post.id }}">
                     <img src="{{ post.user.profile_picture.url }}" class="profile-img">
