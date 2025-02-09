@@ -1,10 +1,12 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.core.paginator import Paginator
 import random
+import json
 
 from .models import User, Post, PostForm, Follow, Like
 
@@ -40,6 +42,32 @@ def index(request):
         "posts": posts,
         "page_obj": page_obj
     })
+    
+@login_required
+def edit_post(request, post_id):
+    user = request.user
+    post = get_object_or_404(Post, pk=post_id)
+    
+    if post.user != user:
+        return redirect("index")
+    
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            new_content = data.get('content',)
+            post.content = new_content 
+            post.save()
+            return JsonResponse({
+                "success": True,
+                "updated_content": post.content
+            })
+        except json.JSONDecodeError:
+            return JsonResponse({
+                "error": "Invalid JSON data"
+            }, status=400)
+    return JsonResponse({
+        "error": "Invalid request."
+    }, status=400)
 
 def like_post(request, post_id):
     user = request.user

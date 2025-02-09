@@ -24,11 +24,11 @@
                     <img src="{{ post.user.profile_picture.url }}" class="profile-img">
                     <a href="{% url 'profile' post.user  %}"><h5>{{ post.user.username }}</h5></a>
                     <h5>{{ post.created_at }}</h5>
-                    <h5>{{ post.content }}</h5>
+                    <p id="post-content-{{ post.id }}">{{ post.content }}</p>
                 </div>
 
                 {% comment %} Only display like button if user is not author {% endcomment %}
-                {% if user.username != post.user%}
+                {% if user.username != post.user.username %}
                     <button class="btn btn-primary like-btn" data-post-id="{{ post.id }}">
                         {% if user in post.likes.all %}
                             Unlike
@@ -36,6 +36,12 @@
                             Like
                         {% endif %}
                     </button>
+                {% comment %} If user is author, add the ability to edit post {% endcomment %}
+                {% else %}
+                    <button class="btn btn-primary edit-btn" data-post-id="{{ post.id }}">
+                        Edit
+                    </button>
+                    
                 {% endif %}
 
                 {% comment %} Display likecount {% endcomment %}
@@ -43,6 +49,7 @@
                     {{ post.likes.count }}
                 </div>
                 <img src="{{ post.image.url }}" class="post-img">
+
             </div>
         {% endfor %}
 

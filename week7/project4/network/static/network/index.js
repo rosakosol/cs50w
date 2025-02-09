@@ -43,6 +43,59 @@ document.addEventListener('DOMContentLoaded', function() {
         })
     })
 
+    const editButtons = this.querySelectorAll('.edit-btn');
+
+    editButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const postId = this.dataset.postId;
+            const postContentElement = document.querySelector(`#post-content-${postId}`);
+            
+            console.log(postContentElement)
+
+            if (postContentElement) {
+                const originalContent = postContentElement.textContent.trim();
+
+                // Replace content with textarea for editing
+                postContentElement.innerHTML = `<textarea>${originalContent}</textarea>`;
+    
+                // Create the save button dynamically
+                const saveButton = document.createElement('button');
+                saveButton.textContent = 'Save';
+                saveButton.classList.add('btn', 'btn-success');
+                postContentElement.appendChild(saveButton);
+    
+                // Handle saving the updated post
+                saveButton.addEventListener('click', function() {
+                    const updatedContent = postContentElement.querySelector('textarea').value;
+    
+                    fetch(`/edit_post/${postId}/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                        },
+                        body: JSON.stringify({ 
+                            content: updatedContent 
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // If successful, update the content in the DOM
+                            postContentElement.innerHTML = data.updated_content;
+                        } else {
+                            alert('Error: Could not update post.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while saving your post.');
+                    });
+                });
+            }
+        });
+    })
+
     // Follow button functionality (fixed for multiple buttons)
     const followButtons = document.querySelectorAll('.follow-btn'); // Select all follow buttons
 
