@@ -10,7 +10,7 @@ from .models import User, Post, PostForm, Follow, Like
 
 def index(request):
     user = request.user
-    posts = Post.objects.all()
+    posts = Post.objects.all().order_by("created_at")
     paginator = Paginator(posts, 10)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
@@ -21,7 +21,7 @@ def index(request):
                 post_form = PostForm(request.POST, request.FILES)
                 if post_form.is_valid():
                     new_post = Post()
-                    new_post.author = user
+                    new_post.user = user
                     new_post.content = post_form.cleaned_data["content"]
                     new_post.image = post_form.cleaned_data["image"]
                     new_post.save()
@@ -72,14 +72,18 @@ def like_post(request, post_id):
         "liked": liked
     })
 
-def profile_view(request, username):
+def profile_view(request, username):    
     # Get User instance from profile username
     profile_user = User.objects.get(username=username)
+    
+    # Get profile posts
+    posts = Post.objects.filter(user=profile_user).order_by("created_at")
     
     # Check if user is following profile user
     is_following = Follow.objects.filter(users=profile_user, follower=request.user).exists()
 
     return render(request, "network/profile.html", {
+        "posts": posts,
         "profile_user": profile_user,
         "is_following": is_following,
     })

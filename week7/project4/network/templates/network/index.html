@@ -21,7 +21,7 @@
             <div class="post-container">
                 <div class="post-details" id="post-{{ post.id }}">
                     <img src="{{ post.user.profile_picture.url }}" class="profile-img">
-                    <a href="{% url 'profile' post.user.username  %}"><h5>{{ post.user }}</h5></a>
+                    <a href="{% url 'profile' post.user  %}"><h5>{{ post.user.username }}</h5></a>
                     <h5>{{ post.created_at }}</h5>
                     <h5>{{ post.content }}</h5>
                 </div>
