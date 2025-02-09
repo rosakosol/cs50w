@@ -1,0 +1,64 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+<h2>Following</h2>
+
+{% comment %} Only show New Post Form is user is logged in {% endcomment %}
+{% if user.is_authenticated %}
+    <div class="all-posts-container">
+        {% for post in random_posts %}
+            <div class="post-container">
+                <div class="post-details" id="post-{{ post.id }}">
+                    <img src="{{ post.user.profile_picture.url }}" class="profile-img">
+                    <a href="{% url 'profile' post.user  %}"><h5>{{ post.user.username }}</h5></a>
+                    <h5>{{ post.created_at }}</h5>
+                    <h5>{{ post.content }}</h5>
+                </div>
+
+                {% comment %} Only display like button if user is not author {% endcomment %}
+                {% if user.username != post.user%}
+                    <button class="like-btn" data-post-id="{{ post.id }}">
+                        {% if user in post.likes.all %}
+                            <p>Unlike</p>
+                        {% else %}
+                            <p>Like</p>
+                        {% endif %}
+                    </button>
+                {% endif %}
+
+                {% comment %} Display likecount {% endcomment %}
+                <div class="like-count" id="like-count-{{ post.id }}">
+                    {{ post.likes.count }}
+                </div>
+                <img src="{{ post.image.url }}" class="post-img">
+            </div>
+        {% endfor %}
+
+
+    </div>
+
+    {% comment %} Pagination {% endcomment %}
+    {% if random_posts %}
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+        
+                <span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+        
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    {% else %}
+        <p>You are not following anyone. Follow some users to see their posts!</p>
+    {% endif %}
+
+{% endif %}
+{% endblock %}

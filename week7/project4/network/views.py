@@ -4,13 +4,14 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.core.paginator import Paginator
+import random
 
 from .models import User, Post, PostForm, Follow, Like
 
 
 def index(request):
     user = request.user
-    posts = Post.objects.all().order_by("created_at")
+    posts = Post.objects.all().order_by("-created_at")
     paginator = Paginator(posts, 10)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
@@ -77,7 +78,8 @@ def profile_view(request, username):
     profile_user = User.objects.get(username=username)
     
     # Get profile posts
-    posts = Post.objects.filter(user=profile_user).order_by("created_at")
+    posts = Post.objects.filter(user=profile_user).order_by("-created_at")
+    print(posts.query)
     
     # Check if user is following profile user
     is_following = Follow.objects.filter(users=profile_user, follower=request.user).exists()
@@ -95,15 +97,15 @@ def follow_user(request, username):
     # Exception handling if profile user does not exist
     try:
         profile_user = User.objects.get(username=username)
-        following_username = Follow.objects.filter(users=profile_user, follower=user)
+        following_user = Follow.objects.filter(users=profile_user, follower=user)
     except:
         print("Profile does not exist.")
         return False
     
     
     # If user already following, then delete follow from list
-    if following_username.exists():
-        following_username.delete()
+    if following_user.exists():
+        following_user.delete()
         followed = False
         
     # Else create a new Follow object
@@ -117,6 +119,27 @@ def follow_user(request, username):
     return JsonResponse({
         "follow_count": follow_count, 
         "followed": followed
+    })
+    
+def following_view(request):
+    user = request.user
+    
+    if user.is_authenticated:
+        followed_users = Follow.objects.filter(follower=user).select_related("users")
+        followed_user_ids = followed_users.values_list("users", flat=True)
+        
+        # If user is following others
+        if followed_users:
+            posts = Post.objects.filter(user__id__in=followed_user_ids)
+            
+            random_posts = random.sample(list(posts), min(5, len(posts)))
+        else:
+            random_posts = None
+        
+    return render(request, "network/following.html", {
+        "user": user,
+        "followed_users": followed_users,
+        "random_posts": random_posts
     })
     
 def login_view(request):
