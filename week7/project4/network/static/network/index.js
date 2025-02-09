@@ -148,14 +148,14 @@ function create_new_post() {
         allPostsContainer.style.marginTop = '0';
         setTimeout(function() {
             createPostContainer.style.display = 'none';
-        })
+        }, 1000);
 
     // Otherwise fade in new post view
     } else {
         createPostContainer.style.display = 'block';
         createPostContainer.classList.remove('fade-out-up');
         createPostContainer.classList.add('fade-in-down');
-        allPostsContainer.style.marginTop = '200px';
+        allPostsContainer.style.marginTop = '450px';
 
     }
 }

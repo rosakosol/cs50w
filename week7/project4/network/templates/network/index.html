@@ -7,10 +7,17 @@
 {% if user.is_authenticated %}
     <div id="create-post-view">
         <!-- Create Post Form -->
-        <form action="{% url 'index' %}" method="post" class="create-listing-form" enctype="multipart/form-data">
+        <form action="{% url 'index' %}" method="post" class="create-post-form" enctype="multipart/form-data">
             {% csrf_token %}
             <h4>New Post</h4>
-            {{ post_form }}
+            <div class="form-group">
+                <label for="image">Image</label>
+                {{ post_form.image }}
+            </div>
+            <div class="form-group">
+                <label for="content">Content</label>
+                {{ post_form.content }}
+            </div>
             <input type="submit" value="Submit" class="btn btn-primary">
         </form>
     </div>

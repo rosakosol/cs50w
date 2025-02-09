@@ -25,10 +25,7 @@ class PostForm(forms.ModelForm):
         model = Post
         fields = ['image', 'content']
         widgets = {
-            'content': forms.Textarea(attrs={
-                'rows': 10,
-                'cols': 80
-            })
+            'content': forms.Textarea()
         }
     
 
@@ -62,8 +59,5 @@ class Comment(models.Model):
 class CommentForm(forms.Form):
     content = forms.CharField(
         label="",
-        widget=forms.Textarea(attrs={
-            "rows": 10,
-            "cols": 30
-        })
+        widget=forms.Textarea()
     )
