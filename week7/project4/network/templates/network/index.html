@@ -27,10 +27,12 @@
     <div class="all-posts-container">
         {% for post in page_obj %}
             <div class="post-container">
-                <div class="post-details" id="post-{{ post.id }}">
+                <h6>{{ post.created_at }}</h6>
+                <div class="user-details">
                     <img src="{{ post.user.profile_picture.url }}" class="profile-img">
                     <a href="{% url 'profile' post.user  %}"><h5>{{ post.user.username }}</h5></a>
-                    <h5>{{ post.created_at }}</h5>
+                </div>
+                <div class="post-details" id="post-{{ post.id }}">
                     <p id="post-content-{{ post.id }}">{{ post.content }}</p>
                 </div>
 
@@ -55,6 +57,7 @@
                 <div class="like-count" id="like-count-{{ post.id }}">
                     {{ post.likes.count }}
                 </div>
+
                 <img src="{{ post.image.url }}" class="post-img">
 
             </div>

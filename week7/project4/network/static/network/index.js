@@ -43,6 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
     })
 
+    // Function to edit posts
     const editButtons = this.querySelectorAll('.edit-btn');
 
     editButtons.forEach(button => {
@@ -55,43 +56,46 @@ document.addEventListener('DOMContentLoaded', function() {
             if (postContentElement) {
                 const originalContent = postContentElement.textContent.trim();
 
-                // Replace content with textarea for editing
-                postContentElement.innerHTML = `<textarea>${originalContent}</textarea>`;
-    
-                // Create the save button dynamically
-                const saveButton = document.createElement('button');
-                saveButton.textContent = 'Save';
-                saveButton.classList.add('btn', 'btn-success');
-                postContentElement.appendChild(saveButton);
-    
-                // Handle saving the updated post
-                saveButton.addEventListener('click', function() {
-                    const updatedContent = postContentElement.querySelector('textarea').value;
-    
-                    fetch(`/edit_post/${postId}/`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-                        },
-                        body: JSON.stringify({ 
-                            content: updatedContent 
+                // Avoid re-editing if already in editing mode
+                if (!postContentElement.querySelector('textarea')) {
+                    // Replace content with textarea for editing
+                    postContentElement.innerHTML = `<textarea>${originalContent}</textarea>`;
+
+                    // Create the save button dynamically
+                    const saveButton = document.createElement('button');
+                    saveButton.textContent = 'Save';
+                    saveButton.classList.add('btn', 'btn-success');
+                    postContentElement.appendChild(saveButton);
+
+                    // Handle saving the updated post
+                    saveButton.addEventListener('click', function() {
+                        const updatedContent = postContentElement.querySelector('textarea').value;
+
+                        fetch(`/edit_post/${postId}/`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                            },
+                            body: JSON.stringify({ 
+                                content: updatedContent 
+                            })
                         })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            // If successful, update the content in the DOM
-                            postContentElement.innerHTML = data.updated_content;
-                        } else {
-                            alert('Error: Could not update post.');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('An error occurred while saving your post.');
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                // If successful, update the content in the DOM
+                                postContentElement.innerHTML = data.updated_content;
+                            } else {
+                                alert('Error: Could not update post.');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('An error occurred while saving your post.');
+                        });
                     });
-                });
+                }
             }
         });
     })

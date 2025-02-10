@@ -7,13 +7,28 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
         <link href="{% static 'network/styles.css' %}" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
         <script type="text/javascript" src="{% static 'network/index.js' %}"></script>
     </head>
     <body>
 
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="#">Rostagram</a>
-          
+            <div class="navbar-items">
+                <a class="navbar-brand" href="#">Rostagram</a>
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                </li>
+                <li class="nav-item profile-details">
+                    <a class="nav-link profile-username" href="{% url 'profile' user.username %}"><strong>{{ user.username }}</strong></a>
+                    <img src="{{ user.profile_picture.url }}" class="profile-img">
+                </li>
+                {% endif %}
+            </div>
+        </nav>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="navbar-items">
               <ul class="navbar-nav mr-auto">
                 {% if user.is_authenticated and request.resolver_match.url_name == 'index'  %}
@@ -28,13 +43,6 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'following' %}">Following</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
-                    </li>
-                    <li class="nav-item profile-details">
-                        <a class="nav-link" href="{% url 'profile' user.username %}"><strong>{{ user.username }}</strong></a>
-                        <img src="{{ user.profile_picture.url }}" class="profile-img">
-                    </li>
                 {% else %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'login' %}">Log In</a>
@@ -45,7 +53,7 @@
                 {% endif %}
               </ul>
             </div>
-          </nav>
+        </nav>
         
         <div class="body">
             {% block body %}
