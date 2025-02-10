@@ -11967,10 +11967,6 @@ textarea.form-control-lg {
     display: none !important;
   }
 }
-* {
-  outline: 1px solid red;
-}
-
 .lobster-regular {
   font-family: "Lobster", serif;
   font-weight: 400;
@@ -11984,9 +11980,10 @@ textarea.form-control-lg {
   font-style: normal;
 }
 
-h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, p, li, a {
+h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, p, li, a {
   font-family: "Inter", sans-serif;
   color: #333333;
+  margin-bottom: 0;
 }
 
 h5, .h5 {
@@ -12011,6 +12008,11 @@ button {
 
 textarea {
   width: 100%;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  background-color: #f8f8f8;
+  resize: none;
 }
 
 .fade-in-down {
@@ -12043,7 +12045,38 @@ textarea {
 }
 .navbar {
   justify-content: space-between;
-  padding: 5px 10px;
+  padding: 10px 10px;
+  border-bottom: 1px solid gray;
+}
+
+.navbar-2 {
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+  padding: 10px 10px;
+  border-top: 1px solid gray;
+  z-index: 10000;
+}
+
+@media (min-width: 768px) {
+  .navbar-2 {
+    position: relative;
+    margin-top: 0px;
+    border-top: 0px;
+  }
+  .navbar-items {
+    justify-content: center !important;
+  }
+}
+.navbar-brand {
+  font-size: 30px;
+  colour: #333333;
+}
+
+#new-post-btn {
+  padding-block: 0px;
+  padding-inline: 0px;
+  border-width: 0px;
 }
 
 .navbar-brand {
@@ -12078,6 +12111,10 @@ textarea {
   margin-right: 0 !important;
 }
 
+.page-heading {
+  padding: 10px;
+}
+
 .profile-img {
   max-width: 30px;
   border-radius: 50%;
@@ -12091,6 +12128,7 @@ textarea {
 .profile-details {
   display: flex;
   align-items: center;
+  margin: 0 5px;
 }
 
 #create-post-view {
@@ -12122,11 +12160,15 @@ textarea {
 
 .post-container {
   display: flex;
-  border: 1px solid black;
   width: 100%;
   padding: 1rem;
-  margin: 1rem;
+  margin: 0.5rem 0;
   flex-direction: column;
+  border-bottom: 1px solid grey;
+}
+
+.post-container button {
+  width: 100px;
 }
 
 @media (min-width: 768px) {
@@ -12147,10 +12189,20 @@ textarea {
     width: 1000px;
   }
 }
+.post-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .user-details {
   display: flex;
   align-items: center;
-  margin: 5px 0;
+  padding: 5px 0;
+}
+
+.user-details h5, .user-details .h5 {
+  margin-bottom: 0;
 }
 
 .user-details .profile-img {
@@ -12163,9 +12215,22 @@ textarea {
   flex-direction: column;
 }
 
+.post-content-container {
+  height: 100px;
+}
+
 .post-img {
-  max-width: 250px;
-  border: 1px solid black;
+  max-width: 100%;
+  margin: 5px 0;
+}
+
+.like-container {
+  display: flex;
+  align-content: center;
+}
+
+.like-container i {
+  margin: 0 10px;
 }
 
 .like-count {
@@ -12176,4 +12241,28 @@ textarea {
 .pagination {
   display: flex;
   justify-content: center;
+  font-family: "Inter", sans-serif;
+  margin-bottom: 80px;
+}
+
+@media (min-width: 768px) {
+  .pagination {
+    margin-bottom: 20px;
+  }
+}
+.step-links {
+  display: flex;
+}
+
+.form-group label {
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  margin: 5px 0;
+  width: 100%;
+}
+
+.form-group input[type=file] {
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  width: 100%;
 }/*# sourceMappingURL=styles.css.map */
