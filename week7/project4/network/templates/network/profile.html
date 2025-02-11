@@ -26,16 +26,71 @@
 
 
     <div class="all-posts-container">
-    {% for post in posts %}
-        <div class="post-container">
-            <div class="post-details" id="post-{{ post.id }}">
-                <h5>{{ post.created_at }}</h5>
-                <p>{{ post.content }}</p>
-            </div>
+        {% for post in posts %}
+            <div class="post-container">
+                <div class="post-timestamp">
+                    <h6>{{ post.created_at }}</h6>
+                </div>
 
-            <img src="{{ post.image.url }}" class="post-img">
-        </div>
-    {% endfor %}
+                <div class="post-details" id="post-{{ post.id }}">
+                    <div class="post-topbar">
+                        {% if user.is_authenticated %}
+                        <div class="post-btn-container">
+                            {% comment %} Only display like button if user is not author {% endcomment %}
+                            {% if user.username != post.user.username %}
+                            <button class="btn btn-primary like-btn" data-post-id="{{ post.id }}">
+                                {% if user in post.likes.all %}
+                                    Unlike
+                                {% else %}
+                                    Like
+                                {% endif %}
+                            </button>
+                            {% comment %} If user is author, add the ability to edit post {% endcomment %}
+                            {% else %}
+                                <button class="btn btn-success edit-btn" data-post-id="{{ post.id }}">
+                                    Edit
+                                </button>
+                                
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="post-content-container">
+                        <p id="post-content-{{ post.id }}">{{ post.content }}</p>
+                    </div>
+                </div>
+
+                {% comment %} Post Image {% endcomment %}
+                <img src="{{ post.image.url }}" class="post-img">
+
+                {% comment %} Display likecount {% endcomment %}
+                <div class="like-container">
+                    <i class="bi bi-heart"></i>
+                    <div class="like-count" id="like-count-{{ post.id }}">
+                        {{ post.likes.count }}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% comment %} Pagination {% endcomment %}
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1" class="page-link">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}" class="page-link">previous</a>
+            {% endif %}
+    
+            <span class="current page-link">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+    
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="page-link">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}" class="page-link">last &raquo;</a>
+            {% endif %}
+        </span>
     </div>
 
 

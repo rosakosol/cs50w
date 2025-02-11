@@ -12085,6 +12085,10 @@ textarea {
   border-width: 0px;
 }
 
+.post-btn-container {
+  margin: 10px 0;
+}
+
 .navbar-brand {
   display: flex;
   flex-grow: 1;

@@ -86,7 +86,7 @@ async function handleLikeButton() {
 // Initialise edit button on author posts
 function initEditButtons() {
     // Function to edit posts
-    const editButtons = this.querySelectorAll('.edit-btn');
+    const editButtons = document.querySelectorAll('.edit-btn');
 
     editButtons.forEach(button => {
         button.addEventListener('click', handleEditButtons); 

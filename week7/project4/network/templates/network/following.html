@@ -18,14 +18,14 @@
                 </div>
 
                 {% comment %} Only display like button if user is not author {% endcomment %}
-                {% if user.username != post.user%}
-                    <button class="like-btn" data-post-id="{{ post.id }}">
-                        {% if user in post.likes.all %}
-                            <p>Unlike</p>
-                        {% else %}
-                            <p>Like</p>
-                        {% endif %}
-                    </button>
+                {% if user.username != post.user.username %}
+                <button class="btn btn-primary like-btn" data-post-id="{{ post.id }}">
+                    {% if user in post.likes.all %}
+                        Unlike
+                    {% else %}
+                        Like
+                    {% endif %}
+                </button>
                 {% endif %}
 
                 {% comment %} Display likecount {% endcomment %}
@@ -35,8 +35,6 @@
                 <img src="{{ post.image.url }}" class="post-img">
             </div>
         {% endfor %}
-
-
     </div>
 
     {% comment %} Pagination {% endcomment %}
