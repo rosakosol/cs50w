@@ -12134,7 +12134,7 @@ textarea {
 }
 
 .profile-username {
-  display: none;
+  display: block;
 }
 
 .profile-details {

@@ -8,32 +8,59 @@
 {% comment %} Only show New Post Form is user is logged in {% endcomment %}
 {% if user.is_authenticated %}
     <div class="all-posts-container">
-        {% for post in random_posts %}
-            <div class="post-container">
-                <div class="post-details" id="post-{{ post.id }}">
-                    <img src="{{ post.user.profile_picture.url }}" class="profile-img">
-                    <a href="{% url 'profile' post.user  %}"><h5>{{ post.user.username }}</h5></a>
-                    <h5>{{ post.created_at }}</h5>
-                    <h5>{{ post.content }}</h5>
-                </div>
+        {% for post in page_obj %}
+        <div class="post-container">
+            <div class="post-timestamp">
+                <h6>{{ post.created_at }}</h6>
+            </div>
 
-                {% comment %} Only display like button if user is not author {% endcomment %}
-                {% if user.username != post.user.username %}
-                <button class="btn btn-primary like-btn" data-post-id="{{ post.id }}">
-                    {% if user in post.likes.all %}
-                        Unlike
-                    {% else %}
-                        Like
+            <div class="post-details" id="post-{{ post.id }}">
+                <div class="post-topbar">
+                    
+                    {% comment %} User Profile {% endcomment %}
+                    <div class="user-details">
+                        <img src="{{ post.user.profile_picture.url }}" class="profile-img">
+                        <a href="{% url 'profile' post.user  %}"><h5>{{ post.user.username }}</h5></a>
+                    </div>
+
+                    {% if user.is_authenticated %}
+                    <div class="post-btn-container">
+                        {% comment %} Only display like button if user is not author {% endcomment %}
+                        {% if user.username != post.user.username %}
+                        <button class="btn btn-primary like-btn" data-post-id="{{ post.id }}">
+                            {% if user in post.likes.all %}
+                                Unlike
+                            {% else %}
+                                Like
+                            {% endif %}
+                        </button>
+                        {% comment %} If user is author, add the ability to edit post {% endcomment %}
+                        {% else %}
+                        {% csrf_token %}
+                            <button class="btn btn-success edit-btn" data-post-id="{{ post.id }}">
+                                Edit
+                            </button>
+                            
+                        {% endif %}
+                    </div>
                     {% endif %}
-                </button>
-                {% endif %}
+                </div>
+                <div class="post-content-container">
+                    <p id="post-content-{{ post.id }}">{{ post.content }}</p>
+                </div>
+            </div>
 
-                {% comment %} Display likecount {% endcomment %}
+            {% comment %} Post Image {% endcomment %}
+            <img src="{{ post.image.url }}" class="post-img">
+
+            {% comment %} Display likecount {% endcomment %}
+            <div class="like-container">
+                <i class="bi bi-heart"></i>
                 <div class="like-count" id="like-count-{{ post.id }}">
                     {{ post.likes.count }}
                 </div>
-                <img src="{{ post.image.url }}" class="post-img">
             </div>
+        </div>
         {% endfor %}
     </div>
 

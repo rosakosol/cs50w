@@ -26,7 +26,7 @@
 
 
     <div class="all-posts-container">
-        {% for post in posts %}
+        {% for post in page_obj %}
             <div class="post-container">
                 <div class="post-timestamp">
                     <h6>{{ post.created_at }}</h6>
@@ -47,6 +47,7 @@
                             </button>
                             {% comment %} If user is author, add the ability to edit post {% endcomment %}
                             {% else %}
+                            {% csrf_token %}
                                 <button class="btn btn-success edit-btn" data-post-id="{{ post.id }}">
                                     Edit
                                 </button>

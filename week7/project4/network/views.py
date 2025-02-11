@@ -49,7 +49,7 @@ def edit_post(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
     
     if post.user != user:
-        return redirect("index")
+        return HttpResponseRedirect(reverse("access_denied"))
     
     if request.method == "POST":
         try:
@@ -68,6 +68,12 @@ def edit_post(request, post_id):
     return JsonResponse({
         "error": "Invalid request."
     }, status=400)
+    
+    
+def access_denied(request):
+    return render(request, "network/access_denied.html",)
+
+
 
 def like_post(request, post_id):
     user = request.user
@@ -107,7 +113,9 @@ def profile_view(request, username):
     
     # Get profile posts
     posts = Post.objects.filter(user=profile_user).order_by("-created_at")
-    print(posts.query)
+    paginator = Paginator(posts, 10)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
     
     # Check if user is following profile user
     is_following = Follow.objects.filter(users=profile_user, follower=request.user).exists()
@@ -116,6 +124,7 @@ def profile_view(request, username):
         "posts": posts,
         "profile_user": profile_user,
         "is_following": is_following,
+        "page_obj": page_obj
     })
 
 def follow_user(request, username):
@@ -151,7 +160,7 @@ def follow_user(request, username):
     
 def following_view(request):
     user = request.user
-    
+
     if user.is_authenticated:
         followed_users = Follow.objects.filter(follower=user).select_related("users")
         followed_user_ids = followed_users.values_list("users", flat=True)
@@ -159,15 +168,21 @@ def following_view(request):
         # If user is following others
         if followed_users:
             posts = Post.objects.filter(user__id__in=followed_user_ids)
-            
             random_posts = random.sample(list(posts), min(5, len(posts)))
+        
+        
         else:
             random_posts = None
+            
+        paginator = Paginator(random_posts, 10)
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
         
     return render(request, "network/following.html", {
         "user": user,
         "followed_users": followed_users,
-        "random_posts": random_posts
+        "random_posts": random_posts,
+        "page_obj": page_obj
     })
     
 def login_view(request):

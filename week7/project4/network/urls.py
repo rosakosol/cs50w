@@ -14,7 +14,8 @@ urlpatterns = [
     path("like/<int:post_id>/", views.like_post, name="like_post"),
     path("profile/<str:username>/", views.profile_view, name="profile"),
     path("follow/<str:username>/", views.follow_user, name="follow_user"),
-    path("edit_post/<int:post_id>/", views.edit_post, name="edit_post")
+    path("edit_post/<int:post_id>/", views.edit_post, name="edit_post"),
+    path("access_denied", views.access_denied, name="access_denied")
 ] 
 
 
