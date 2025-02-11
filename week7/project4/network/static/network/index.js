@@ -1,13 +1,14 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Functions for initiating buttons
+    // Functions for initialising buttons
     initNewPostButton()
     initLikeButtons()
     initEditButtons()
     initFollowButton()
 });
 
+
+// Initialise button to add new posts, will show/hide the new post form
 function initNewPostButton() {
-    // Button to add new posts, will show/hide the new post form
     const newPostButton = document.querySelector('#new-post-btn');
 
     if (newPostButton) {
@@ -40,9 +41,8 @@ function createNewPost() {
     }
 }
 
-
+// Initialise like button for posts
 function initLikeButtons() {
-    // Function to like post
     const likeButtons = document.querySelectorAll('.like-btn');
 
     likeButtons.forEach(button => {
@@ -50,7 +50,7 @@ function initLikeButtons() {
     });
 }
 
-
+// Function to handle when like button is clicked on a post and increment like count
 async function handleLikeButton() {
     const postId = this.getAttribute('data-post-id');
 
@@ -79,10 +79,11 @@ async function handleLikeButton() {
 
         likeCountElement.textContent = data.like_count;
     } catch (error) {
-        console.error('Error with Like', error);
+        console.error('An error occurred with Like', error);
     }
 }
 
+// Initialise edit button on author posts
 function initEditButtons() {
     // Function to edit posts
     const editButtons = this.querySelectorAll('.edit-btn');
@@ -92,6 +93,7 @@ function initEditButtons() {
     })
 }
 
+// Function to handle edit button click and create text area, save button
 function handleEditButtons() {
     const postId = this.dataset.postId;
     const postContentElement = document.querySelector(`#post-content-${postId}`);
@@ -129,7 +131,7 @@ function handleEditButtons() {
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        // If successful, update the content in the DOM
+                        // If successful, update the content in the post
                         postContentElement.innerHTML = data.updated_content;
                     } else {
                         alert('Error: Could not update post.');
@@ -144,6 +146,7 @@ function handleEditButtons() {
     }
 }
 
+// Initialise follow button on user profile
 function initFollowButton() {
     // Follow button functionality (fixed for multiple buttons)
     const followButtons = document.querySelectorAll('.follow-btn'); // Select all follow buttons
@@ -153,6 +156,7 @@ function initFollowButton() {
     });
 }
 
+// Function to handle follow and unfollow
 async function handleFollowButton() {
     const profileUsername = this.getAttribute('data-profile-username');
 
@@ -181,7 +185,7 @@ async function handleFollowButton() {
         // Update the follower count displayed on the page
         followCountElement.textContent = `Followers: ${data.follow_count}`;
     } catch (error) {
-        console.error('Error with Follow', error);
+        console.error('An error occurred with Follow', error);
     }
 }
 
