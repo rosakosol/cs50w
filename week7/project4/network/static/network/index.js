@@ -36,7 +36,7 @@ function createNewPost() {
         createPostContainer.style.display = 'block';
         createPostContainer.classList.remove('fade-out-up');
         createPostContainer.classList.add('fade-in-down');
-        allPostsContainer.style.marginTop = '450px';
+        allPostsContainer.style.marginTop = '470px';
 
     }
 }

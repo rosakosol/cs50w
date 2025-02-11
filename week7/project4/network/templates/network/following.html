@@ -1,7 +1,9 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-<h2>Following</h2>
+<div class="page-heading">
+    <h2>Following</h2>
+</div>
 
 {% comment %} Only show New Post Form is user is logged in {% endcomment %}
 {% if user.is_authenticated %}
@@ -57,7 +59,9 @@
             </span>
         </div>
     {% else %}
+    <div class="page-container">
         <p>You are not following anyone. Follow some users to see their posts!</p>
+    </div>
     {% endif %}
 
 {% endif %}

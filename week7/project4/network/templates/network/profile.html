@@ -2,12 +2,13 @@
 
 
 {% block body %}
-    <h2>{{ profile_user.username }}</h2>
-    <p class="follow-count" id="follow-count-{{ profile_user.username }}">Followers: {{ profile_user.followers.count }}</p>
-    <p>Following: {{ profile_user.following.count }}</p>
-
+    <div class="page-heading">
+        <img src="{{ profile_user.profile_picture.url }}" class="profile-img">
+        <h2>{{ profile_user.username }}</h2>
+    </div>
     {% if user.username != profile_user.username %}
-        {% csrf_token %}
+    {% csrf_token %}
+    <div class="profile-follow-btn-container">
         <button class="btn btn-primary follow-btn" data-profile-username="{{ profile_user.username }}">
             {% if is_following %}
                 Unfollow
@@ -15,14 +16,21 @@
                 Follow
             {% endif %}
         </button>
+    </div>
     {% endif %}
+    <div class="profile-follow-container">
+        <p class="follow-count" id="follow-count-{{ profile_user.username }}">Followers: {{ profile_user.followers.count }}</p>
+        <p>Following: {{ profile_user.following.count }}</p>
+    </div>
+
+
 
     <div class="all-posts-container">
     {% for post in posts %}
         <div class="post-container">
             <div class="post-details" id="post-{{ post.id }}">
                 <h5>{{ post.created_at }}</h5>
-                <h5>{{ post.content }}</h5>
+                <p>{{ post.content }}</p>
             </div>
 
             <img src="{{ post.image.url }}" class="post-img">

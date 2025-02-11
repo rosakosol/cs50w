@@ -33,12 +33,17 @@
                 <div class="post-timestamp">
                     <h6>{{ post.created_at }}</h6>
                 </div>
+
                 <div class="post-details" id="post-{{ post.id }}">
                     <div class="post-topbar">
+                        
+                        {% comment %} User Profile {% endcomment %}
                         <div class="user-details">
                             <img src="{{ post.user.profile_picture.url }}" class="profile-img">
                             <a href="{% url 'profile' post.user  %}"><h5>{{ post.user.username }}</h5></a>
                         </div>
+
+                        {% if user.is_authenticated %}
                         <div class="post-btn-container">
                             {% comment %} Only display like button if user is not author {% endcomment %}
                             {% if user.username != post.user.username %}
@@ -57,6 +62,7 @@
                                 
                             {% endif %}
                         </div>
+                        {% endif %}
                     </div>
                     <div class="post-content-container">
                         <p id="post-content-{{ post.id }}">{{ post.content }}</p>
