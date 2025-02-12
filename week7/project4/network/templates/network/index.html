@@ -48,7 +48,7 @@
                             {% comment %} Only display like button if user is not author {% endcomment %}
                             {% if user.username != post.user.username %}
                             <button class="btn btn-primary like-btn" data-post-id="{{ post.id }}">
-                                {% if user in post.likes.all %}
+                                {% if post.is_liked %}
                                     Unlike
                                 {% else %}
                                     Like

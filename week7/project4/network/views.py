@@ -12,42 +12,58 @@ from .models import User, Post, PostForm, Follow, Like
 
 
 def index(request):
+    # Get logged in user
     user = request.user
+    
+    # Get all posts sorted newest to oldest
     posts = Post.objects.all().order_by("-created_at")
+    
+    # Pagination to show 10 posts per page
     paginator = Paginator(posts, 10)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
     
     # If user is logged in, show new post form
     if user.is_authenticated:
-            if request.method == "POST":
-                post_form = PostForm(request.POST, request.FILES)
-                if post_form.is_valid():
-                    new_post = Post()
-                    new_post.user = user
-                    new_post.content = post_form.cleaned_data["content"]
-                    new_post.image = post_form.cleaned_data["image"]
-                    new_post.save()
-                    
-                    return HttpResponseRedirect(reverse("index"))
+        if request.method == "POST":
+            post_form = PostForm(request.POST, request.FILES)
+            if post_form.is_valid():
+                new_post = Post()
+                new_post.user = user
+                new_post.content = post_form.cleaned_data["content"]
+                new_post.image = post_form.cleaned_data["image"]
+                new_post.save()
+            
+                return HttpResponseRedirect(reverse("index"))
+        
+        # Else show empty form
+        else:
+            post_form = PostForm()
                 
-            else:
-                post_form = PostForm()
+        # For each post, check if user has liked it to alter button display
+        for post in page_obj.object_list:
+            post.is_liked = post.likes.filter(user=user).exists()
+        
     else:
         post_form = None
-        
+    
+
     return render(request, "network/index.html", {
         "user": user,
         "post_form": post_form,
-        "posts": posts,
-        "page_obj": page_obj
+        "posts": page_obj.object_list,
+        "page_obj": page_obj,
     })
     
 @login_required
 def edit_post(request, post_id):
+    # Get logged in user
     user = request.user
+    
+    # Get post to be edited if it exists
     post = get_object_or_404(Post, pk=post_id)
     
+    # If user is not the author, deny access
     if post.user != user:
         return HttpResponseRedirect(reverse("access_denied"))
     
@@ -76,15 +92,11 @@ def access_denied(request):
 
 
 def like_post(request, post_id):
+    # Get logged in user
     user = request.user
-    post = None
     
-    # Exception handling if post does not exist
-    try:
-        post = Post.objects.get(pk=post_id)
-    except:
-        print("Post does not exist.")
-        return False
+    # Get post to be liked if it exists
+    post = get_object_or_404(Post, pk=post_id)
     
     # Check if user has already liked post
     like_exists = Like.objects.filter(post=post, user=user).first()
@@ -107,9 +119,11 @@ def like_post(request, post_id):
         "liked": liked
     })
 
+
+
 def profile_view(request, username):    
     # Get User instance from profile username
-    profile_user = User.objects.get(username=username)
+    profile_user = get_object_or_404(User, username=username)
     
     # Get profile posts
     posts = Post.objects.filter(user=profile_user).order_by("-created_at")
@@ -121,24 +135,21 @@ def profile_view(request, username):
     is_following = Follow.objects.filter(users=profile_user, follower=request.user).exists()
 
     return render(request, "network/profile.html", {
-        "posts": posts,
+        "posts": page_obj.object_list,
         "profile_user": profile_user,
         "is_following": is_following,
         "page_obj": page_obj
     })
 
+
 def follow_user(request, username):
+    # Get logged in user
     user = request.user
-    profile_user = None
     
-    # Exception handling if profile user does not exist
-    try:
-        profile_user = User.objects.get(username=username)
-        following_user = Follow.objects.filter(users=profile_user, follower=user)
-    except:
-        print("Profile does not exist.")
-        return False
-    
+    # Get User instance from profile username
+    profile_user = get_object_or_404(User, username=username)
+    following_user = Follow.objects.filter(users=profile_user, follower=user)
+
     
     # If user already following, then delete follow from list
     if following_user.exists():
@@ -158,22 +169,27 @@ def follow_user(request, username):
         "followed": followed
     })
     
+
+
+
 def following_view(request):
+    # Get logged in user
     user = request.user
 
+    # If user is logged in
     if user.is_authenticated:
         followed_users = Follow.objects.filter(follower=user).select_related("users")
         followed_user_ids = followed_users.values_list("users", flat=True)
         
-        # If user is following others
+        # If user is following others, get a random sample of their posts
         if followed_users:
             posts = Post.objects.filter(user__id__in=followed_user_ids)
             random_posts = random.sample(list(posts), min(5, len(posts)))
         
-        
         else:
             random_posts = None
-            
+        
+        # Pagination
         paginator = Paginator(random_posts, 10)
         page_number = request.GET.get("page")
         page_obj = paginator.get_page(page_number)
@@ -181,9 +197,11 @@ def following_view(request):
     return render(request, "network/following.html", {
         "user": user,
         "followed_users": followed_users,
-        "random_posts": random_posts,
+        "random_posts": page_obj.object_list,
         "page_obj": page_obj
     })
+    
+    
     
 def login_view(request):
     if request.method == "POST":
@@ -205,9 +223,11 @@ def login_view(request):
         return render(request, "network/login.html")
 
 
+
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
+
 
 
 def register(request):

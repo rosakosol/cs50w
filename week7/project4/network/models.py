@@ -19,6 +19,17 @@ class Post(models.Model):
 class PostView(ListView):
     paginate_by = 10
     model = Post
+    
+    def get_data(self, **kwargs):
+        data = super().get_data(**kwargs)
+        
+        user = self.request.user
+        liked_posts = Like.objects.filter(user=user).values_list("post", flat=True)
+        
+        data["liked_posts"] = liked_posts
+        
+        return data
+
 
 class PostForm(forms.ModelForm):
     class Meta:
