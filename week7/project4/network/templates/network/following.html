@@ -25,6 +25,7 @@
 
                     {% if user.is_authenticated %}
                     <div class="post-btn-container">
+                        {% csrf_token %}
                         {% comment %} Only display like button if user is not author {% endcomment %}
                         {% if user.username != post.user.username %}
                         <button class="btn btn-primary like-btn" data-post-id="{{ post.id }}">
@@ -36,7 +37,6 @@
                         </button>
                         {% comment %} If user is author, add the ability to edit post {% endcomment %}
                         {% else %}
-                        {% csrf_token %}
                             <button class="btn btn-success edit-btn" data-post-id="{{ post.id }}">
                                 Edit
                             </button>

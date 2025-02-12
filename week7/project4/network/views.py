@@ -122,6 +122,8 @@ def like_post(request, post_id):
 
 
 def profile_view(request, username):    
+    user = request.user
+    
     # Get User instance from profile username
     profile_user = get_object_or_404(User, username=username)
     
@@ -133,6 +135,10 @@ def profile_view(request, username):
     
     # Check if user is following profile user
     is_following = Follow.objects.filter(users=profile_user, follower=request.user).exists()
+
+    # For each post, check if user has liked it to alter button display
+    for post in page_obj.object_list:
+        post.is_liked = post.likes.filter(user=user).exists()
 
     return render(request, "network/profile.html", {
         "posts": page_obj.object_list,
@@ -193,6 +199,10 @@ def following_view(request):
         paginator = Paginator(random_posts, 10)
         page_number = request.GET.get("page")
         page_obj = paginator.get_page(page_number)
+        
+        # For each post, check if user has liked it to alter button display
+        for post in page_obj.object_list:
+            post.is_liked = post.likes.filter(user=user).exists()
         
     return render(request, "network/following.html", {
         "user": user,
