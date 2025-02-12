@@ -187,27 +187,28 @@ def following_view(request):
         followed_users = Follow.objects.filter(follower=user).select_related("users")
         followed_user_ids = followed_users.values_list("users", flat=True)
         
-        # If user is following others, get a random sample of their posts
+        # If user is following others, display their posts
         if followed_users:
             posts = Post.objects.filter(user__id__in=followed_user_ids)
-            random_posts = random.sample(list(posts), min(5, len(posts)))
+        
+            # Pagination if there are posts
+            paginator = Paginator(posts, 10)
+            page_number = request.GET.get("page")
+            page_obj = paginator.get_page(page_number)
+            
+            # For each post, check if user has liked it to alter button display
+            for post in page_obj.object_list:
+                post.is_liked = post.likes.filter(user=user).exists()
         
         else:
-            random_posts = None
+            page_obj = None
+            posts = None
         
-        # Pagination
-        paginator = Paginator(random_posts, 10)
-        page_number = request.GET.get("page")
-        page_obj = paginator.get_page(page_number)
-        
-        # For each post, check if user has liked it to alter button display
-        for post in page_obj.object_list:
-            post.is_liked = post.likes.filter(user=user).exists()
         
     return render(request, "network/following.html", {
         "user": user,
         "followed_users": followed_users,
-        "random_posts": page_obj.object_list,
+        "posts": posts,
         "page_obj": page_obj
     })
     
