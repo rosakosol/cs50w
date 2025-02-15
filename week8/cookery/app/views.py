@@ -42,12 +42,20 @@ def add_recipe_view(request):
             # Create Listing Form
             create_form = CreateRecipeForm(request.POST)
             if create_form.is_valid():
-                new_recipe = Recipe()
-                new_recipe.name = create_form.cleaned_data["name"]
-                new_recipe.description = create_form.cleaned_data["description"]
-                new_recipe.image_url = create_form.cleaned_data["image_url"]
-                new_recipe.meal_type = create_form.cleaned_data["meal_type"]
-                new_recipe.save()              
+                name = form.cleaned_data['name']
+                description = form.cleaned_data['description']
+                image_url = form.cleaned_data.get('image_url', '')
+                meal_type = form.cleaned_data['meal_type']
+                cuisine = form.cleaned_data['cuisine']
+
+                # Create a new Recipe instance
+                recipe = Recipe.objects.create(
+                    name=name,
+                    description=description,
+                    image_url=image_url,
+                    meal_type=meal_type,
+                    cuisine=cuisine,
+                )           
                 # Redirect to the same page to show the new comment
                 return HttpResponseRedirect(reverse("index"))  
         
