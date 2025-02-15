@@ -14,9 +14,9 @@ def index(request):
     user = request.user
     recipes = Recipe.objects.all().order_by("-created_at")
     
-    # If there are any recipes, paginate to 12 per page
+    # If there are any recipes, paginate
     if recipes:
-        paginator = Paginator(recipes, 12)
+        paginator = Paginator(recipes, 6)
         page_number = request.GET.get("page", 1)
             
         page_obj = paginator.get_page(page_number)
@@ -33,6 +33,15 @@ def index(request):
         "user": user,
         "recipes": recipes,
         "page_obj": page_obj,
+    })
+    
+def recipe(request, recipe_name):
+    user = request.user
+    recipe = get_object_or_404(Recipe, name=recipe_name)
+    
+    return render(request, "recipe.html", {
+        "user": user,
+        "recipe": recipe
     })
 
 

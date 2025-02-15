@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block body %}
-<div class="container text-center">
+<div class="container ">
     <!-- Row to display recipes in 3-column grid -->
     <div class="row">
         {% for recipe in page_obj %}
@@ -11,8 +11,7 @@
                 <img src="{{ recipe.image.url }}" class="card-img-top" alt="{{ recipe.name }}">
                 {% endif %}
                 <div class="card-body">
-                    <h5 class="card-title">{{ recipe.name }}</h5>
-                    <p class="card-text">{{ recipe.description }}</p>
+                    <h5 class="card-title text-center"><a href="{% url 'recipe' recipe.name %}">{{ recipe.name }}</a></h5>
                 </div>
             </div>
         </div>
@@ -21,22 +20,20 @@
 
     <!-- Pagination Links -->
      {% if page_obj %}
-     <div class="pagination">
-        <span class="step-links">
-            {% if page_obj.has_previous %}
-                <a href="?page=1" class="page-link">&laquo; first</a>
-                <a href="?page={{ page_obj.previous_page_number }}" class="page-link">previous</a>
-            {% endif %}
-    
-            <span class="current page-link">
-                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-            </span>
-    
-            {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}" class="page-link">next</a>
-                <a href="?page={{ page_obj.paginator.num_pages }}" class="page-link">last &raquo;</a>
-            {% endif %}
+     <div class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+            <a href="?page=1" class="page-link">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}" class="page-link">previous</a>
+        {% endif %}
+
+        <span class="current page-link">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
         </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="page-link">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}" class="page-link">last &raquo;</a>
+        {% endif %}
     </div>
     {% endif %}
   </div>
