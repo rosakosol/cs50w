@@ -9,7 +9,17 @@
     font-optical-sizing: auto;
     font-weight: normal;
     font-style: normal;
-  }
+}
+
+div {
+    box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: inherit;
+}
 
 h1 {
     font-family: "Lobster", sans-serif;
@@ -18,3 +28,10 @@ h1 {
 h2, h3, h4, h5, h6, p, li, a {
     font-family: "Inter", sans-serif;
 }
+
+body {
+    background: url("../../media/bg.jpg") no-repeat center center;
+    height: 100vh;
+    width: 100%;
+}
+

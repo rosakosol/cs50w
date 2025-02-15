@@ -56,7 +56,7 @@ class Recipe(models.Model):
     description = models.TextField(default="")  
     image = models.ImageField(upload_to="images/%d/%m/%y", default=None)    
     meal_type = models.ForeignKey(MealType, on_delete=models.CASCADE, related_name="recipes", null=True)
-    
+    created_at = models.DateTimeField(auto_now_add=True)
     
 class CreateRecipeForm(forms.Form):
     name = forms.CharField(max_length=64)

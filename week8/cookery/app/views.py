@@ -12,7 +12,7 @@ from .models import Ingredient, Cuisine, Rating, MealType, Recipe, CreateRecipeF
 # Create your views here.
 def index(request):
     user = request.user
-    recipes = Recipe.objects.all().order_by("name")
+    recipes = Recipe.objects.all().order_by("-created_at")
     
     # If there are any recipes, paginate to 12 per page
     if recipes:
