@@ -43,3 +43,5 @@ class Recipe(models.Model):
     rating = models.ForeignKey(Rating, on_delete=models.CASCADE, null=True, blank=True, related_name="recipes")
     ingredients = models.ManyToManyField(Ingredient)
     description = models.TextField(default="")  
+    image_url = models.URLField(max_length=200, null=True, blank=True)
+    meal_type = models.ForeignKey(MealType, on_delete=models.CASCADE, related_name="recipes", null=True)
