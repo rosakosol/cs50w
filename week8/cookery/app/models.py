@@ -54,7 +54,7 @@ class Recipe(models.Model):
     rating = models.ForeignKey(Rating, on_delete=models.CASCADE, null=True, blank=True, related_name="recipes")
     ingredients = models.ManyToManyField(Ingredient)
     description = models.TextField(default="")  
-    image_url = models.URLField(max_length=200, null=True, blank=True)
+    image = models.ImageField(upload_to="images/%d/%m/%y", default=None)    
     meal_type = models.ForeignKey(MealType, on_delete=models.CASCADE, related_name="recipes", null=True)
     
     
@@ -66,7 +66,7 @@ class CreateRecipeForm(forms.Form):
             "rows": 10,
             "cols": 80
         }))
-    image_url = forms.URLField(max_length=200, required=False)
+    image_url = forms.ImageField()
     meal_type = forms.ModelChoiceField(
         queryset=MealType.objects.all(),
         empty_label="Select a category",
