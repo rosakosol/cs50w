@@ -29,6 +29,11 @@ def index(request):
     })
 
 
+def add_recipe_view(request):
+    return render(request, 'add_recipe.html', {
+        
+    })
+
 def login_view(request):
     if request.method == "POST":
 
