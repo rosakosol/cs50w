@@ -36,6 +36,11 @@ body {
   width: 100%;
 }
 
+@media (min-width: 768px) {
+  .navbar {
+    height: 100px;
+  }
+}
 /* Card for recipes on index page */
 .card img {
   max-height: 250px;

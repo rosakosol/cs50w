@@ -10,6 +10,16 @@ $grid-breakpoints: (
   xxl: 1400px
 );
 
+$spacer: 1rem;
+$spacers: (
+  0: 0,
+  1: $spacer * .25,
+  2: $spacer * .5,
+  3: $spacer,
+  4: $spacer * 1.5,
+  5: $spacer * 3,
+);
+
 .lobster-regular {
     font-family: "Lobster", serif;
     font-weight: 400;
@@ -45,6 +55,12 @@ body {
     background: url("../../media/bg.jpg") no-repeat center center;
     height: 100vh;
     width: 100%;
+}
+
+@include media-breakpoint-up(md) {
+    .navbar {
+        height: 100px;
+    }
 }
 
 /* Card for recipes on index page */

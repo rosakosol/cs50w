@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block body %}
-<div class="container ">
+<div class="container mt-5">
     <!-- Row to display recipes in 3-column grid -->
     <div class="row">
         {% for recipe in page_obj %}
@@ -20,7 +20,7 @@
 
     <!-- Pagination Links -->
      {% if page_obj %}
-     <div class="pagination justify-content-center">
+     <div class="pagination justify-content-center pb-5">
         {% if page_obj.has_previous %}
             <a href="?page=1" class="page-link">&laquo; first</a>
             <a href="?page={{ page_obj.previous_page_number }}" class="page-link">previous</a>
