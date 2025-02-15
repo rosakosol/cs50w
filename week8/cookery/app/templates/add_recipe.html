@@ -5,7 +5,7 @@
         <h2>Add a New Recipe</h2>
         <div>
             <!-- Create Listing Form -->
-            <form action="{% url 'add_recipe' %}" method="post">
+            <form action="{% url 'add_recipe' %}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ create_form }}
                 <input type="submit" value="Submit" class="btn btn-primary">

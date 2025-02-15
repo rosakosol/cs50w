@@ -60,13 +60,7 @@ class Recipe(models.Model):
     
 class CreateRecipeForm(forms.Form):
     name = forms.CharField(max_length=64)
-    description = forms.CharField(
-        label="Description",
-        widget=forms.Textarea(attrs={
-            "rows": 10,
-            "cols": 80
-        }))
-    image_url = forms.ImageField()
+    image = forms.ImageField(required=False)
     meal_type = forms.ModelChoiceField(
         queryset=MealType.objects.all(),
         empty_label="Select a category",
@@ -79,3 +73,9 @@ class CreateRecipeForm(forms.Form):
         widget=forms.Select(attrs={"class": "form-control"}),
         required=True
     )
+    description = forms.CharField(
+        label="Description",
+        widget=forms.Textarea(attrs={
+            "rows": 10,
+            "cols": 80
+        }))

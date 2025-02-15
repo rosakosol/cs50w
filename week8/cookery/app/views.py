@@ -17,8 +17,11 @@ def index(request):
     # If there are any recipes, paginate to 12 per page
     if recipes:
         paginator = Paginator(recipes, 12)
-        page_number = request.GET.get("page")
+        page_number = request.GET.get("page", 1)
+            
         page_obj = paginator.get_page(page_number)
+        
+
         
         # If no recipes, paginator is none
     else:
@@ -40,19 +43,19 @@ def add_recipe_view(request):
         if request.method == "POST":
             
             # Create Listing Form
-            create_form = CreateRecipeForm(request.POST)
+            create_form = CreateRecipeForm(request.POST, request.FILES)
             if create_form.is_valid():
-                name = form.cleaned_data['name']
-                description = form.cleaned_data['description']
-                image_url = form.cleaned_data.get('image_url', '')
-                meal_type = form.cleaned_data['meal_type']
-                cuisine = form.cleaned_data['cuisine']
+                name = create_form.cleaned_data["name"]
+                description = create_form.cleaned_data["description"]
+                image = create_form.cleaned_data["image"]
+                meal_type = create_form.cleaned_data["meal_type"]
+                cuisine = create_form.cleaned_data["cuisine"]
 
                 # Create a new Recipe instance
                 recipe = Recipe.objects.create(
                     name=name,
                     description=description,
-                    image_url=image_url,
+                    image=image,
                     meal_type=meal_type,
                     cuisine=cuisine,
                 )           
