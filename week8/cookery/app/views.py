@@ -1,15 +1,31 @@
 from django.shortcuts import render
 from django.conf import settings
 from django.core.paginator import Paginator
-from .models import Recipe
+from django.http import HttpResponse, HttpResponseRedirect
+from .models import Ingredient, Cuisine, Rating, MealType, Recipe
 
 
 # Create your views here.
 def index(request):
+    user = request.user
+    recipes = Recipe.objects.all().order_by("name")
+    
+    # If there are any recipes, paginate to 12 per page
+    if recipes:
+        paginator = Paginator(recipes, 12)
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+        
+        # If no recipes, paginator is none
+    else:
+        page_obj = None
     
     
     return render(request, 'index.html', {
         "MEDIA_URL": settings.MEDIA_URL,
+        "user": user,
+        "recipes": recipes,
+        "page_obj": page_obj,
     })
 
 

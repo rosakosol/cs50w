@@ -5,14 +5,14 @@ from django.core.exceptions import ValidationError
 
 # Create your models here.
 class Ingredient(models.Model):
-    name = models.CharField(max_length=64)
+    name = models.CharField(max_length=64, default="")
 
         
 class Cuisine(models.Model):
-    name = models.CharField(max_length=64)
+    name = models.CharField(max_length=64, default="")
 
 class Rating(models.Model):
-    value = models.IntegerField()
+    value = models.IntegerField(default=1)
     
     def validate(self):
         if not 1 <= self.value <= 5:
@@ -38,8 +38,8 @@ class MealType(models.Model):
     
 
 class Recipe(models.Model):
-    name = models.CharField(max_length=64)
-    cuisine = models.ForeignKey(Cuisine, on_delete=models.CASCADE, null=True, blank=True)
-    rating = models.ForeignKey(Rating, on_delete=models.CASCADE, null=True, blank=True)
+    name = models.CharField(max_length=64, default="")
+    cuisine = models.ForeignKey(Cuisine, on_delete=models.CASCADE, null=True, blank=True, related_name="recipes")
+    rating = models.ForeignKey(Rating, on_delete=models.CASCADE, null=True, blank=True, related_name="recipes")
     ingredients = models.ManyToManyField(Ingredient)
-    description = models.TextField()  
+    description = models.TextField(default="")  
