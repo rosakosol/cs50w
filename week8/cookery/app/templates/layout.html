@@ -21,9 +21,11 @@
                     <li class="nav-item">
                         <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'index' %}">All Recipes</a>
                     </li>
+                    {% if user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link {% if request.path == '/add_recipe' %}active{% endif %}" href="{% url 'add_recipe' %}">Add Recipe</a>
                     </li>
+                    {% endif %}
                     <li class="nav-item">
                         <a class="nav-link {% if request.path == '/login' %}active{% endif %}" href="{% url 'login' %}">Login</a>
                     </li>

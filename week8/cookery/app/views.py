@@ -30,9 +30,32 @@ def index(request):
 
 
 def add_recipe_view(request):
-    return render(request, 'add_recipe.html', {
+    user = request.user
+    
+    if user.is_authenticated:
+        if request.method == "POST":
+            
+            # Create Listing Form
+            create_form = CreateRecipeForm(request.POST)
+            if create_form.is_valid():
+                new_recipe = Recipe()
+                new_recipe.name = create_form.cleaned_data["name"]
+                new_recipe.description = create_form.cleaned_data["description"]
+                new_recipe.image_url = create_form.cleaned_data["image_url"]
+                new_recipe.meal_type = create_form.cleaned_data["meal_type"]
+                new_recipe.save()              
+                # Redirect to the same page to show the new comment
+                return HttpResponseRedirect(reverse("index"))  
         
-    })
+        else:
+            create_form = CreateRecipeForm()
+        
+        return render(request, "add_recipe.html", {
+            "user": user,
+            "create_form": create_form,
+        })
+    else:
+        return render(request, "access_denied.html")
 
 def login_view(request):
     if request.method == "POST":

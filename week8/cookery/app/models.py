@@ -45,3 +45,20 @@ class Recipe(models.Model):
     description = models.TextField(default="")  
     image_url = models.URLField(max_length=200, null=True, blank=True)
     meal_type = models.ForeignKey(MealType, on_delete=models.CASCADE, related_name="recipes", null=True)
+    
+    
+class CreateRecipeForm(forms.Form):
+    name = forms.CharField(max_length=64)
+    description = forms.CharField(
+        label="Content",
+        widget=forms.Textarea(attrs={
+            "rows": 10,
+            "cols": 80
+        }))
+    image_url = forms.URLField(max_length=200, required=False)
+    meal_type = forms.ModelChoiceField(
+        queryset=MealType.objects.all(),
+        empty_label="Select a category",
+        widget=forms.Select(attrs={"class": "form-control"}),
+        required=True
+    )
