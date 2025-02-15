@@ -1,8 +1,16 @@
 from django.shortcuts import render
+from django.conf import settings
+from django.core.paginator import Paginator
+from .models import Recipe
+
 
 # Create your views here.
 def index(request):
-    return render(request, 'index.html',)
+    
+    
+    return render(request, 'index.html', {
+        "MEDIA_URL": settings.MEDIA_URL,
+    })
 
 
 def login_view(request):
@@ -57,3 +65,4 @@ def register_view(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "register.html")
+    
