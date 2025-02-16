@@ -40,6 +40,18 @@
                 </div>
             </div>
         </nav>
+        {% if messages %}
+        <div class="messages">
+            <ul>
+                {% for message in messages %}
+                    <li class="alert alert-{{ message.level_tag }}" style="list-style-type:none;">
+                        {{ message }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
         <div class="body">
             {% block body %}
             {% endblock %}

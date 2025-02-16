@@ -2,28 +2,40 @@ from django.db import models
 from django import forms
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
+from django.db.models import Avg
 
 # Create your models here.
 class Ingredient(models.Model):
     name = models.CharField(max_length=64, default="")
     
     def __str__(self):
-        return f"{self.name}"
+        return self.name
 
         
 class Cuisine(models.Model):
     name = models.CharField(max_length=64, default="")
     
     def __str__(self):
-        return f"{self.name}"
-
+        return self.name
 
 class Rating(models.Model):
+    user = models.ForeignKey('auth.User', on_delete=models.CASCADE, default="")
     value = models.IntegerField(default=1)
+    recipe = models.ForeignKey('Recipe', on_delete=models.CASCADE, default="", null=True)
     
-    def validate(self):
+    def clean(self):
         if not 1 <= self.value <= 5:
-            raiseValidationError("Rating must be between 1 and 5.")
+            raise ValidationError("Rating must be between 1 and 5.")
+            
+    def __str__(self):
+        return str(self.value)
+            
+class RatingForm(forms.Form):
+    value = forms.ChoiceField(
+        choices=[(str(i), i) for i in range(1, 6)],
+        widget=forms.RadioSelect(attrs={'class': 'star-rating'}),
+        required=True
+    )
 
 
 class MealType(models.Model):
@@ -44,19 +56,25 @@ class MealType(models.Model):
     )
     
     def __str__(self):
-        return f"{self.meal_type}"
-
-    
+        return self.meal_type
 
 class Recipe(models.Model):
     name = models.CharField(max_length=64, default="")
     cuisine = models.ForeignKey(Cuisine, on_delete=models.CASCADE, null=True, blank=True, related_name="recipes")
-    rating = models.ForeignKey(Rating, on_delete=models.CASCADE, null=True, blank=True, related_name="recipes")
+    ratings = models.ManyToManyField(Rating, related_name="recipes")
     ingredients = models.ManyToManyField(Ingredient)
     description = models.TextField(default="")  
     image = models.ImageField(upload_to="images/%d/%m/%y", default=None)    
     meal_type = models.ForeignKey(MealType, on_delete=models.CASCADE, related_name="recipes", null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    
+    def average_rating(self):
+        average = self.ratings.aggregate(Avg('value'))['value__avg']
+        return average if average is not None else 0
+
+    
+    def __str__(self):
+        return self.name
     
 class CreateRecipeForm(forms.Form):
     name = forms.CharField(max_length=64)
@@ -79,3 +97,10 @@ class CreateRecipeForm(forms.Form):
             "rows": 10,
             "cols": 80
         }))
+    ingredients = forms.ModelMultipleChoiceField(
+        queryset=Ingredient.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=True
+    )
+
+

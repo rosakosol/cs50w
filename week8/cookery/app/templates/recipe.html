@@ -10,6 +10,23 @@
     </div>
     {% endif %}
     <div class="container p-5 pb-0">
+        <p>Average Rating: {{ recipe.average_rating }}</p>
+        <form method="post">
+            {% csrf_token %}
+            <!-- Render the 'value' field -->
+            <div class="form-group">
+                <div class="star-rating">
+                    {% for choice in rating_form.value.field.choices %}
+                        <input type="radio" id="rating_{{ choice.0 }}" name="{{ rating_form.value.name }}" value="{{ choice.0 }}" class="star-rating-input">
+                        <label for="rating_{{ choice.0 }}" class="star-rating-label">
+                            <i class="bi bi-star"></i>
+                        </label>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <button class="btn btn-primary" type="submit">Submit Rating</button>
+        </form>
         <p>{{ recipe.description }}</p>
     </div>
     <div class="container-fluid p-0">
@@ -21,7 +38,7 @@
             <h3>Instructions</h3>
           </div>
         </div>
-      </div>
+    </div>
 </div>
 
 {% endblock %}

@@ -3,9 +3,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.core.paginator import Paginator
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
-from .models import Ingredient, Cuisine, Rating, MealType, Recipe, CreateRecipeForm
+from django.contrib import messages
+from .models import Ingredient, Cuisine, Rating, RatingForm, MealType, Recipe, CreateRecipeForm
 
 
 
@@ -18,10 +19,7 @@ def index(request):
     if recipes:
         paginator = Paginator(recipes, 6)
         page_number = request.GET.get("page", 1)
-            
         page_obj = paginator.get_page(page_number)
-        
-
         
         # If no recipes, paginator is none
     else:
@@ -32,16 +30,46 @@ def index(request):
         "MEDIA_URL": settings.MEDIA_URL,
         "user": user,
         "recipes": recipes,
-        "page_obj": page_obj,
+        "page_obj": page_obj
     })
     
 def recipe(request, recipe_name):
     user = request.user
     recipe = get_object_or_404(Recipe, name=recipe_name)
     
+    if user.is_authenticated:
+        if request.method == "POST":
+            rating_form = RatingForm(request.POST)
+            if rating_form.is_valid():
+                # Check if user has rated before
+                existing_rating = Rating.objects.filter(user=user, recipe=recipe).first()
+                if existing_rating:
+                    existing_rating.value = rating_form.cleaned_data["value"]
+                    existing_rating.save()
+                    messages.success(request, "Your rating has been saved successfully!")
+
+                else:
+                    rating = Rating()
+                    rating.value = rating_form.cleaned_data["value"]
+                    rating.user = user
+                    rating.recipe = recipe
+                    rating.save()
+                    recipe.ratings.add(rating)
+                    messages.success(request, "Your rating has been placed successfully!")
+                
+                # Refresh recipe in db
+                recipe.refresh_from_db()
+                print(recipe.ratings.all())
+                
+                return HttpResponseRedirect(reverse("recipe", args=[recipe_name]))
+            
+        else:
+            rating_form = RatingForm()
+    
     return render(request, "recipe.html", {
         "user": user,
-        "recipe": recipe
+        "recipe": recipe,
+        "rating_form": rating_form
     })
 
 
