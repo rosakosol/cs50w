@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     starRating();
     fadeMessage();
+    averageRating();
 });
 
 // Function to colour rating stars when clicked
@@ -45,4 +46,21 @@ function fadeMessage() {
     } else {
         console.error("Elements not found. Ensure '.alert' and '.star-rating-container' exist in the DOM.");
     }
+}
+
+
+function averageRating() {
+    const avgRatingElement = document.querySelector("[data-avg-rating]")
+
+    const avgRating = parseInt(avgRatingElement.getAttribute("data-avg-rating"));
+
+    const pRating = document.querySelector(".star-avg-rating")
+
+    pRating.innerHTML = "";
+
+    for (let i = 0; i < avgRating; i++) {
+        pRating.innerHTML += `<label class="star-rating-label"><i class="bi bi-star-fill" style="color:gold;"></i></label>`;
+    }
+
+    
 }

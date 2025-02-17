@@ -6,6 +6,9 @@
     <div class="container-fluid p-0">
         <div class="recipe-img-container p-5 text-left" style="{% if recipe.image %}background-image: url('{{ recipe.image.url }}'){% endif %}; background-size: cover; background-position: center;">
           <h2 class="text-body-emphasis">{{ recipe.name }}</h2>
+          <!-- Display recipe average rating -->
+          <p class="star-avg-rating" data-avg-rating="{{ recipe.average_rating }}">Average Rating: {{ recipe.average_rating }}
+        </p>
         </div>
     </div>
     {% endif %}
@@ -20,8 +23,6 @@
             {% endfor %}
             {% endif %}
             <div class="star-rating-container">
-                <p>Average Rating: {{ recipe.average_rating }}
-                </p>
                 <form method="post">
                     {% csrf_token %}
                     <!-- Render the 'value' field -->
@@ -35,7 +36,6 @@
                             {% endfor %}
                         </div>
                     </div>
-                    
                     <button class="btn btn-primary" type="submit">Submit Rating</button>
                 </form>
             </div>
