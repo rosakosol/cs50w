@@ -59,7 +59,6 @@ def recipe(request, recipe_name):
                 
                 # Refresh recipe in db
                 recipe.refresh_from_db()
-                print(recipe.ratings.all())
                 
                 return HttpResponseRedirect(reverse("recipe", args=[recipe_name]))
             

@@ -66,15 +66,12 @@ body {
   }
 }
 /* Star Rating */
-/* Hide the radio buttons */
 .star-rating input[type=radio] {
   display: none;
 }
 
-/* Style the star labels */
 .star-rating-label {
-  font-size: 30px;
-  color: #ccc; /* Light gray for unselected stars */
+  font-size: 20px;
   cursor: pointer;
   margin-right: 5px;
 }/*# sourceMappingURL=style.css.map */

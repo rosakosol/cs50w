@@ -1,4 +1,6 @@
 {% extends "layout.html" %}
+{% load custom_filters %}
+
 
 {% block body %}
 <div class="container-md recipe-container p-0 mt-5">
@@ -10,12 +12,13 @@
     </div>
     {% endif %}
     <div class="container p-5 pb-0">
-        <p>Average Rating: {{ recipe.average_rating }}</p>
+        <p>Average Rating: {{ recipe.average_rating }}
+        </p>
         <form method="post">
             {% csrf_token %}
             <!-- Render the 'value' field -->
             <div class="form-group">
-                <div class="star-rating">
+                <div class="star-rating mb-2">
                     {% for choice in rating_form.value.field.choices %}
                         <input type="radio" id="rating_{{ choice.0 }}" name="{{ rating_form.value.name }}" value="{{ choice.0 }}" class="star-rating-input">
                         <label for="rating_{{ choice.0 }}" class="star-rating-label">
