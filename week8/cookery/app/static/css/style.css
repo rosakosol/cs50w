@@ -1,5 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lobster&display=swap");
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
+* {
+  outline: 1px solid red;
+}
+
 .lobster-regular {
   font-family: "Lobster", serif;
   font-weight: 400;
@@ -33,8 +37,8 @@ h2, h3, h4, h5, h6, p, li, a {
 
 body {
   background: url("../../media/bg.jpg") no-repeat center center;
-  height: 100vh;
   width: 100%;
+  height: 100%;
 }
 
 @media (min-width: 768px) {
@@ -42,7 +46,6 @@ body {
     height: 100px;
   }
 }
-/* Card for recipes on index page */
 .card img {
   max-height: 250px;
   width: 100%;
@@ -50,7 +53,6 @@ body {
      object-fit: cover;
 }
 
-/* Individual recipe page */
 .recipe-container {
   background-color: #fff;
   height: 80vh;
@@ -65,13 +67,35 @@ body {
     height: 500px;
   }
 }
-/* Star Rating */
 .star-rating input[type=radio] {
   display: none;
 }
 
 .star-rating-label {
+  color: #ccc;
   font-size: 20px;
   cursor: pointer;
   margin-right: 5px;
+}
+
+.alert {
+  position: absolute !important;
+  top: 200px;
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0px);
+  transition: visibility 0s, opacity 250ms, transform 1s;
+}
+
+.alert.hide {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: visibility 0s 250ms, opacity 250ms, transform 1s;
+}
+
+@media (min-width: 768px) {
+  .alert {
+    top: 600px;
+  }
 }/*# sourceMappingURL=style.css.map */

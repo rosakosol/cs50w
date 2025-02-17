@@ -1,9 +1,7 @@
 {% extends "layout.html" %}
-{% load custom_filters %}
-
 
 {% block body %}
-<div class="container-md recipe-container p-0 mt-5">
+<div class="container-md recipe-container p-0 mt-5 mb-5">
     {% if recipe %}
     <div class="container-fluid p-0">
         <div class="recipe-img-container p-5 text-left" style="{% if recipe.image %}background-image: url('{{ recipe.image.url }}'){% endif %}; background-size: cover; background-position: center;">
@@ -11,35 +9,61 @@
         </div>
     </div>
     {% endif %}
-    <div class="container p-5 pb-0">
-        <p>Average Rating: {{ recipe.average_rating }}
-        </p>
-        <form method="post">
-            {% csrf_token %}
-            <!-- Render the 'value' field -->
-            <div class="form-group">
-                <div class="star-rating mb-2">
-                    {% for choice in rating_form.value.field.choices %}
-                        <input type="radio" id="rating_{{ choice.0 }}" name="{{ rating_form.value.name }}" value="{{ choice.0 }}" class="star-rating-input">
-                        <label for="rating_{{ choice.0 }}" class="star-rating-label">
-                            <i class="bi bi-star"></i>
-                        </label>
-                    {% endfor %}
-                </div>
+    <div class="container p-5">
+        <div>
+            {% if messages %}
+
+            {% for message in messages %}
+                <li class="alert alert-{{ message.level_tag }}" style="list-style-type:none;">
+                    {{ message }}
+                </li>
+            {% endfor %}
+            {% endif %}
+            <div class="star-rating-container">
+                <p>Average Rating: {{ recipe.average_rating }}
+                </p>
+                <form method="post">
+                    {% csrf_token %}
+                    <!-- Render the 'value' field -->
+                    <div class="form-group">
+                        <div class="star-rating mb-2">
+                            {% for choice in rating_form.value.field.choices %}
+                                <input type="radio" id="rating_{{ choice.0 }}" name="{{ rating_form.value.name }}" value="{{ choice.0 }}" class="star-rating-input">
+                                <label for="rating_{{ choice.0 }}" class="star-rating-label">
+                                    <i class="bi bi-star-fill"></i>
+                                </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary" type="submit">Submit Rating</button>
+                </form>
             </div>
-            
-            <button class="btn btn-primary" type="submit">Submit Rating</button>
-        </form>
-        <p>{{ recipe.description }}</p>
-    </div>
-    <div class="container-fluid p-0">
-        <div class="row p-5">
-          <div class="col-md-6">
-            <h3>Ingredients</h3>
-          </div>
-          <div class="col-md-6">
-            <h3>Instructions</h3>
-          </div>
+        </div>
+        <div class="mt-5">        
+            <p>{{ recipe.description }}</p>
+        </div>
+
+        <div class="mt-5">
+            <div class="row">
+            <div class="col-md-6">
+                <h3>Ingredients</h3>
+                <p>Bootstrap’s form controls expand on our Rebooted form styles with classes. Use these classes to opt into their customized displays for a more consistent rendering across browsers and devices.
+
+                    Be sure to use an appropriate type attribute on all inputs (e.g., email for email address or number for numerical information) to take advantage of newer input controls like email verification, number selection, and more.
+                    
+                    Here’s a quick example to demonstrate Bootstrap’s form styles. Keep reading for documentation on required classes, form layout, and more.</p>
+            </div>
+            <div class="col-md-6">
+                <h3>Instructions</h3>
+                <p>Bootstrap’s form controls expand on our Rebooted form styles with classes. Use these classes to opt into their customized displays for a more consistent rendering across browsers and devices.
+
+                    Be sure to use an appropriate type attribute on all inputs (e.g., email for email address or number for numerical information) to take advantage of newer input controls like email verification, number selection, and more.
+                    
+                    Here’s a quick example to demonstrate Bootstrap’s form styles. Keep reading for documentation on required classes, form layout, and more.</p>
+
+            </div>
+            </div>
         </div>
     </div>
 </div>

@@ -12,9 +12,9 @@
                 {% endif %}
                 <div class="card-body">
                     <h5 class="card-title text-center"><a href="{% url 'recipe' recipe.name %}">{{ recipe.name }}</a></h5>
+                    <!-- Display average ratings -->
+                    {{ recipe.average_rating }}
                 </div>
-                <!-- Display average ratings -->
-                {{ recipe.average_rating }}
             </div>
         </div>
         {% endfor %}
