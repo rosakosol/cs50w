@@ -62,5 +62,12 @@ function averageRating() {
         pRating.innerHTML += `<label class="star-rating-label"><i class="bi bi-star-fill" style="color:gold;"></i></label>`;
     }
 
+}
+
+function existingRating() {
+    const avgRatingElement = document.querySelector("[data-avg-rating]")
+
+    const avgRating = parseInt(avgRatingElement.getAttribute("data-avg-rating"));
+
     
 }

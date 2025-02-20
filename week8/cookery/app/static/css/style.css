@@ -78,6 +78,10 @@ body {
   margin-right: 5px;
 }
 
+.existing {
+  color: gold;
+}
+
 .alert {
   position: absolute !important;
   top: 200px;

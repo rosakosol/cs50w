@@ -38,17 +38,19 @@ def recipe(request, recipe_name):
     recipe = get_object_or_404(Recipe, name=recipe_name)
     
     if user.is_authenticated:
+        existing_rating = Rating.objects.filter(user=user, recipe=recipe).first()
+
         if request.method == "POST":
             rating_form = RatingForm(request.POST)
             if rating_form.is_valid():
                 # Check if user has rated before
-                existing_rating = Rating.objects.filter(user=user, recipe=recipe).first()
                 if existing_rating:
                     existing_rating.value = rating_form.cleaned_data["value"]
                     existing_rating.save()
                     messages.success(request, "Your rating has been saved successfully!")
 
                 else:
+                    existing_rating = None
                     rating = Rating()
                     rating.value = rating_form.cleaned_data["value"]
                     rating.user = user
@@ -64,11 +66,15 @@ def recipe(request, recipe_name):
             
         else:
             rating_form = RatingForm()
+    else:
+        existing_rating = None
+        rating_form = None
     
     return render(request, "recipe.html", {
         "user": user,
         "recipe": recipe,
-        "rating_form": rating_form
+        "rating_form": rating_form,
+        "existing_rating": existing_rating
     })
 
 

@@ -13,7 +13,7 @@
                 <div class="card-body">
                     <h5 class="card-title text-center"><a href="{% url 'recipe' recipe.name %}">{{ recipe.name }}</a></h5>
                     <!-- Display average ratings -->
-                    {{ recipe.average_rating }}
+                    <p class="star-avg-rating" data-avg-rating="{{ recipe.average_rating }}">Average Rating: {{ recipe.average_rating }}
                 </div>
             </div>
         </div>

@@ -14,6 +14,7 @@
     {% endif %}
     <div class="container p-5">
         <div>
+            <!-- Display django message if rating saved/failed -->
             {% if messages %}
 
             {% for message in messages %}
@@ -22,23 +23,42 @@
                 </li>
             {% endfor %}
             {% endif %}
+
+            <!-- Display star rating container if logged in -->
+            {% if user.is_authenticated %}
             <div class="star-rating-container">
                 <form method="post">
                     {% csrf_token %}
                     <!-- Render the 'value' field -->
                     <div class="form-group">
                         <div class="star-rating mb-2">
-                            {% for choice in rating_form.value.field.choices %}
-                                <input type="radio" id="rating_{{ choice.0 }}" name="{{ rating_form.value.name }}" value="{{ choice.0 }}" class="star-rating-input">
-                                <label for="rating_{{ choice.0 }}" class="star-rating-label">
-                                    <i class="bi bi-star-fill"></i>
-                                </label>
-                            {% endfor %}
+                            <!-- Display default star rating if user has not rated before -->
+                            {% if not existing_rating %}
+                                {% for choice in rating_form.value.field.choices %}
+                                    <input type="radio" id="rating_{{ choice.0 }}" name="{{ rating_form.value.name }}" value="{{ choice.0 }}" class="star-rating-input">
+                                    <label for="rating_{{ choice.0 }}" class="star-rating-label">
+                                        <i class="bi bi-star-fill"></i>
+                                    </label>
+                                {% endfor %}
+
+                            <!-- If existing rating, display saved rating -->
+                            {% else %}
+                                {% for choice in rating_form.value.field.choices %}
+                                    <input type="radio" id="rating_{{ choice.0 }}" name="{{ rating_form.value.name }}" value="{{ choice.0 }}" class="star-rating-input"
+                                    {% if choice.0 == existing_rating.value %} checked {% endif %}> <!-- Mark the radio button as checked if it matches the existing rating -->
+                                    <label for="rating_{{ choice.0 }}" class="star-rating-label">
+                                        <i class="bi bi-star-fill"></i> <!-- Use 'existing' class for styling -->
+                                    </label>
+                                {% endfor %}
+                            {% endif %}
+
                         </div>
                     </div>
                     <button class="btn btn-primary" type="submit">Submit Rating</button>
                 </form>
             </div>
+            {% endif %}
+
         </div>
         <div class="mt-5">        
             <p>{{ recipe.description }}</p>
@@ -48,11 +68,10 @@
             <div class="row">
             <div class="col-md-6">
                 <h3>Ingredients</h3>
-                <p>Bootstrap’s form controls expand on our Rebooted form styles with classes. Use these classes to opt into their customized displays for a more consistent rendering across browsers and devices.
 
-                    Be sure to use an appropriate type attribute on all inputs (e.g., email for email address or number for numerical information) to take advantage of newer input controls like email verification, number selection, and more.
-                    
-                    Here’s a quick example to demonstrate Bootstrap’s form styles. Keep reading for documentation on required classes, form layout, and more.</p>
+
+
+                {{ recipe.ingredients }}
             </div>
             <div class="col-md-6">
                 <h3>Instructions</h3>
