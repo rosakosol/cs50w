@@ -5,10 +5,10 @@
     {% if recipe %}
     <div class="container-fluid p-0">
         <div class="recipe-img-container p-5 text-left" style="{% if recipe.image %}background-image: url('{{ recipe.image.url }}'){% endif %}; background-size: cover; background-position: center;">
-          <h2 class="text-body-emphasis">{{ recipe.name }}</h2>
+          <!-- Display recipe name -->
+            <h2 class="text-body-emphasis">{{ recipe.name }}</h2>
           <!-- Display recipe average rating -->
-          <p class="star-avg-rating" data-avg-rating="{{ recipe.average_rating }}">Average Rating: {{ recipe.average_rating }}
-        </p>
+          <p class="star-avg-rating" data-avg-rating="{{ recipe.average_rating }}">Average Rating: {{ recipe.average_rating }}</p>
         </div>
     </div>
     {% endif %}
@@ -58,8 +58,9 @@
                 </form>
             </div>
             {% endif %}
-
         </div>
+
+        <!-- Display recipe description -->
         <div class="mt-5">        
             <p>{{ recipe.description }}</p>
         </div>
@@ -67,20 +68,18 @@
         <div class="mt-5">
             <div class="row">
             <div class="col-md-6">
+                <!-- Display recipe ingredients -->
                 <h3>Ingredients</h3>
-
-
-
-                {{ recipe.ingredients }}
+                {% for ingredient in recipe.ingredients.all %}
+                    <li>{{ ingredient.name }}</li>
+                {% endfor %}
             </div>
             <div class="col-md-6">
+                <!-- Display recipe instructions -->
                 <h3>Instructions</h3>
-                <p>Bootstrap’s form controls expand on our Rebooted form styles with classes. Use these classes to opt into their customized displays for a more consistent rendering across browsers and devices.
-
-                    Be sure to use an appropriate type attribute on all inputs (e.g., email for email address or number for numerical information) to take advantage of newer input controls like email verification, number selection, and more.
-                    
-                    Here’s a quick example to demonstrate Bootstrap’s form styles. Keep reading for documentation on required classes, form layout, and more.</p>
-
+                {% if recipe.instructions %}
+                    <p>{{ recipe.instructions }}</p>
+                {% endif %}
             </div>
             </div>
         </div>

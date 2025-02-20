@@ -64,6 +64,7 @@ class Recipe(models.Model):
     ratings = models.ManyToManyField(Rating, related_name="recipes")
     ingredients = models.ManyToManyField(Ingredient)
     description = models.TextField(default="")  
+    instructions = models.TextField(default="")
     image = models.ImageField(upload_to="images/%d/%m/%y", default=None)    
     meal_type = models.ForeignKey(MealType, on_delete=models.CASCADE, related_name="recipes", null=True)
     created_at = models.DateTimeField(auto_now_add=True)

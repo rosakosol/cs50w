@@ -21,17 +21,22 @@
                     <li class="nav-item p-md-3">
                         <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'index' %}">All Recipes</a>
                     </li>
-                    {% if user.is_authenticated %}
-                    <li class="nav-item p-md-3">
-                        <a class="nav-link {% if request.path == '/add_recipe' %}active{% endif %}" href="{% url 'add_recipe' %}">Add Recipe</a>
-                    </li>
+                    {% if not user.is_authenticated %}
+                        <li class="nav-item p-md-3">
+                            <a class="nav-link {% if request.path == '/login' %}active{% endif %}" href="{% url 'login' %}">Login</a>
+                        </li>
+                        <li class="nav-item p-md-3">
+                            <a class="nav-link {% if request.path == '/register' %}active{% endif %}" href="{% url 'register' %}">Register</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item p-md-3">
+                            <a class="nav-link {% if request.path == '/add_recipe' %}active{% endif %}" href="{% url 'add_recipe' %}">Add Recipe</a>
+                        </li>
+                        <li class="nav-item p-md-3">
+                            <a class="nav-link {% if request.path == '/logout' %}active{% endif %}" href="{% url 'logout' %}">Logout</a>
+                        </li>
                     {% endif %}
-                    <li class="nav-item p-md-3">
-                        <a class="nav-link {% if request.path == '/login' %}active{% endif %}" href="{% url 'login' %}">Login</a>
-                    </li>
-                    <li class="nav-item p-md-3">
-                        <a class="nav-link {% if request.path == '/register' %}active{% endif %}" href="{% url 'register' %}">Register</a>
-                    </li>
+
                 </ul>
                 <form class="d-flex" role="search">
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
