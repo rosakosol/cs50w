@@ -246,6 +246,45 @@ def favourites_view(request):
         "favourites": favourites,
         "page_obj": page_obj
     })
+    
+    
+    
+def search(request):
+    user = request.user
+    query = request.POST.get("q")
+    recipes = Recipe.objects.all()
+    
+    # If query read
+    if query:
+        results = []
+        
+        # If search query substring in recipe name then add to list of search results
+        for recipe in recipes:
+            if query.lower() in recipe.name.lower():
+                results.append(recipe)
+        
+        # If there are any recipes, paginate
+        if results:
+            paginator = Paginator(results, 6)
+            page_number = request.GET.get("page", 1)
+            page_obj = paginator.get_page(page_number)
+            
+            # If no recipes, paginator is none and return no results page
+        else:
+            page_obj = None
+            return render(request, 'no_results.html')
+            
+        # Else render index page with search results
+        return render(request, 'index.html', {
+            "MEDIA_URL": settings.MEDIA_URL,
+            "user": user,
+            "recipes": results,
+            "page_obj": page_obj
+        })
+    # If query cannot be read, display error message
+    else:     
+        messages.error("Query could not be read!")
+        
 
 def login_view(request):
     if request.method == "POST":
