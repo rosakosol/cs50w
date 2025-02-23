@@ -5,7 +5,7 @@
 
     <!-- Loop through each category -->
     <ul>
-        {% for recipe in recipes %}
+        {% for recipe in favourites %}
             <a href="{% url 'recipe' recipe.id %}" alt=""><li>{{ recipe.name }}</li></a>
         {% endfor %}
     </ul>

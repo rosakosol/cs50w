@@ -7,7 +7,7 @@ from django.core.paginator import Paginator
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.contrib import messages
-from .models import Ingredient, Cuisine, Rating, RatingForm, MealType, Recipe, CreateRecipeForm
+from .models import Ingredient, Cuisine, Rating, RatingForm, MealType, Recipe, CreateRecipeForm, Favourites
 from django.db import IntegrityError
 import json
 
@@ -195,9 +195,27 @@ def delete_recipe(request, recipe_id):
 
 def favourites_view(request):
     user = request.user
+    
+    if user.is_authenticated:
+        # Display watchlist
+        favourites = Favourites.objects.filter(user=user)
+    else:
+        favourites = []
+
+    # If there are any recipes, paginate
+    if favourites:
+        paginator = Paginator(recipes, 6)
+        page_number = request.GET.get("page", 1)
+        page_obj = paginator.get_page(page_number)
+        
+        # If no recipes, paginator is none
+    else:
+        page_obj = None
         
     return render(request, "favourites.html", {
         "user": user,
+        "favourites": favourites,
+        "page_obj": page_obj
     })
 
 def login_view(request):
