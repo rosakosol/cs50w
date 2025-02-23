@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     fadeMessage();
     averageRating();
     initEditButton();
+    initDeleteButton();
 });
 
 // Function to colour rating stars when clicked
@@ -141,3 +142,42 @@ function handleEditButton() {
         });
     }
 }
+
+// Initialize the delete button click event
+function initDeleteButton() {
+    const deleteButton = document.querySelector('.delete-btn');
+    deleteButton.addEventListener('click', handleDeleteButton);
+}
+
+// Ensure delete button is initialized
+document.addEventListener('DOMContentLoaded', initDeleteButton);
+
+
+function handleDeleteButton() {
+    const recipeId = this.dataset.recipeId;  // Get recipe ID from the button's data attribute
+
+    if (confirm("Are you sure you want to delete this recipe?")) {
+        fetch(`/delete_recipe/${recipeId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert("Recipe deleted successfully.");
+                // Optionally, redirect or remove the deleted recipe from the UI
+                window.location.href = '/';  // Redirect to the recipe list page or wherever you want
+            } else {
+                alert("Error: " + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert("An error occurred while deleting the recipe.");
+        });
+    }
+}
+

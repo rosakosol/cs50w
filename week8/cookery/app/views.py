@@ -168,6 +168,30 @@ def edit_recipe(request, recipe_id):
     return JsonResponse({
         "error": "Invalid request."
     }, status=400)
+    
+    
+@login_required
+def delete_recipe(request, recipe_id):
+    user = request.user
+    
+    # Get the recipe object if it exists
+    recipe = get_object_or_404(Recipe, pk=recipe_id)
+    
+    # Ensure the logged-in user is the author of the recipe
+    if recipe.user != user:
+        return JsonResponse({"error": "Unauthorized"}, status=403)
+    
+    try:
+        # Delete the recipe
+        recipe.delete()
+
+        return JsonResponse({
+            "success": True,
+            "message": "Recipe deleted successfully."
+        })
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
+    
 
 
 def login_view(request):
