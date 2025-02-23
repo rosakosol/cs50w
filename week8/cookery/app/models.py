@@ -98,10 +98,17 @@ class CreateRecipeForm(forms.Form):
             "rows": 10,
             "cols": 80
         }))
+    instructions = forms.CharField(
+        label="Instructions",
+        widget=forms.Textarea(attrs={
+            "rows": 10,
+            "cols": 80
+        }))
     ingredients = forms.ModelMultipleChoiceField(
         queryset=Ingredient.objects.all(),
         widget=forms.CheckboxSelectMultiple,
         required=True
     )
+
 
 
