@@ -115,3 +115,8 @@ class Favourites(models.Model):
     user = models.ForeignKey("auth.User", on_delete=models.CASCADE, related_name="favourites")
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name="added_by")
     added_at = models.DateTimeField(auto_now_add=True) 
+    
+    
+class FavouriteForm(forms.Form):
+    recipe_id = forms.IntegerField(widget=forms.HiddenInput())
+    action = forms.ChoiceField(choices=[("add", "Add"), ("remove", "Remove")], widget=forms.HiddenInput())

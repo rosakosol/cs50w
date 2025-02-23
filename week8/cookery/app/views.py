@@ -7,7 +7,7 @@ from django.core.paginator import Paginator
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.contrib import messages
-from .models import Ingredient, Cuisine, Rating, RatingForm, MealType, Recipe, CreateRecipeForm, Favourites
+from .models import Ingredient, Cuisine, Rating, RatingForm, MealType, Recipe, CreateRecipeForm, Favourites, FavouriteForm
 from django.db import IntegrityError
 import json
 
@@ -44,6 +44,7 @@ def recipe(request, recipe_name):
         existing_rating = Rating.objects.filter(user=user, recipe=recipe).first()
 
         if request.method == "POST":
+            
             rating_form = RatingForm(request.POST)
             if rating_form.is_valid():
                 # Check if user has rated before
@@ -64,19 +65,45 @@ def recipe(request, recipe_name):
                 
                 # Refresh recipe in db
                 recipe.refresh_from_db()
-                
                 return HttpResponseRedirect(reverse("recipe", args=[recipe_name]))
-            
+
+            favourite_form = FavouriteForm(request.POST)
+            if favourite_form.is_valid():
+                action = favourite_form.cleaned_data["action"]
+                
+                if action == "add":
+                    if not Favourites.objects.filter(user=user, recipe=recipe).exists():
+                        Favourites.objects.create(user=user, recipe=recipe)
+                        messages.success(request, "Recipe added to favourites.")
+                        
+                # Handle removing the listing from favourites
+                elif action == "remove":
+                    favourite_recipe = Favourites.objects.filter(user=request.user, recipe=recipe).first()
+                    if favourite_recipe:
+                        favourite_recipe.delete()
+                        messages.error(request, "Recipe removed from favourites.")
+
+                return HttpResponseRedirect(reverse("recipe", args=[recipe_name]))
+                
+        # If user is logged in, display empty form 
         else:
             rating_form = RatingForm()
+            favourite_form = FavouriteForm()
+
+        is_favourited = Favourites.objects.filter(user=request.user, recipe=recipe).exists()
+
     else:
         existing_rating = None
         rating_form = None
+        favourite_form = None
+        is_favourited = False
     
     return render(request, "recipe.html", {
         "user": user,
         "recipe": recipe,
         "rating_form": rating_form,
+        "favourite_form": favourite_form,
+        "is_favourited": is_favourited,
         "existing_rating": existing_rating
     })
 
@@ -191,10 +218,12 @@ def delete_recipe(request, recipe_id):
         })
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
-    
+
 
 def favourites_view(request):
     user = request.user
+    
+    recipes = Recipe.objects.all()
     
     if user.is_authenticated:
         # Display watchlist

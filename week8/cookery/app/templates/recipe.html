@@ -69,8 +69,20 @@
                 <button class="btn btn-danger delete-btn" data-recipe-id="{{ recipe.id }}">
                     Delete
                 </button>
-
             {% endif %}
+
+            <!-- If user is logged in, add/remove to favourites -->
+            <form action="{% url 'recipe' recipe.name %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="recipe_id" value="{{ recipe.id }}">
+            {% if is_favourited %}
+                <!-- If the user  has already added the recipe to favourites, show the "Remove from Favourites" button -->
+                <button type="submit" name="action" value="remove" class="btn btn-danger" >Remove from Favourites</button>
+            {% else %}
+                <!-- If the user has not added the recipe to favourites, show the "Add to Favourites" button -->
+                <button type="submit" name="action" value="add" class="btn btn-success">Add to Favourites</button>
+            {% endif %}
+            </form>
         </div>
 
         <!-- Display recipe description -->
