@@ -19,9 +19,9 @@ class Cuisine(models.Model):
         return self.name
 
 class Rating(models.Model):
-    user = models.ForeignKey('auth.User', on_delete=models.CASCADE, default="")
+    user = models.ForeignKey("auth.User", on_delete=models.CASCADE, default="")
     value = models.IntegerField(default=1)
-    recipe = models.ForeignKey('Recipe', on_delete=models.CASCADE, default="", null=True)
+    recipe = models.ForeignKey("Recipe", on_delete=models.CASCADE, default="", null=True)
     
     def clean(self):
         if not 1 <= self.value <= 5:
@@ -59,6 +59,7 @@ class MealType(models.Model):
         return self.meal_type
 
 class Recipe(models.Model):
+    user = models.ForeignKey("auth.User", on_delete=models.CASCADE, default="")
     name = models.CharField(max_length=64, default="")
     cuisine = models.ForeignKey(Cuisine, on_delete=models.CASCADE, null=True, blank=True, related_name="recipes")
     ratings = models.ManyToManyField(Rating, related_name="recipes")

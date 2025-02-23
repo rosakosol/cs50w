@@ -9,6 +9,7 @@ from django.urls import reverse
 from django.contrib import messages
 from .models import Ingredient, Cuisine, Rating, RatingForm, MealType, Recipe, CreateRecipeForm
 from django.db import IntegrityError
+import json
 
 
 
@@ -89,7 +90,7 @@ def add_recipe_view(request):
             # Create Listing Form
             create_form = CreateRecipeForm(request.POST, request.FILES)
             if create_form.is_valid():
-
+                
                 name = create_form.cleaned_data["name"]
                 description = create_form.cleaned_data["description"]
                 image = create_form.cleaned_data["image"]
@@ -100,14 +101,18 @@ def add_recipe_view(request):
 
                 # Create a new Recipe instance
                 recipe = Recipe.objects.create(
+                    user=user,
                     name=name,
                     description=description,
                     image=image,
                     meal_type=meal_type,
                     cuisine=cuisine,
                     instructions=instructions,
-                    ingredients=ingredients
                 )           
+                
+                recipe.ingredients.set(ingredients)
+                recipe.save()
+                
                 # Redirect to the same page to show the new comment
                 return HttpResponseRedirect(reverse("index"))  
         
@@ -120,6 +125,50 @@ def add_recipe_view(request):
         })
     else:
         return render(request, "access_denied.html")
+    
+    
+@login_required
+def edit_recipe(request, recipe_id):
+    user = request.user
+    
+    # Get the recipe object if it exists
+    recipe = get_object_or_404(Recipe, pk=recipe_id)
+    
+    # Ensure the logged-in user is the author of the recipe
+    if recipe.user != user:
+        return JsonResponse({"error": "Unauthorized"}, status=403)
+    
+    if request.method == "POST":
+        try:
+            # Parse the JSON data from the request body
+            data = json.loads(request.body)
+            new_name = data.get('name', recipe.name)  # Default to current name if not provided
+            new_description = data.get('description', recipe.description)  # Default to current description if not provided
+            new_instructions = data.get('instructions', recipe.instructions)  # Default to current instructions if not provided
+            
+            # Update the recipe fields
+            recipe.name = new_name
+            recipe.description = new_description
+            recipe.instructions = new_instructions 
+            
+            # Save the updated recipe
+            recipe.save()
+            
+            # Return a JSON response with success and updated data
+            return JsonResponse({
+                "success": True,
+                "updated_name": recipe.name,
+                "updated_description": recipe.description,
+                "updated_instructions": recipe.instructions
+            })
+        except json.JSONDecodeError:
+            return JsonResponse({
+                "error": "Invalid JSON data"
+            }, status=400)
+    return JsonResponse({
+        "error": "Invalid request."
+    }, status=400)
+
 
 def login_view(request):
     if request.method == "POST":
