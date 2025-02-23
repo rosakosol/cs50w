@@ -193,6 +193,12 @@ def delete_recipe(request, recipe_id):
         return JsonResponse({"error": str(e)}, status=500)
     
 
+def favourites_view(request):
+    user = request.user
+        
+    return render(request, "favourites.html", {
+        "user": user,
+    })
 
 def login_view(request):
     if request.method == "POST":
