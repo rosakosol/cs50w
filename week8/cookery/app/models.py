@@ -37,6 +37,12 @@ class RatingForm(forms.Form):
         required=True
     )
 
+class Tag(models.Model):
+    value = models.CharField(max_length=64, default="")
+    
+    def __str__(self):
+        return str(self.value)
+
 
 class MealType(models.Model):
     BREAKFAST = 'Breakfast'
@@ -69,6 +75,7 @@ class Recipe(models.Model):
     image = models.ImageField(upload_to="images/%d/%m/%y", default=None)    
     meal_type = models.ForeignKey(MealType, on_delete=models.CASCADE, related_name="recipes", null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    tags = models.ManyToManyField(Tag)
     
     def average_rating(self):
         average = self.ratings.aggregate(Avg('value'))['value__avg']
@@ -109,6 +116,11 @@ class CreateRecipeForm(forms.Form):
         queryset=Ingredient.objects.all(),
         widget=forms.CheckboxSelectMultiple,
         required=True
+    )
+    tags = forms.ModelMultipleChoiceField(
+        queryset=Tag.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False
     )
 
 class Favourites(models.Model):
