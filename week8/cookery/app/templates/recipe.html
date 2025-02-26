@@ -16,12 +16,17 @@
         <div>
             <!-- Display django message if rating saved/failed -->
             {% if messages %}
-
-            {% for message in messages %}
-                <li class="alert alert-{{ message.level_tag }}" style="list-style-type:none;">
-                    {{ message }}
-                </li>
-            {% endfor %}
+                {% for message in messages %}
+                    {% if message.level_tag == "error" %}
+                        <li class="alert alert-danger" style="list-style-type:none;">
+                            {{ message }}
+                        </li>
+                    {% else %}
+                        <li class="alert alert-{{ message.level_tag }}" style="list-style-type:none;">
+                            {{ message }}
+                        </li>
+                    {% endif %}
+                {% endfor %}
             {% endif %}
 
             <!-- Display star rating container if logged in -->

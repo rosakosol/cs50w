@@ -14,7 +14,7 @@ urlpatterns = [
     path('edit_recipe/<int:recipe_id>/', views.edit_recipe, name='edit_recipe'),
     path('delete_recipe/<int:recipe_id>/', views.delete_recipe, name='delete_recipe'),
     path('favourites/', views.favourites_view, name='favourites'),
-    path('search/', views.search, name="search")
+    path('search/', views.search, name="search"),
 ]
 
 if settings.DEBUG:
