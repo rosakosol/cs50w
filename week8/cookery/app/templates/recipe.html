@@ -5,10 +5,15 @@
     {% if recipe %}
     <div class="container-fluid p-0">
         <div class="recipe-img-container p-5 text-left" style="{% if recipe.image %}background-image: url('{{ recipe.image.url }}'){% endif %}; background-size: cover; background-position: center;">
-          <!-- Display recipe name -->
+            <!-- Display recipe name -->
             <h2 class="text-body-emphasis" id="recipe-name-{{ recipe.id }}">{{ recipe.name }}</h2>
-          <!-- Display recipe average rating -->
-          <p class="star-avg-rating" data-avg-rating="{{ recipe.average_rating }}">Average Rating: {{ recipe.average_rating }}</p>
+            <!-- Display recipe average rating -->
+            <p class="star-avg-rating" data-avg-rating="{{ recipe.average_rating }}">Average Rating: {{ recipe.average_rating }}</p>
+            <!-- Display tags -->
+             {% for tag in tags %}
+                <button class="btn btn-secondary">{{ tag }}</button>
+             {% endfor %}
+            
         </div>
     </div>
     {% endif %}

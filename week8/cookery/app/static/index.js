@@ -50,19 +50,30 @@ function fadeMessage() {
 
 
 function averageRating() {
-    const avgRatingElement = document.querySelector("[data-avg-rating]")
+    var avgRatingElements = document.querySelectorAll("[data-avg-rating]"); 
 
-    const avgRating = parseInt(avgRatingElement.getAttribute("data-avg-rating"));
+    avgRatingElements.forEach(function(avgRatingElement, index) {
+        var avgRating = parseInt(avgRatingElement.getAttribute("data-avg-rating"));
+        console.log(avgRating);
 
-    const pRating = document.querySelector(".star-avg-rating")
+        // Select the correct pRating element based on the index
+        var pRating = document.querySelectorAll(".star-avg-rating")[index]; 
 
-    pRating.innerHTML = "";
+        if (pRating) {
+            console.log("pRating exists");
+        }
 
-    for (let i = 0; i < avgRating; i++) {
-        pRating.innerHTML += `<label class="star-rating-label"><i class="bi bi-star-fill" style="color:gold;"></i></label>`;
-    }
+        // Clear the current content inside the pRating element
+        pRating.innerHTML = "";
 
+        // Loop to create the stars based on the avgRating value
+        for (let i = 0; i < avgRating; i++) {
+            pRating.innerHTML += `<label class="star-rating-label"><i class="bi bi-star-fill" style="color:gold;"></i></label>`;
+        }
+    });
 }
+
+
 
 
 // Initialise edit button on author posts

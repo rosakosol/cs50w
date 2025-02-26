@@ -39,6 +39,7 @@ def index(request):
 def recipe(request, recipe_name):
     user = request.user
     recipe = get_object_or_404(Recipe, name=recipe_name)
+    tags = recipe.tags.all()
     
     if user.is_authenticated:
         existing_rating = Rating.objects.filter(user=user, recipe=recipe).first()
@@ -101,6 +102,7 @@ def recipe(request, recipe_name):
     return render(request, "recipe.html", {
         "user": user,
         "recipe": recipe,
+        "tags": tags,
         "rating_form": rating_form,
         "favourite_form": favourite_form,
         "is_favourited": is_favourited,
@@ -125,6 +127,7 @@ def add_recipe_view(request):
                 cuisine = create_form.cleaned_data["cuisine"]
                 instructions = create_form.cleaned_data["instructions"]
                 ingredients = create_form.cleaned_data["ingredients"]
+                tags = create_form.cleaned_data["tags"]
 
                 # Create a new Recipe instance
                 recipe = Recipe.objects.create(
@@ -138,6 +141,8 @@ def add_recipe_view(request):
                 )           
                 
                 recipe.ingredients.set(ingredients)
+                recipe.tags.set(tags)
+                
                 recipe.save()
                 
                 # Redirect to the same page to show the new comment
