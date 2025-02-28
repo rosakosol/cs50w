@@ -133,3 +133,21 @@ body {
         top: 600px;
     }
 }
+
+.dropdown-menu {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 20px;
+    background-color: #f8f9fa;
+  }
+  .dropdown-menu .col-md-4 {
+    padding: 10px;
+  }
+  .search-bar {
+    max-width: 300px;
+  }
+  @media (max-width: 768px) {
+    .navbar-nav {
+      display: none;
+    }
+  }

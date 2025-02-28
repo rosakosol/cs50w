@@ -10,46 +10,149 @@
         <script type="text/javascript" src="{% static 'index.js' %}"></script>
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg col-md-8 m-auto p-0">
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <!-- Logo -->
+      <a class="navbar-brand" href="{% url 'index' %}"><h1>Cookery</h1></a>
+
+      <!-- Hamburger Menu for Small Screens -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <!-- Mega Menu on Medium and Large Screens -->
+        <ul class="navbar-nav mega-menu-links d-none d-md-flex">
+          <li class="nav-item dropdown p-md-3">
+            <a class="nav-link dropdown-toggle {% if request.path == '/' %}active{% endif %}" href="{% url 'index' %}" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                All Recipes
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <div class="p-md-3">
+                <h5>Category 1</h5>
+                <ul class="list-unstyled">
+                  <li><a class="dropdown-item" href="#">Link 1</a></li>
+                  <li><a class="dropdown-item" href="#">Link 2</a></li>
+                  <li><a class="dropdown-item" href="#">Link 3</a></li>
+                </ul>
+              </div>
+              <div class="p-md-3">
+                <h5>Category 2</h5>
+                <ul class="list-unstyled">
+                  <li><a class="dropdown-item" href="#">Link 4</a></li>
+                  <li><a class="dropdown-item" href="#">Link 5</a></li>
+                  <li><a class="dropdown-item" href="#">Link 6</a></li>
+                </ul>
+              </div>
+              <div class="p-md-3">
+                <h5>Category 3</h5>
+                <ul class="list-unstyled">
+                  <li><a class="dropdown-item" href="#">Link 7</a></li>
+                  <li><a class="dropdown-item" href="#">Link 8</a></li>
+                  <li><a class="dropdown-item" href="#">Link 9</a></li>
+                </ul>
+              </div>
+            </div>
+          </li>
+        {% if not user.is_authenticated %}
+            <li class="nav-item p-md-3">
+                <a class="nav-link {% if request.path == '/login' %}active{% endif %}" href="{% url 'login' %}">Login</a>
+            </li>
+            <li class="nav-item p-md-3">
+                <a class="nav-link {% if request.path == '/register' %}active{% endif %}" href="{% url 'register' %}">Register</a>
+            </li>
+        {% else %}
+            <li class="nav-item p-md-3">
+                <a class="nav-link {% if request.path == '/add_recipe' %}active{% endif %}" href="{% url 'add_recipe' %}">Add Recipe</a>
+            </li>
+            <li class="nav-item p-md-3">
+                <a class="nav-link {% if request.path == '/favourites' %}active{% endif %}" href="{% url 'favourites' %}">Favourites</a>
+            </li>
+            <li class="nav-item p-md-3">
+                <a class="nav-link {% if request.path == '/logout' %}active{% endif %}" href="{% url 'logout' %}">Logout</a>
+            </li>
+            {% endif %}
+        </ul>
+
+        <!-- Search Bar and Profile Icon (always visible) -->
+        <div class="d-none d-md-flex justify-content-end align-items-center ms-3">
+          <input type="text" class="form-control search-bar me-2" placeholder="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+          <button class="btn btn-outline-secondary">Profile</button>
+        </div>
+
+        <!-- Hamburger Menu Content for Small Screens (d-md-none) -->
+        <ul class="navbar-nav d-md-none">
+            {% if not user.is_authenticated %}
+            <li class="nav-item p-md-3">
+                <a class="nav-link {% if request.path == '/login' %}active{% endif %}" href="{% url 'login' %}">Login</a>
+            </li>
+            <li class="nav-item p-md-3">
+                <a class="nav-link {% if request.path == '/register' %}active{% endif %}" href="{% url 'register' %}">Register</a>
+            </li>
+        {% else %}
+            <li class="nav-item p-md-3">
+                <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'index' %}">All Recipes</a>
+            </li>
+            <li class="nav-item p-md-3">
+                <a class="nav-link {% if request.path == '/add_recipe' %}active{% endif %}" href="{% url 'add_recipe' %}">Add Recipe</a>
+            </li>
+            <li class="nav-item p-md-3">
+                <a class="nav-link {% if request.path == '/favourites' %}active{% endif %}" href="{% url 'favourites' %}">Favourites</a>
+            </li>
+            <li class="nav-item p-md-3">
+                <a class="nav-link {% if request.path == '/logout' %}active{% endif %}" href="{% url 'logout' %}">Logout</a>
+            </li>
+            {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+        {% comment %} <nav class="navbar navbar-expand-lg col-md-8 m-auto p-0">
             <div class="container-fluid">
                 <a class="navbar-brand" href="{% url 'index' %}"><h1>Cookery</h1></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item p-md-3">
-                        <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'index' %}">All Recipes</a>
-                    </li>
-                    {% if not user.is_authenticated %}
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item p-md-3">
-                            <a class="nav-link {% if request.path == '/login' %}active{% endif %}" href="{% url 'login' %}">Login</a>
+                            <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'index' %}">All Recipes</a>
                         </li>
-                        <li class="nav-item p-md-3">
-                            <a class="nav-link {% if request.path == '/register' %}active{% endif %}" href="{% url 'register' %}">Register</a>
-                        </li>
-                    {% else %}
-                        <li class="nav-item p-md-3">
-                            <a class="nav-link {% if request.path == '/add_recipe' %}active{% endif %}" href="{% url 'add_recipe' %}">Add Recipe</a>
-                        </li>
-                        <li class="nav-item p-md-3">
-                            <a class="nav-link {% if request.path == '/favourites' %}active{% endif %}" href="{% url 'favourites' %}">Favourites</a>
-                        </li>
-                        <li class="nav-item p-md-3">
-                            <a class="nav-link {% if request.path == '/logout' %}active{% endif %}" href="{% url 'logout' %}">Logout</a>
-                        </li>
-                    {% endif %}
+                        {% if not user.is_authenticated %}
+                            <li class="nav-item p-md-3">
+                                <a class="nav-link {% if request.path == '/login' %}active{% endif %}" href="{% url 'login' %}">Login</a>
+                            </li>
+                            <li class="nav-item p-md-3">
+                                <a class="nav-link {% if request.path == '/register' %}active{% endif %}" href="{% url 'register' %}">Register</a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item p-md-3">
+                                <a class="nav-link {% if request.path == '/add_recipe' %}active{% endif %}" href="{% url 'add_recipe' %}">Add Recipe</a>
+                            </li>
+                            <li class="nav-item p-md-3">
+                                <a class="nav-link {% if request.path == '/favourites' %}active{% endif %}" href="{% url 'favourites' %}">Favourites</a>
+                            </li>
+                            <li class="nav-item p-md-3">
+                                <a class="nav-link {% if request.path == '/logout' %}active{% endif %}" href="{% url 'logout' %}">Logout</a>
+                            </li>
+                        {% endif %}
 
-                </ul>
+                    </ul>
 
-                <form action="{% url 'search' %}" method="post" class="d-flex" role="search">
-                    {% csrf_token %}
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="q">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
+
                 </div>
             </div>
         </nav>
+        <nav class="navbar navbar-expand-lg col-md-8 m-auto p-0">
+            <form action="{% url 'search' %}" method="post" class="d-flex" role="search">
+                {% csrf_token %}
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="q">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+        </nav> {% endcomment %}
 
 
         <div class="body">
