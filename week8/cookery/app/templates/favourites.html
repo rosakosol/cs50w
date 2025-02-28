@@ -3,11 +3,43 @@
 {% block body %}
     <h2>Favourites</h2>
 
-    <!-- Loop through each category -->
-    <ul>
-        {% for recipe in page_obj %}
-            <a href="{% url 'recipe' recipe.name %}" alt=""><li>{{ recipe.name }}</li></a>
-        {% endfor %}
-    </ul>
+    <div class="container mt-5">
+        <!-- Row to display recipes in 3-column grid -->
+        <div class="row">
+            {% for recipe in page_obj %}
+            <div class="col-12 col-md-4 mb-4">
+                <div class="card">
+                    {% if recipe.image %}
+                    <img src="{{ recipe.image.url }}" class="card-img-top" alt="{{ recipe.name }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title text-center"><a href="{% url 'recipe' recipe.name %}">{{ recipe.name }}</a></h5>
+                        <!-- Display average ratings -->
+                        <p class="star-avg-rating" data-avg-rating="{{ recipe.average_rating }}">Average Rating: {{ recipe.average_rating }}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    
+        <!-- Pagination Links -->
+         {% if page_obj %}
+         <div class="pagination justify-content-center pb-5">
+            {% if page_obj.has_previous %}
+                <a href="?page=1" class="page-link">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}" class="page-link">previous</a>
+            {% endif %}
+    
+            <span class="current page-link">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+    
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="page-link">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}" class="page-link">last &raquo;</a>
+            {% endif %}
+        </div>
+        {% endif %}
+      </div>
 
 {% endblock %}

@@ -147,7 +147,7 @@ class CreateRecipeForm(forms.Form):
 
 class Favourites(models.Model):
     user = models.ForeignKey("auth.User", on_delete=models.CASCADE, related_name="favourites")
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name="added_by")
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name="favourites")
     added_at = models.DateTimeField(auto_now_add=True) 
     
     

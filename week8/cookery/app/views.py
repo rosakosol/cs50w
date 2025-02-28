@@ -9,6 +9,7 @@ from django.urls import reverse
 from django.contrib import messages
 from .models import Ingredient, Cuisine, Rating, RatingForm, MealType, Recipe, CreateRecipeForm, Favourites, FavouriteForm
 from django.db import IntegrityError
+from django.utils import timezone
 import json
 
 
@@ -45,47 +46,52 @@ def recipe(request, recipe_name):
         existing_rating = Rating.objects.filter(user=user, recipe=recipe).first()
 
         if request.method == "POST":
+            if 'rating' in request.POST:
+                rating_form = RatingForm(request.POST)
+                if rating_form.is_valid():
+                    # Check if user has rated before
+                    if existing_rating:
+                        existing_rating.value = rating_form.cleaned_data["value"]
+                        existing_rating.save()
+                        messages.success(request, "Your rating has been saved successfully!")
+
+                    else:
+                        rating = Rating()
+                        rating.value = rating_form.cleaned_data["value"]
+                        rating.user = user
+                        rating.recipe = recipe
+                        rating.save()
+                        recipe.ratings.add(rating)
+                        messages.success(request, "Your rating has been placed successfully!")
+                    
+                    # Refresh recipe in db
+                    recipe.refresh_from_db()
+                    return HttpResponseRedirect(reverse("recipe", args=[recipe_name]))
             
-            rating_form = RatingForm(request.POST)
-            if rating_form.is_valid():
-                # Check if user has rated before
-                if existing_rating:
-                    existing_rating.value = rating_form.cleaned_data["value"]
-                    existing_rating.save()
-                    messages.success(request, "Your rating has been saved successfully!")
+            
+            elif 'favourite' in request.POST:
+                favourite_form = FavouriteForm(request.POST)
+                if favourite_form.is_valid():
+                    action = favourite_form.cleaned_data["action"]
+                    
+                    if action == "add":
+                        favourite_recipe = Favourites.object.filter(user=user, recipe=recipe).first()
 
-                else:
-                    existing_rating = None
-                    rating = Rating()
-                    rating.value = rating_form.cleaned_data["value"]
-                    rating.user = user
-                    rating.recipe = recipe
-                    rating.save()
-                    recipe.ratings.add(rating)
-                    messages.success(request, "Your rating has been placed successfully!")
-                
-                # Refresh recipe in db
-                recipe.refresh_from_db()
-                return HttpResponseRedirect(reverse("recipe", args=[recipe_name]))
+                        if not favourite_recipe:
+                            Favourites.objects.create(user=user, recipe=recipe)
+                            messages.success(request, "Recipe added to favourites.")
+                            
+                            
+                    # Handle removing the listing from favourites
+                    elif action == "remove":
+                        favourite_recipe = Favourites.object.filter(user=user, recipe=recipe).first()
+                        if favourite_recipe:
+                            favourite_recipe.delete()
+                            messages.error(request, "Recipe removed from favourites.")
 
-            favourite_form = FavouriteForm(request.POST)
-            if favourite_form.is_valid():
-                action = favourite_form.cleaned_data["action"]
-                
-                if action == "add":
-                    if not Favourites.objects.filter(user=user, recipe=recipe).exists():
-                        Favourites.objects.create(user=user, recipe=recipe)
-                        messages.success(request, "Recipe added to favourites.")
-                        
-                # Handle removing the listing from favourites
-                elif action == "remove":
-                    favourite_recipe = Favourites.objects.filter(user=request.user, recipe=recipe).first()
-                    if favourite_recipe:
-                        favourite_recipe.delete()
-                        messages.error(request, "Recipe removed from favourites.")
-
-                return HttpResponseRedirect(reverse("recipe", args=[recipe_name]))
-                
+                    recipe.refresh_from_db()
+                    return HttpResponseRedirect(reverse("recipe", args=[recipe_name]))
+                    
         # If user is logged in, display empty form 
         else:
             rating_form = RatingForm()
@@ -227,24 +233,24 @@ def delete_recipe(request, recipe_id):
 
 def favourites_view(request):
     user = request.user
-    
-    recipes = Recipe.objects.all()
+    #recipes = Recipe.objects.all()
     
     if user.is_authenticated:
-        # Display watchlist
-        favourites = Favourites.objects.filter(user=user)
+        # Display favourites
+        favourites = Recipe.objects.filter(favourites__user=user)
     else:
         favourites = []
 
     # If there are any recipes, paginate
     if favourites:
-        paginator = Paginator(recipes, 6)
+        paginator = Paginator(favourites, 6)
         page_number = request.GET.get("page", 1)
         page_obj = paginator.get_page(page_number)
         
         # If no recipes, paginator is none
     else:
         page_obj = None
+        
         
     return render(request, "favourites.html", {
         "user": user,
