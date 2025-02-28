@@ -7,10 +7,20 @@ from django.db.models import Avg
 # Create your models here.
 class Ingredient(models.Model):
     name = models.CharField(max_length=64, default="")
+    calories_per_unit = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    unit = models.CharField(max_length=64, default="")
+    
     
     def __str__(self):
         return self.name
 
+class RecipeIngredient(models.Model):
+    recipe = models.ForeignKey("Recipe", on_delete=models.CASCADE, related_name="recipe_ingredients")
+    ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
+    quantity = models.DecimalField(max_digits=10, decimal_places=2)
+    
+    def __str__(self):
+        return f"{self.quantity} {self.ingredient.unit} of {self.ingredient.name} "
         
 class Cuisine(models.Model):
     name = models.CharField(max_length=64, default="")
@@ -69,9 +79,10 @@ class Recipe(models.Model):
     name = models.CharField(max_length=64, default="")
     cuisine = models.ForeignKey(Cuisine, on_delete=models.CASCADE, null=True, blank=True, related_name="recipes")
     ratings = models.ManyToManyField(Rating, related_name="recipes")
-    ingredients = models.ManyToManyField(Ingredient, related_name="recipes")
+    ingredients = models.ManyToManyField(Ingredient, through=RecipeIngredient)
     description = models.TextField(default="")  
     instructions = models.TextField(default="")
+    servings = models.PositiveBigIntegerField(default=1)
     image = models.ImageField(upload_to="images/%d/%m/%y", default=None)    
     meal_type = models.ForeignKey(MealType, on_delete=models.CASCADE, related_name="recipes", null=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -80,6 +91,16 @@ class Recipe(models.Model):
     def average_rating(self):
         average = self.ratings.aggregate(Avg('value'))['value__avg']
         return average if average is not None else 0
+    
+    def total_calories(self):
+        total_calories = 0
+        for recipe_inrgedient in self.recipe_ingredients.all():
+            ingredient_calories = recipe_inrgedient.ingredient.calories_per_unit * recipe_ingredient.quantity
+            total_calories += ingredient_calories
+        return total_calories
+    
+    def total_calories_per_serving(self):
+        return self.total_calories() / self.servings
 
     
     def __str__(self):

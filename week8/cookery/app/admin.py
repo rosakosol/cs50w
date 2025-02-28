@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Ingredient, Cuisine, MealType, Recipe, Rating, Tag
+from .models import Ingredient, Cuisine, MealType, Recipe, Rating, Tag, RecipeIngredient 
 
 class IngredientAdmin(admin.ModelAdmin):
     list_display = ("name",)
@@ -13,11 +13,16 @@ class CuisineAdmin(admin.ModelAdmin):
     
 class MealTypeAdmin(admin.ModelAdmin):
     list_display = ("meal_type",)
+    
+class RecipeIngredientInline(admin.TabularInline):
+    model = RecipeIngredient
+    extra = 1
 
 class RecipeAdmin(admin.ModelAdmin):
     list_display = ("name", "cuisine", "meal_type", "average_rating")
     ordering = ("name",)
     filter_horizontal = ("ratings",)
+    inlines = [RecipeIngredientInline]
     
 class RatingAdmin(admin.ModelAdmin):
     list_display = ("value",)
@@ -26,6 +31,8 @@ class RatingAdmin(admin.ModelAdmin):
 class TagAdmin(admin.ModelAdmin):
     list_display = ("value",)
     ordering = ("value",)
+
+    
     
 admin.site.register(Ingredient, IngredientAdmin)
 admin.site.register(Cuisine, CuisineAdmin)
