@@ -83,6 +83,7 @@ class Recipe(models.Model):
     description = models.TextField(default="")  
     instructions = models.TextField(default="")
     servings = models.PositiveBigIntegerField(default=1)
+    cooking_time = models.PositiveBigIntegerField(default=0)
     image = models.ImageField(upload_to="images/%d/%m/%y", default=None)    
     meal_type = models.ForeignKey(MealType, on_delete=models.CASCADE, related_name="recipes", null=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -94,8 +95,8 @@ class Recipe(models.Model):
     
     def total_calories(self):
         total_calories = 0
-        for recipe_inrgedient in self.recipe_ingredients.all():
-            ingredient_calories = recipe_inrgedient.ingredient.calories_per_unit * recipe_ingredient.quantity
+        for recipe_ingredient in self.recipe_ingredients.all():
+            ingredient_calories = recipe_ingredient.ingredient.calories_per_unit * recipe_ingredient.quantity
             total_calories += ingredient_calories
         return total_calories
     
