@@ -1,10 +1,14 @@
 /* print.css */
 @media print {
+    * {
+        outline: 1px solid red;
+    }
     body {
         font-family: Arial, sans-serif;
         margin: 0;
         padding: 0;
         background: none;
+        overflow-y: hidden;
     }
 
     img {
@@ -15,6 +19,10 @@
     .recipe-container {
         padding: 0 !important;
         margin: 0 !important;
+    }
+
+    .social-sharing-container {
+        display: none !important;
     }
     
     /* Hide unnecessary elements when printing */

@@ -1,10 +1,10 @@
 {% extends "layout.html" %}
 
 {% block body %}
-<div class="container-md recipe-container p-0 mt-5 mb-5">
+<div class="container-md recipe-container p-0 mt-5 mb-5 shadow-sm rounded">
     {% if recipe %}
     <div class="container-fluid p-0">
-        <div class="recipe-img-container p-5 text-left" style="{% if recipe.image %}background-image: url('{{ recipe.image.url }}'){% endif %}; background-size: cover; background-position: center;">
+        <div class="recipe-img-container p-5 text-left rounded-top" style="{% if recipe.image %}background-image: url('{{ recipe.image.url }}'){% endif %}; background-size: cover; background-position: center;">
             <!-- Display recipe name -->
             <h2 class="text-white" id="recipe-name-{{ recipe.id }}">{{ recipe.name }}</h2>
             <!-- Display recipe average rating -->
@@ -18,7 +18,7 @@
     </div>
     {% endif %}
     <div class="container p-5 no-print">
-        <div class="d-flex flex-row align-items-start">
+        <div class="d-flex flex-row align-items-start justify-content-between">
             <!-- Display django message if rating saved/failed -->
             {% if messages %}
                 {% for message in messages %}
@@ -36,7 +36,7 @@
 
             <!-- Display star rating container if logged in -->
             {% if user.is_authenticated %}
-            <div class="star-rating-container d-flex">
+            <div class="star-rating-container d-flex me-3">
                 <form method="post">
                     {% csrf_token %}
                     <!-- Render the 'value' field -->
@@ -68,15 +68,15 @@
                 </form>
             </div>
             {% endif %}
-            <div class="d-flex justify-content-end ">
+            <div class="d-flex justify-content-end">
                 <!-- If user is author of recipe, show edit button -->
                 {% if user.username == recipe.user.username %}
-                    <button class="btn btn-success edit-btn" data-recipe-id="{{ recipe.id }}">
+                    <button class="me-3 btn btn-success edit-btn" data-recipe-id="{{ recipe.id }}">
                         Edit
                     </button>
 
                     <!-- Show delete button -->
-                    <button class="btn btn-danger delete-btn" data-recipe-id="{{ recipe.id }}">
+                    <button class="me-3 btn btn-danger delete-btn" data-recipe-id="{{ recipe.id }}">
                         Delete
                     </button>
                 {% endif %}
@@ -98,28 +98,26 @@
             </div>
         </div>
 
-        <div>
-            <a href="mailto:?subject=Check out this recipe: {{ recipe.name }}&body=Here is the recipe: {{ request.build_absolute_uri }}"><i class="bi bi-envelope-fill"></i></a>
-            <button onclick="window.print();"><i class="bi bi-printer-fill"></i>Print this page</button>
-        </div>
-        <div class="social-sharing-container">
-        <!-- Facebook Share Button -->
-        <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank" class="social-share-button facebook-share">
-            <i class="bi bi-facebook"></i> Share on Facebook
-        </a>
-        <!-- Twitter Share Button -->
-        <a href="https://x.com/intent/tweet?url={{ request.build_absolute_uri }}&text=Check out this recipe!" target="_blank" class="social-share-button x-share">
-            <i class="bi bi-twitter-x"></i> Share on X
-        </a>
-
-
+        <div class="email-print-container d-flex justify-content-end align-items-center">
+            <a class="me-3" href="mailto:?subject=Check out this recipe: {{ recipe.name }}&body=Here is the recipe: {{ request.build_absolute_uri }}"><i class="btn btn-light ps-2 pe-2 bi bi-envelope-fill"></i></a>
+            <button class="btn btn-light" onclick="window.print();"><i class="bi bi-printer-fill"></i></button>
         </div>
     </div>
     <div class="container p-5">
 
         <!-- Display recipe description -->
-        <div class="mt-5">        
+        <div class="mt-5 d-flex align-items-center justify-content-between">        
             <p id="recipe-description-{{ recipe.id }}">{{ recipe.description }}</p>
+            <div class="social-sharing-container d-flex">
+                <!-- Facebook Share Button -->
+                <a class="no-print" href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank" class="me-3 social-share-button facebook-share">
+                    <i class="btn btn-light bi bi-facebook me-3 ps-2 pe-2"></i>
+                </a>
+                <!-- Twitter Share Button -->
+                <a class="no-print" href="https://x.com/intent/tweet?url={{ request.build_absolute_uri }}&text=Check out this recipe!" target="_blank" class="social-share-button x-share">
+                    <i class="btn btn-light bi bi-twitter-x ps-2 pe-2"></i>
+                </a>
+            </div>
         </div>
 
         <div class="mt-5">
