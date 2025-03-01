@@ -88,10 +88,10 @@
                     <input type="hidden" name="recipe_id" value="{{ recipe.id }}">
                     {% if is_favourited %}
                         <!-- If the user  has already added the recipe to favourites, show the "Remove from Favourites" button -->
-                        <button type="submit" name="action" value="remove" class="btn btn-danger" >Remove from Favourites</button>
+                        <button type="submit" name="action" value="remove" class="btn btn-link"><i class="bi bi-heart-fill"></i></button>
                     {% else %}
                         <!-- If the user has not added the recipe to favourites, show the "Add to Favourites" button -->
-                        <button type="submit" name="action" value="add" class="btn btn-success">Add to Favourites</button>
+                        <button type="submit" name="action" value="add" class="btn btn-link"><i class="bi bi-heart"></i></button>
                     {% endif %}
                     </form>
                 {% endif %}

@@ -14,14 +14,14 @@ function starRating() {
     // Click event: Mark stars gold up to the clicked star
     stars.forEach((star, index) => {
         star.addEventListener("click", function() {
-            // Color the stars gold up to and including the clicked one
+            // Colour the stars gold up to and including the clicked one
             for (let i = 0; i <= index; i++) {
                 labels[i].style.color = "gold"; 
             }
 
-            // Reset the colors for the rest of the stars
+            // Reset the colours for the rest of the stars
             for (let i = index + 1; i < stars.length; i++) {
-                labels[i].style.color = "#ccc"; // Reset the rest to the default color
+                labels[i].style.color = "#ccc";
             }
         });
     });
@@ -54,14 +54,9 @@ function averageRating() {
 
     avgRatingElements.forEach(function(avgRatingElement, index) {
         var avgRating = parseInt(avgRatingElement.getAttribute("data-avg-rating"));
-        console.log(avgRating);
 
         // Select the correct pRating element based on the index
         var pRating = document.querySelectorAll(".star-avg-rating")[index]; 
-
-        if (pRating) {
-            console.log("pRating exists");
-        }
 
         // Clear the current content inside the pRating element
         pRating.innerHTML = "";
@@ -154,18 +149,18 @@ function handleEditButton() {
     }
 }
 
-// Initialize the delete button click event
+// Initialise the delete button click event
 function initDeleteButton() {
     const deleteButton = document.querySelector('.delete-btn');
     deleteButton.addEventListener('click', handleDeleteButton);
 }
 
-// Ensure delete button is initialized
+// Ensure delete button is initialised
 document.addEventListener('DOMContentLoaded', initDeleteButton);
 
 
 function handleDeleteButton() {
-    const recipeId = this.dataset.recipeId;  // Get recipe ID from the button's data attribute
+    const recipeId = this.dataset.recipeId;
 
     if (confirm("Are you sure you want to delete this recipe?")) {
         fetch(`/delete_recipe/${recipeId}/`, {
@@ -179,8 +174,8 @@ function handleDeleteButton() {
         .then(data => {
             if (data.success) {
                 alert("Recipe deleted successfully.");
-                // Optionally, redirect or remove the deleted recipe from the UI
-                window.location.href = '/';  // Redirect to the recipe list page or wherever you want
+                // Redirect to index page
+                window.location.href = '/';
             } else {
                 alert("Error: " + data.error);
             }

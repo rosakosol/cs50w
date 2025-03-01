@@ -1,9 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lobster&display=swap");
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
-* {
-  outline: 1px solid red;
-}
-
 .lobster-regular {
   font-family: "Lobster", serif;
   font-weight: 400;
@@ -142,4 +138,8 @@ i {
 
 .email-print-container button:hover, .email-print-container a:hover, .social-sharing-container button:hover, .social-sharing-container a:hover {
   color: #212529;
+}
+
+.bi-heart, .bi-heart-fill {
+  color: #6c757d;
 }/*# sourceMappingURL=style.css.map */
