@@ -98,9 +98,25 @@
             </div>
         </div>
 
-        <div class="email-print-container d-flex justify-content-end align-items-center">
-            <a class="me-3" href="mailto:?subject=Check out this recipe: {{ recipe.name }}&body=Here is the recipe: {{ request.build_absolute_uri }}"><i class="btn btn-light ps-2 pe-2 bi bi-envelope-fill"></i></a>
-            <button class="btn btn-light" onclick="window.print();"><i class="bi bi-printer-fill"></i></button>
+        <div class="d-flex align-items-center justify-content-end">
+            <div class="email-print-container d-flex align-items-center">
+                <a class="me-3" href="mailto:?subject=Check out this recipe: {{ recipe.name }}&body=Here is the recipe: {{ request.build_absolute_uri }}">
+                    <i class="bi bi-envelope-fill"></i>
+                </a>
+                <button class="me-3" onclick="window.print();">
+                    <i class="bi bi-printer-fill"></i>
+                </button>
+            </div>
+            <div class="social-sharing-container d-flex align-items-center">
+                <!-- Facebook Share Button -->
+                <a class="no-print me-3 social-share-button facebook-share" href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank">
+                    <i class="bi bi-facebook"></i>
+                </a>
+                <!-- Twitter Share Button -->
+                <a class="no-print social-share-button x-share" href="https://x.com/intent/tweet?url={{ request.build_absolute_uri }}&text=Check out this recipe!" target="_blank">
+                    <i class="bi bi-twitter-x"></i>
+                </a>
+            </div>
         </div>
     </div>
     <div class="container p-5">
@@ -108,16 +124,7 @@
         <!-- Display recipe description -->
         <div class="mt-5 d-flex align-items-center justify-content-between">        
             <p id="recipe-description-{{ recipe.id }}">{{ recipe.description }}</p>
-            <div class="social-sharing-container d-flex">
-                <!-- Facebook Share Button -->
-                <a class="no-print" href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank" class="me-3 social-share-button facebook-share">
-                    <i class="btn btn-light bi bi-facebook me-3 ps-2 pe-2"></i>
-                </a>
-                <!-- Twitter Share Button -->
-                <a class="no-print" href="https://x.com/intent/tweet?url={{ request.build_absolute_uri }}&text=Check out this recipe!" target="_blank" class="social-share-button x-share">
-                    <i class="btn btn-light bi bi-twitter-x ps-2 pe-2"></i>
-                </a>
-            </div>
+
         </div>
 
         <div class="mt-5">
