@@ -15,7 +15,7 @@ class MealTypeAdmin(admin.ModelAdmin):
     list_display = ("meal_type",)
 
 class RecipeAdmin(admin.ModelAdmin):
-    list_display = ("name", "cuisine", "meal_type", "average_rating")
+    list_display = ("name", "cuisine", "average_rating")
     ordering = ("name",)
     filter_horizontal = ("ratings",)
     
