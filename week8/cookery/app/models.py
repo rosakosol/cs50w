@@ -40,10 +40,10 @@ class RatingForm(forms.Form):
     )
 
 class Tag(models.Model):
-    value = models.CharField(max_length=64, default="")
+    name = models.CharField(max_length=64, default="")
     
     def __str__(self):
-        return str(self.value)
+        return str(self.name)
 
 
 class MealType(models.Model):

@@ -24,8 +24,8 @@ class RatingAdmin(admin.ModelAdmin):
     ordering = ("value",)
     
 class TagAdmin(admin.ModelAdmin):
-    list_display = ("value",)
-    ordering = ("value",)
+    list_display = ("name",)
+    ordering = ("name",)
 
     
     
