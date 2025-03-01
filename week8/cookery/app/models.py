@@ -47,24 +47,10 @@ class Tag(models.Model):
 
 
 class MealType(models.Model):
-    BREAKFAST = 'Breakfast'
-    LUNCH = 'Lunch'
-    DINNER = 'Dinner'
-
-    MEAL_CHOICES = [
-        (BREAKFAST, 'Breakfast'),
-        (LUNCH, 'Lunch'),
-        (DINNER, 'Dinner'),
-    ]
-    
-    meal_type = models.CharField(
-        max_length=20,
-        choices=MEAL_CHOICES,
-        default=BREAKFAST,
-    )
+    name = models.CharField(max_length=64, default="")
     
     def __str__(self):
-        return self.meal_type
+        return self.name
 
 class Recipe(models.Model):
     user = models.ForeignKey("auth.User", on_delete=models.CASCADE, default="")
