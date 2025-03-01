@@ -12,7 +12,7 @@ class CuisineAdmin(admin.ModelAdmin):
     ordering = ("name",)
     
 class MealTypeAdmin(admin.ModelAdmin):
-    list_display = ("meal_type",)
+    list_display = ("name",)
 
 class RecipeAdmin(admin.ModelAdmin):
     list_display = ("name", "cuisine", "average_rating")
