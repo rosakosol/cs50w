@@ -5,6 +5,23 @@
 
     <div class="container mt-5">
         <h2>Favourites</h2>
+
+        {% for list in favourites_list %}
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Active</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Link</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Link</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+            </li>
+          </ul>
+          {% endfor %}
         <!-- Row to display recipes in 3-column grid -->
         <div class="row">
             {% for recipe in page_obj %}
