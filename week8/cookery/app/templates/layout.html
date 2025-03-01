@@ -109,52 +109,6 @@
       </div>
     </div>
   </nav>
-
-        {% comment %} <nav class="navbar navbar-expand-lg col-md-8 m-auto p-0">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="{% url 'index' %}"><h1>Cookery</h1></a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item p-md-3">
-                            <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'index' %}">All Recipes</a>
-                        </li>
-                        {% if not user.is_authenticated %}
-                            <li class="nav-item p-md-3">
-                                <a class="nav-link {% if request.path == '/login' %}active{% endif %}" href="{% url 'login' %}">Login</a>
-                            </li>
-                            <li class="nav-item p-md-3">
-                                <a class="nav-link {% if request.path == '/register' %}active{% endif %}" href="{% url 'register' %}">Register</a>
-                            </li>
-                        {% else %}
-                            <li class="nav-item p-md-3">
-                                <a class="nav-link {% if request.path == '/add_recipe' %}active{% endif %}" href="{% url 'add_recipe' %}">Add Recipe</a>
-                            </li>
-                            <li class="nav-item p-md-3">
-                                <a class="nav-link {% if request.path == '/favourites' %}active{% endif %}" href="{% url 'favourites' %}">Favourites</a>
-                            </li>
-                            <li class="nav-item p-md-3">
-                                <a class="nav-link {% if request.path == '/logout' %}active{% endif %}" href="{% url 'logout' %}">Logout</a>
-                            </li>
-                        {% endif %}
-
-                    </ul>
-
-
-                </div>
-            </div>
-        </nav>
-        <nav class="navbar navbar-expand-lg col-md-8 m-auto p-0">
-            <form action="{% url 'search' %}" method="post" class="d-flex" role="search">
-                {% csrf_token %}
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="q">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
-        </nav> {% endcomment %}
-
-
         <div class="body">
             {% block body %}
             {% endblock %}

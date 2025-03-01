@@ -95,6 +95,9 @@
                     {% endif %}
                     </form>
                 {% endif %}
+
+                <a href="mailto:?subject=Check out this recipe: {{ recipe.name }}&body=Here is the recipe: {{ request.build_absolute_uri }}"><i class="bi bi-envelope-fill"></i></a>
+                
             </div>
         </div>
 
