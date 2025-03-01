@@ -8,7 +8,7 @@
             <!-- Display recipe name -->
             <h2 class="text-white" id="recipe-name-{{ recipe.id }}">{{ recipe.name }}</h2>
             <!-- Display recipe average rating -->
-            <p class="star-avg-rating" data-avg-rating="{{ recipe.average_rating }}">Average Rating: {{ recipe.average_rating }}</p>
+            <p class="star-avg-rating mb-2" data-avg-rating="{{ recipe.average_rating }}">Average Rating: {{ recipe.average_rating }}</p>
             <!-- Display tags -->
              {% for tag in tags %}
                 <button class="btn btn-secondary">{{ tag }}</button>
@@ -37,34 +37,21 @@
             <!-- Display star rating container if logged in -->
             {% if user.is_authenticated %}
             <div class="star-rating-container d-flex me-3">
-                <form method="post">
+                <form class="star-rating-form" method="post">
                     {% csrf_token %}
                     <!-- Render the 'value' field -->
                     <div class="form-group">
                         <div class="star-rating mb-2">
-                            <!-- Display default star rating if user has not rated before -->
-                            {% if not existing_rating %}
-                                {% for choice in rating_form.value.field.choices %}
-                                    <input type="radio" id="rating_{{ choice.0 }}" name="{{ rating_form.value.name }}" value="{{ choice.0 }}" class="star-rating-input">
-                                    <label for="rating_{{ choice.0 }}" class="star-rating-label">
-                                        <i class="bi bi-star-fill"></i>
-                                    </label>
-                                {% endfor %}
-
-                            <!-- If existing rating, display saved rating -->
-                            {% else %}
-                                {% for choice in rating_form.value.field.choices %}
-                                    <input type="radio" id="rating_{{ choice.0 }}" name="{{ rating_form.value.name }}" value="{{ choice.0 }}" class="star-rating-input"
-                                    {% if choice.0 == existing_rating.value %} checked {% endif %}> <!-- Mark the radio button as checked if it matches the existing rating -->
-                                    <label for="rating_{{ choice.0 }}" class="star-rating-label">
-                                        <i class="bi bi-star-fill"></i> <!-- Use 'existing' class for styling -->
-                                    </label>
-                                {% endfor %}
-                            {% endif %}
-
+                            <!-- Star Rating Form -->
+                            {% for choice in rating_form.value.field.choices %}
+                                <input type="radio" id="rating_{{ choice.0 }}" name="{{ rating_form.value.name }}" value="{{ choice.0 }}" class="star-rating-input">
+                                <label for="rating_{{ choice.0 }}" class="star-rating-label">
+                                    <i class="bi bi-star-fill"></i>
+                                </label>
+                            {% endfor %}
                         </div>
                     </div>
-                    <button class="btn btn-primary" type="submit">{% if existing_rating %}Update Rating{% else %}Submit Rating{% endif %}</button>
+                    <button class="btn btn-primary rating-btn" type="submit">{% if existing_rating %}Update Rating{% else %}Submit Rating{% endif %}</button>
                 </form>
             </div>
             {% endif %}

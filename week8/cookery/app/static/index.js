@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     starRating();
     fadeMessage();
     averageRating();
+    existingRating();
     initEditButton();
     initDeleteButton();
 });
@@ -65,8 +66,25 @@ function averageRating() {
         for (let i = 0; i < avgRating; i++) {
             pRating.innerHTML += `<label class="star-rating-label"><i class="bi bi-star-fill" style="color:gold;"></i></label>`;
         }
+        
     });
 }
+
+function existingRating() {
+    // Get the existing rating from the data attribute
+    var existingRatingElement = document.querySelector("[data-avg-rating]");
+    var existingRating = parseInt(existingRatingElement.getAttribute("data-avg-rating"));
+    const ratingForm = document.querySelector(".form-group")
+
+    const stars = document.querySelectorAll(".star-rating-input");
+    const labels = ratingForm.querySelectorAll(".star-rating-label");
+
+    // Click event: Mark stars gold up to current rating
+    for (let i = 0; i < existingRating; i++) {
+        labels[i].style.color = "gold"; 
+    }
+}
+
 
 
 
