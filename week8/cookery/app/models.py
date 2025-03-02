@@ -123,6 +123,28 @@ class CreateRecipeForm(forms.Form):
         widget=forms.CheckboxSelectMultiple,
         required=False
     )
+    
+    
+class RecipeFilterForm(forms.Form):
+    tags = forms.ModelMultipleChoiceField(
+        queryset=Tag.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False,
+        label="Tags"
+    )
+    cuisine = forms.ModelChoiceField(
+        queryset=Cuisine.objects.all(),
+        required=False,
+        label="Cuisine",
+        empty_label="Select a Cuisine"
+    )
+    meal_type = forms.ModelChoiceField(
+        queryset=MealType.objects.all(),
+        required=False,
+        label="Meal Type",
+        empty_label="Select a Meal Type"
+    )
+    
 
 class Favourites(models.Model):
     user = models.ForeignKey("auth.User", on_delete=models.CASCADE, related_name="favourites")

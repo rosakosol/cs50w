@@ -7,7 +7,7 @@ from django.core.paginator import Paginator
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.contrib import messages
-from .models import Ingredient, Cuisine, Rating, RatingForm, MealType, Recipe, CreateRecipeForm, Favourites, FavouriteForm
+from .models import Ingredient, Cuisine, Rating, RatingForm, MealType, Recipe, CreateRecipeForm, Favourites, FavouriteForm, RecipeFilterForm
 from django.db import IntegrityError
 from django.utils import timezone
 import json
@@ -18,6 +18,29 @@ import json
 def index(request):
     user = request.user
     recipes = Recipe.objects.all().order_by("-created_at")
+    
+        # Create an instance of the filter form
+    form = RecipeFilterForm(request.GET)
+
+    # If the form is valid, filter the recipes
+    if form.is_valid():
+        # Get filter data from the form
+        tags = form.cleaned_data['tags']
+        cuisine = form.cleaned_data['cuisine']
+        meal_type = form.cleaned_data['meal_type']
+
+        # Filter by tags (only if tags are selected)
+        if tags:
+            recipes = recipes.filter(tags__in=tags)
+
+        # Filter by cuisine (only if cuisine is selected)
+        if cuisine:
+            recipes = recipes.filter(cuisine=cuisine)
+
+        # Filter by meal type (only if meal type is selected)
+        if meal_type:
+            recipes = recipes.filter(meal_type=meal_type)
+
     
     # If there are any recipes, paginate
     if recipes:
@@ -33,6 +56,7 @@ def index(request):
     return render(request, 'index.html', {
         "MEDIA_URL": settings.MEDIA_URL,
         "user": user,
+        "form": form,
         "recipes": recipes,
         "page_obj": page_obj
     })
@@ -288,7 +312,7 @@ def search(request):
     # If query cannot be read, display error message
     else:     
         messages.error("Query could not be read!")
-        
+
 
 def login_view(request):
     if request.method == "POST":

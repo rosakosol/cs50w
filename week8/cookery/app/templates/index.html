@@ -3,6 +3,11 @@
 {% block body %}
 <div class="container mt-5">
     <h2>Home</h2>
+    <form method="get" action="{% url 'index' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Filter Recipes</button>
+    </form>
     <!-- Row to display recipes in 3-column grid -->
     <div class="row">
         {% for recipe in page_obj %}
