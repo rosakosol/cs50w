@@ -1,11 +1,15 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Ingredient, Cuisine, MealType, Recipe, Rating, Tag
+from .models import Ingredient, RecipeIngredient, Cuisine, MealType, Recipe, Rating, Tag
 
 class IngredientAdmin(admin.ModelAdmin):
     list_display = ("name",)
     ordering = ("name",)
+    
+class RecipeIngredientAdmin(admin.ModelAdmin):
+    list_display = ("ingredient",)
+    ordering = ("ingredient",)
 
 class CuisineAdmin(admin.ModelAdmin):
     list_display = ("name",)
@@ -30,6 +34,7 @@ class TagAdmin(admin.ModelAdmin):
     
     
 admin.site.register(Ingredient, IngredientAdmin)
+admin.site.register(RecipeIngredient, RecipeIngredientAdmin)
 admin.site.register(Cuisine, CuisineAdmin)
 admin.site.register(MealType, MealTypeAdmin)
 admin.site.register(Recipe, RecipeAdmin)

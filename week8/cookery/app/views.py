@@ -135,8 +135,6 @@ def recipe(request, recipe_name):
         rating_form = None
         favourite_form = None
         is_favourited = False
-        
-    print(recipe.schema)
     
     return render(request, "recipe.html", {
         "user": user,
@@ -196,7 +194,8 @@ def add_recipe_view(request):
                 for form in formset:
                     ingredient = form.cleaned_data.get("ingredient")
                     quantity = form.cleaned_data.get("quantity")
-                    RecipeIngredient.objects.create(recipe=recipe, ingredient=ingredient, quantity=quantity)
+                    recipe_ingredient = RecipeIngredient.objects.create(recipe=recipe, ingredient=ingredient, quantity=quantity)
+                
                 
                 # Redirect to the same page to show the new comment
                 return HttpResponseRedirect(reverse("index"))  

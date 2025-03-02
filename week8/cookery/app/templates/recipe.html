@@ -111,31 +111,37 @@
         <!-- Display recipe description -->
         <div class="mt-5 d-flex align-items-center justify-content-between">        
             <p id="recipe-description-{{ recipe.id }}">{{ recipe.description }}</p>
-
         </div>
 
         <div class="mt-5">
             <div class="row">
-            <div class="col-md-6">
-                <!-- Display recipe ingredients -->
-                <h3>Ingredients</h3>
-
-            </div>
-            <div class="col-md-6">
-                <!-- Display recipe instructions -->
-                <h3>Instructions</h3>
-                {% if recipe.instructions %}
-                    <p id="recipe-instructions-{{ recipe.id }}">{{ recipe.instructions }}</p>
-                {% endif %}
-            </div>
+                <div class="col-md-6">
+                    <!-- Display recipe ingredients -->
+                    <h3>Ingredients</h3>
+                    <ul>
+                        {% for recipe_ingredient in recipe.recipe_ingredients.all %}
+                            <li>{{ recipe_ingredient.quantity}} {{ recipe_ingredient.unit }} of {{ recipe_ingredient.ingredient.name }} </li>
+                        {% empty %}
+                        <li>No ingredients added yet.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <!-- Display recipe instructions -->
+                    <h3>Instructions</h3>
+                    <p>
+                        {{ recipe.instructions }}
+                    </p>
+                </div>
             </div>
         </div>
     </div>
-    {% if recipe.schema %}
-        <script type="application/ld+json">
-            {{ recipe.schema|json_script:"recipe-schema" }}
-        </script>
-    {% endif %}
 </div>
+
+{% if recipe.schema %}
+<script type="application/ld+json">
+    {{ recipe.schema|json_script:"recipe-schema" }}
+</script>
+{% endif %}
 
 {% endblock %}

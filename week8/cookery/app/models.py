@@ -22,7 +22,7 @@ class RecipeIngredient(models.Model):
     unit = models.CharField(max_length=64, default="")
 
     def __str__(self):
-        return f"{self.quantity} {self.unit} of {self.name} in {self.recipe}"
+        return f"{self.quantity} {self.unit} of {self.ingredient} in {self.recipe}"
 
         
 class Cuisine(models.Model):
