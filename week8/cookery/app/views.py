@@ -7,7 +7,7 @@ from django.core.paginator import Paginator
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.contrib import messages
-from .models import Ingredient, Cuisine, Rating, RatingForm, MealType, Recipe, CreateRecipeForm, Favourites, FavouriteForm, FavouritesList
+from .models import Ingredient, Cuisine, Rating, RatingForm, MealType, Recipe, CreateRecipeForm, Favourites, FavouriteForm
 from django.db import IntegrityError
 from django.utils import timezone
 import json
@@ -71,27 +71,17 @@ def recipe(request, recipe_name):
             favourite_form = FavouriteForm(request.POST)
             if favourite_form.is_valid():
                 action = favourite_form.cleaned_data["action"]
-                selected_list = favourite_form.cleaned_data["favourites_list"]
                 
                 if action == "add":
-                    # Check if recipe is already in list
-                    if Favourites.objects.filter(user=user, recipe=recipe, favourites_list=selected_list).exists():
-                            messages.info(request, f'{recipe.name} is already in your list "{selected_list.name}".')
-                    else:
-                        # Add the recipe to the list
-                        Favourites.objects.create(user=user, recipe=recipe, favourites_list=selected_list)
-                        messages.success(request, f'{recipe.name} has been added to your list "{selected_list.name}".')
+                    # Check if user has already favourited recipe
+                    if not Favourites.objects.filter(user=user, recipe=recipe).exists():
+                        Favourites.objects.create(user=user, recipe=recipe)
                         
-                        
-                # Handle removing the listing from favourites
                 elif action == "remove":
-                    # Remove the recipe from the list
-                    favourite = Favourites.objects.filter(user=user, recipe=recipe, favourites_list=selected_list).first()
-                    if favourite:
-                        favourite.delete()
-                        messages.success(request, f'{recipe.name} has been removed from your list "{selected_list.name}".')
-                    else:
-                        messages.error(request, f'{recipe.name} is not in your list "{selected_list.name}".')
+                    favourite_instance = Favourites.objects.filter(user=user, recipe=recipe).first()
+                    if favourite_instance:
+                        favourite_instance.delete()
+
 
                 recipe.refresh_from_db()
                 return HttpResponseRedirect(reverse("recipe", args=[recipe_name]))

@@ -1,5 +1,6 @@
 from django.db import models
 from django import forms
+from django.forms import ModelForm
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from django.db.models import Avg
@@ -122,20 +123,11 @@ class CreateRecipeForm(forms.Form):
         widget=forms.CheckboxSelectMultiple,
         required=False
     )
-    
-class FavouritesList(models.Model):
-    user = models.ForeignKey("auth.User", on_delete=models.CASCADE, related_name="favourite_lists")
-    name = models.CharField(max_length=64, default="")
-    created_at = models.DateTimeField(auto_now_add=True)
-    
-    def __str__(self):
-        return f"{self.name} - {self.user.username}"
 
 class Favourites(models.Model):
     user = models.ForeignKey("auth.User", on_delete=models.CASCADE, related_name="favourites")
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name="favourites")
     added_at = models.DateTimeField(auto_now_add=True) 
-    favourites_list = models.ForeignKey(FavouritesList, on_delete=models.CASCADE, related_name="favourites", default="")
     
     def __str__(self):
         return f"{self.recipe.name} in {self.favourites_list.name}"
@@ -144,5 +136,4 @@ class Favourites(models.Model):
 class FavouriteForm(forms.Form):
     recipe_id = forms.IntegerField(widget=forms.HiddenInput())
     action = forms.ChoiceField(choices=[("add", "Add"), ("remove", "Remove")], widget=forms.HiddenInput())
-    favourites_list = forms.ModelChoiceField(queryset=FavouritesList.objects.all(), empty_label="Select a list")
     
