@@ -6,13 +6,23 @@ from django.core.exceptions import ValidationError
 from django.db.models import Avg
 
 # Create your models here.
+
+# Standalone Ingredient
 class Ingredient(models.Model):
     name = models.CharField(max_length=64, default="")
-    calories_per_unit = models.DecimalField(max_digits=5, decimal_places=2, default=0, blank=True)
-    unit = models.CharField(max_length=64, default="", blank=True)
-    
+        
     def __str__(self):
         return self.name
+
+# Ingredients to be added to Recipe
+class RecipeIngredient(models.Model):
+    name = models.ForeignKey(Ingredient, on_delete=models.CASCADE, default="")
+    quantity = models.IntegerField(default=1)
+    unit = models.CharField(max_length=64, default="")
+
+    def __str__(self):
+        return f"{self.quantity} {self.unit} of {self.name}"
+
         
 class Cuisine(models.Model):
     name = models.CharField(max_length=64, default="")
@@ -57,7 +67,7 @@ class Recipe(models.Model):
     name = models.CharField(max_length=64, default="")
     cuisine = models.ForeignKey(Cuisine, on_delete=models.CASCADE, null=True, blank=True, related_name="recipes")
     ratings = models.ManyToManyField(Rating, related_name="recipes")
-    ingredients = models.ManyToManyField(Ingredient,  related_name="recipes")
+    ingredients = models.ManyToManyField(RecipeIngredient,  related_name="recipes")
     description = models.TextField(default="")  
     instructions = models.TextField(default="")
     servings = models.PositiveBigIntegerField(default=1)
@@ -138,7 +148,7 @@ class CreateRecipeForm(forms.Form):
             "cols": 80
         }))
     ingredients = forms.ModelMultipleChoiceField(
-        queryset=Ingredient.objects.all(),
+        queryset=RecipeIngredient.objects.all(),
         widget=forms.CheckboxSelectMultiple,
         required=False
     )
