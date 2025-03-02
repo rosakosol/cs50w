@@ -19,15 +19,15 @@ def index(request):
     user = request.user
     recipes = Recipe.objects.all().order_by("-created_at")
     
-        # Create an instance of the filter form
+    # Filter form 
     form = RecipeFilterForm(request.GET)
 
     # If the form is valid, filter the recipes
     if form.is_valid():
         # Get filter data from the form
-        tags = form.cleaned_data['tags']
-        cuisine = form.cleaned_data['cuisine']
-        meal_type = form.cleaned_data['meal_type']
+        tags = form.cleaned_data["tags"]
+        cuisine = form.cleaned_data["cuisine"]
+        meal_type = form.cleaned_data["meal_type"]
 
         # Filter by tags (only if tags are selected)
         if tags:
@@ -40,6 +40,20 @@ def index(request):
         # Filter by meal type (only if meal type is selected)
         if meal_type:
             recipes = recipes.filter(meal_type=meal_type)
+            
+    # If user has passed through a filter to index page - i.e. from clicking a tag button on recipe page
+    tag_name = request.GET.get("tag")
+    cuisine_name = request.GET.get("cuisine")
+    meal_type_name = request.GET.get("meal_type")
+    
+    if tag_name:
+        recipes = recipes.filter(tags__name=tag_name)
+        
+    if cuisine_name:
+        recipes = recipes.filter(cuisine__name=cuisine_name)
+        
+    if meal_type_name:
+        recipes = recipes.filter(cuisine__name=cuisine_name)
 
     
     # If there are any recipes, paginate

@@ -11,7 +11,7 @@
             <p class="star-avg-rating mb-2" data-avg-rating="{{ recipe.average_rating }}">Average Rating: {{ recipe.average_rating }}</p>
             <!-- Display tags -->
              {% for tag in tags %}
-                <button class="btn btn-secondary">{{ tag }}</button>
+                <a href="{% url 'index' %}?tag={{ tag.name }}" class="btn btn-primary">{{ tag.name }}</a>
              {% endfor %}
             
         </div>
