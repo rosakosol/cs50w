@@ -13,13 +13,19 @@ class Ingredient(models.Model):
         
     def __str__(self):
         return self.name
+    
+class Unit(models.Model):
+    name = models.CharField(max_length=64, default="")
+    
+    def __str__(self):
+        return self.name
 
 # Ingredients to be added to Recipe
 class RecipeIngredient(models.Model):
     recipe = models.ForeignKey("Recipe", on_delete=models.CASCADE, related_name="recipe_ingredients", default="")
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE, default="")
     quantity = models.IntegerField(default=1)
-    unit = models.CharField(max_length=64, default="")
+    unit = models.ForeignKey(Unit, on_delete=models.CASCADE, default="")
 
     def __str__(self):
         return f"{self.quantity} {self.unit} of {self.ingredient} in {self.recipe}"
@@ -81,6 +87,16 @@ class Recipe(models.Model):
     tags = models.ManyToManyField(Tag, related_name="recipes")
     
     schema = models.JSONField(blank=True, null=True)
+    
+    def get_ingredients(self):
+        recipe_ingredients = self.recipe_ingredients.all()
+        
+        ingredient_names = []
+        
+        for recipe_ingredient in recipe_ingredients:
+            ingredient_names.append(recipe_ingredient.ingredient.name)
+
+        return ingredient_names
     
     def average_rating(self):
         average = self.ratings.aggregate(Avg('value'))['value__avg']
@@ -179,10 +195,15 @@ class RecipeIngredientForm(forms.ModelForm):
         max_value=1000,
         required=True
     )
+    unit = forms.ModelChoiceField(
+        queryset=Unit.objects.all(),
+        required=True
+    )   
+    
     
     class Meta:
         model = RecipeIngredient
-        fields = ["ingredient", "quantity"]
+        fields = ["ingredient", "quantity", "unit"]
         
 RecipeIngredientFormSet = modelformset_factory(RecipeIngredient, form=RecipeIngredientForm, extra=1)
 

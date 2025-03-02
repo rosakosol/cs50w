@@ -7,7 +7,7 @@ from django.core.paginator import Paginator
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.contrib import messages
-from .models import Ingredient, RecipeIngredient, Cuisine, Rating, RatingForm, MealType, Recipe, CreateRecipeForm, RecipeIngredientFormSet, Favourites, FavouriteForm, RecipeFilterForm
+from .models import Ingredient, Unit, RecipeIngredient, Cuisine, Rating, RatingForm, MealType, Recipe, CreateRecipeForm, RecipeIngredientFormSet, Favourites, FavouriteForm, RecipeFilterForm
 from django.db import IntegrityError
 from django.utils import timezone
 import json
@@ -194,7 +194,8 @@ def add_recipe_view(request):
                 for form in formset:
                     ingredient = form.cleaned_data.get("ingredient")
                     quantity = form.cleaned_data.get("quantity")
-                    recipe_ingredient = RecipeIngredient.objects.create(recipe=recipe, ingredient=ingredient, quantity=quantity)
+                    unit = form.cleaned_data.get("unit")
+                    recipe_ingredient = RecipeIngredient.objects.create(recipe=recipe, ingredient=ingredient, quantity=quantity, unit=unit)
                 
                 
                 # Redirect to the same page to show the new comment
