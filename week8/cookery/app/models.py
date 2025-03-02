@@ -11,7 +11,6 @@ class Ingredient(models.Model):
     calories_per_unit = models.DecimalField(max_digits=5, decimal_places=2, default=0, blank=True)
     unit = models.CharField(max_length=64, default="", blank=True)
     
-    
     def __str__(self):
         return self.name
         
@@ -62,12 +61,15 @@ class Recipe(models.Model):
     description = models.TextField(default="")  
     instructions = models.TextField(default="")
     servings = models.PositiveBigIntegerField(default=1)
-    cooking_time = models.PositiveBigIntegerField(default=0)
+    cook_time = models.PositiveBigIntegerField(default=0)
+    prep_time = models.PositiveBigIntegerField(default=0)
     image = models.ImageField(upload_to="images/%d/%m/%y", default=None)    
     image_alt_text = models.CharField(max_length=64, blank=True) 
     meal_type = models.ForeignKey(MealType, on_delete=models.CASCADE, related_name="recipes", null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     tags = models.ManyToManyField(Tag, related_name="recipes")
+    
+    schema = models.JSONField(blank=True, null=True)
     
     def average_rating(self):
         average = self.ratings.aggregate(Avg('value'))['value__avg']
@@ -82,6 +84,23 @@ class Recipe(models.Model):
     
     def total_calories_per_serving(self):
         return self.total_calories() / self.servings
+    
+    def generate_schema(self):
+        return {
+        "@context": "http://schema.org",
+        "@type": "Recipe",
+        "author": f"{self.user.first_name} {self.user.last_name}",
+        "name": self.name,
+        "recipeCuisine": self.cuisine.name,
+        # Ingredients
+        "description": self.description,
+        "recipeInstructions": self.instructions.split('\n'),  # assuming instructions are also stored this way
+        "recipeYield": self.servings,
+        "cookTime": f"PT{self.cook_time}M",
+        "prepTime": f"PT{self.prep_time}M",
+        "image": self.image.url if self.image else "",
+        "dateCreated": f"{self.created_at}"
+    }
 
     
     def __str__(self):
@@ -121,12 +140,27 @@ class CreateRecipeForm(forms.Form):
     ingredients = forms.ModelMultipleChoiceField(
         queryset=Ingredient.objects.all(),
         widget=forms.CheckboxSelectMultiple,
-        required=True
+        required=False
     )
     tags = forms.ModelMultipleChoiceField(
         queryset=Tag.objects.all(),
         widget=forms.CheckboxSelectMultiple,
         required=False
+    )
+    servings = forms.IntegerField(
+        min_value=1,
+        max_value=99,
+        required=True
+    )
+    cook_time = forms.IntegerField(
+        min_value=1,
+        max_value=1000,
+        required=True
+    )
+    prep_time = forms.IntegerField(
+        min_value=1,
+        max_value=1000,
+        required=True
     )
     
     

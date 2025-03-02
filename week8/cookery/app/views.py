@@ -135,6 +135,8 @@ def recipe(request, recipe_name):
         rating_form = None
         favourite_form = None
         is_favourited = False
+        
+    print(recipe.schema)
     
     return render(request, "recipe.html", {
         "user": user,
@@ -158,24 +160,35 @@ def add_recipe_view(request):
             if create_form.is_valid():
                 
                 name = create_form.cleaned_data["name"]
-                description = create_form.cleaned_data["description"]
-                image = create_form.cleaned_data["image"]
-                meal_type = create_form.cleaned_data["meal_type"]
                 cuisine = create_form.cleaned_data["cuisine"]
-                instructions = create_form.cleaned_data["instructions"]
                 ingredients = create_form.cleaned_data["ingredients"]
+                description = create_form.cleaned_data["description"]
+                instructions = create_form.cleaned_data["instructions"]
+                servings = create_form.cleaned_data["servings"]
+                cook_time = create_form.cleaned_data["cook_time"]
+                prep_time = create_form.cleaned_data["prep_time"]
+                image = create_form.cleaned_data["image"]
+                image_alt_text = create_form.cleaned_data["image_alt_text"]
+                meal_type = create_form.cleaned_data["meal_type"]
                 tags = create_form.cleaned_data["tags"]
 
                 # Create a new Recipe instance
                 recipe = Recipe.objects.create(
                     user=user,
                     name=name,
-                    description=description,
-                    image=image,
-                    meal_type=meal_type,
                     cuisine=cuisine,
+                    description=description,
                     instructions=instructions,
+                    servings=servings,
+                    cook_time=cook_time,
+                    prep_time=prep_time,
+                    image=image,
+                    image_alt_text=image_alt_text,
+                    meal_type=meal_type,
                 )           
+                
+                schema = recipe.generate_schema()
+                recipe.schema = schema
                 
                 recipe.ingredients.set(ingredients)
                 recipe.tags.set(tags)

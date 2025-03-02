@@ -131,6 +131,11 @@
             </div>
         </div>
     </div>
+    {% if recipe.schema %}
+        <script type="application/ld+json">
+            {{ recipe.schema|json_script:"recipe-schema" }}
+        </script>
+    {% endif %}
 </div>
 
 {% endblock %}
