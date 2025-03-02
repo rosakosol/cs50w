@@ -40,7 +40,7 @@ def index(request):
         # Filter by meal type (only if meal type is selected)
         if meal_type:
             recipes = recipes.filter(meal_type=meal_type)
-            
+    
     # If user has passed through a filter to index page - i.e. from clicking a tag button on recipe page
     tag_name = request.GET.get("tag")
     cuisine_name = request.GET.get("cuisine")
@@ -53,7 +53,7 @@ def index(request):
         recipes = recipes.filter(cuisine__name=cuisine_name)
         
     if meal_type_name:
-        recipes = recipes.filter(cuisine__name=cuisine_name)
+        recipes = recipes.filter(meal_type__name=meal_type_name)
 
     
     # If there are any recipes, paginate
@@ -65,7 +65,6 @@ def index(request):
         # If no recipes, paginator is none
     else:
         page_obj = None
-    
     
     return render(request, 'index.html', {
         "MEDIA_URL": settings.MEDIA_URL,

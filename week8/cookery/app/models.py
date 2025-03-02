@@ -64,6 +64,7 @@ class Recipe(models.Model):
     servings = models.PositiveBigIntegerField(default=1)
     cooking_time = models.PositiveBigIntegerField(default=0)
     image = models.ImageField(upload_to="images/%d/%m/%y", default=None)    
+    image_alt_text = models.CharField(max_length=64, blank=True) 
     meal_type = models.ForeignKey(MealType, on_delete=models.CASCADE, related_name="recipes", null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     tags = models.ManyToManyField(Tag, related_name="recipes")
@@ -89,6 +90,10 @@ class Recipe(models.Model):
 class CreateRecipeForm(forms.Form):
     name = forms.CharField(max_length=64)
     image = forms.ImageField(required=False)
+    image_alt_text = forms.CharField(
+        widget=forms.TextInput(attrs={'placeholder': 'Enter alt text for image'}),
+        required=False
+    )
     meal_type = forms.ModelChoiceField(
         queryset=MealType.objects.all(),
         empty_label="Select a category",
