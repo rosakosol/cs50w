@@ -1,6 +1,6 @@
 from django.db import models
 from django import forms
-from django.forms import ModelForm
+from django.forms import ModelForm, modelformset_factory
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from django.db.models import Avg
@@ -16,12 +16,13 @@ class Ingredient(models.Model):
 
 # Ingredients to be added to Recipe
 class RecipeIngredient(models.Model):
-    name = models.ForeignKey(Ingredient, on_delete=models.CASCADE, default="")
+    recipe = models.ForeignKey("Recipe", on_delete=models.CASCADE, related_name="recipe_ingredients", default="")
+    ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE, default="")
     quantity = models.IntegerField(default=1)
     unit = models.CharField(max_length=64, default="")
 
     def __str__(self):
-        return f"{self.quantity} {self.unit} of {self.name}"
+        return f"{self.quantity} {self.unit} of {self.name} in {self.recipe}"
 
         
 class Cuisine(models.Model):
@@ -147,11 +148,6 @@ class CreateRecipeForm(forms.Form):
             "rows": 10,
             "cols": 80
         }))
-    ingredients = forms.ModelMultipleChoiceField(
-        queryset=RecipeIngredient.objects.all(),
-        widget=forms.CheckboxSelectMultiple,
-        required=False
-    )
     tags = forms.ModelMultipleChoiceField(
         queryset=Tag.objects.all(),
         widget=forms.CheckboxSelectMultiple,
@@ -173,6 +169,23 @@ class CreateRecipeForm(forms.Form):
         required=True
     )
     
+class RecipeIngredientForm(forms.ModelForm):
+    ingredient = forms.ModelChoiceField(
+        queryset=Ingredient.objects.all(),
+        required=True
+    )    
+    quantity = forms.IntegerField(
+        min_value=1,
+        max_value=1000,
+        required=True
+    )
+    
+    class Meta:
+        model = RecipeIngredient
+        fields = ["ingredient", "quantity"]
+        
+RecipeIngredientFormSet = modelformset_factory(RecipeIngredient, form=RecipeIngredientForm, extra=1)
+
     
 class RecipeFilterForm(forms.Form):
     tags = forms.ModelMultipleChoiceField(

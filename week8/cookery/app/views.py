@@ -7,7 +7,7 @@ from django.core.paginator import Paginator
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.contrib import messages
-from .models import Ingredient, RecipeIngredient, Cuisine, Rating, RatingForm, MealType, Recipe, CreateRecipeForm, Favourites, FavouriteForm, RecipeFilterForm
+from .models import Ingredient, RecipeIngredient, Cuisine, Rating, RatingForm, MealType, Recipe, CreateRecipeForm, RecipeIngredientFormSet, Favourites, FavouriteForm, RecipeFilterForm
 from django.db import IntegrityError
 from django.utils import timezone
 import json
@@ -157,11 +157,11 @@ def add_recipe_view(request):
             
             # Create Listing Form
             create_form = CreateRecipeForm(request.POST, request.FILES)
-            if create_form.is_valid():
+            formset = RecipeIngredientFormSet(request.POST)
+            if create_form.is_valid() and formset.is_valid():
                 
                 name = create_form.cleaned_data["name"]
                 cuisine = create_form.cleaned_data["cuisine"]
-                ingredients = create_form.cleaned_data["ingredients"]
                 description = create_form.cleaned_data["description"]
                 instructions = create_form.cleaned_data["instructions"]
                 servings = create_form.cleaned_data["servings"]
@@ -189,21 +189,26 @@ def add_recipe_view(request):
                 
                 schema = recipe.generate_schema()
                 recipe.schema = schema
-                
-                recipe.ingredients.set(ingredients)
                 recipe.tags.set(tags)
                 
                 recipe.save()
+                
+                for form in formset:
+                    ingredient = form.cleaned_data.get("ingredient")
+                    quantity = form.cleaned_data.get("quantity")
+                    RecipeIngredient.objects.create(recipe=recipe, ingredient=ingredient, quantity=quantity)
                 
                 # Redirect to the same page to show the new comment
                 return HttpResponseRedirect(reverse("index"))  
         
         else:
             create_form = CreateRecipeForm()
+            formset = RecipeIngredientFormSet(queryset=RecipeIngredient.objects.none())
         
         return render(request, "add_recipe.html", {
             "user": user,
             "create_form": create_form,
+            "formset": formset
         })
     else:
         return render(request, "access_denied.html")
