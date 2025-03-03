@@ -51,7 +51,7 @@
                             {% endfor %}
                         </div>
                     </div>
-                    <button class="btn btn-primary rating-btn" type="submit">{% if existing_rating %}Update Rating{% else %}Submit Rating{% endif %}</button>
+                    <button class="btn btn-primary rating-btn" name="form_type" value="rating" type="submit">{% if existing_rating %}Update Rating{% else %}Submit Rating{% endif %}</button>
                 </form>
             </div>
             {% endif %}

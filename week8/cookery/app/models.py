@@ -48,13 +48,19 @@ class Rating(models.Model):
             
     def __str__(self):
         return str(self.value)
-            
-class RatingForm(forms.Form):
+    
+    
+class RatingForm(forms.ModelForm):
+    class Meta:
+        model = Rating
+        fields = ["value",]
+
     value = forms.ChoiceField(
         choices=[(str(i), i) for i in range(1, 6)],
         widget=forms.RadioSelect(attrs={'class': 'star-rating'}),
         required=True
     )
+        
 
 class Tag(models.Model):
     name = models.CharField(max_length=64, default="")
