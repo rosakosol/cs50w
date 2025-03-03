@@ -256,19 +256,20 @@ def add_recipe_view(request):
         return render(request, "access_denied.html")
 
     
-    
+
+
+# * Edit recipe
+# Allow users to edit recipe dynamically
 @login_required
 def edit_recipe(request, recipe_id):
-    user = request.user
-    
-    # Get the recipe object if it exists
-    recipe = get_object_or_404(Recipe, pk=recipe_id)
-    
-    # Ensure the logged-in user is the author of the recipe
-    if recipe.user != user:
-        return JsonResponse({"error": "Unauthorized"}, status=403)
-    
     if request.method == "POST":
+        user = request.user
+        recipe = get_object_or_404(Recipe, pk=recipe_id)
+        
+        # If user is not the author, display unauthorised error
+        if recipe.user != user:
+            return JsonResponse({"error": "Unauthorized"}, status=403)
+    
         try:
             # Parse the JSON data from the request body
             data = json.loads(request.body)
@@ -295,6 +296,7 @@ def edit_recipe(request, recipe_id):
             return JsonResponse({
                 "error": "Invalid JSON data"
             }, status=400)
+        
     return JsonResponse({
         "error": "Invalid request."
     }, status=400)
@@ -351,6 +353,9 @@ def favourites_view(request):
     
     
     
+    
+# * Search function
+# Return search results for query
 def search(request):
     user = request.user
     recipes = Recipe.objects.all()
@@ -381,12 +386,15 @@ def search(request):
             "recipes": recipes,
             "page_obj": page_obj
         })
-    # If query cannot be read, display error message and redirect to index
+    # If query cannot be read, redirect to index
     else:     
-        messages.error(request, "Query could not be read!")
         return HttpResponseRedirect(reverse("index"))
 
 
+
+
+# * Login
+# Allow users to login via username and password
 def login_view(request):
     if request.method == "POST":
 
@@ -408,12 +416,18 @@ def login_view(request):
 
 
 
+
+# * Logout
+# Allow users to logout and redirect to index
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
 
 
 
+
+# * Register
+# Allow users to register
 def register_view(request):
     if request.method == "POST":
         username = request.POST["username"]
