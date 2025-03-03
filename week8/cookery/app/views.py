@@ -13,7 +13,7 @@ from django.utils import timezone
 import json
 
 
-# * Index Page
+# * Index
 # Displays all recipes by default, paginated.
 # Shows filter options
 # TODO: Sort recipes from a-z; recently added; calorie count
@@ -80,7 +80,7 @@ def index(request):
     
     
     
-# * Recipe Page
+# * Recipe
 # Displays single recipe in detail including description, ingredients and instructions
 # Shows filter buttons for each recipe
 # Allows logged-in users to submit ratings and add recipe to favourites
@@ -161,6 +161,13 @@ def recipe(request, recipe_name):
     })
 
 
+
+# * Add Recipe
+# Displays add recipe form
+# Shows filter buttons for each recipe
+# Allows logged-in users to submit ratings and add recipe to favourites
+# If user is author, they can edit and delete recipes
+# Buttons: Share via email, socials, and print-friendly version  
 def add_recipe_view(request):
     user = request.user
     
@@ -346,17 +353,14 @@ def favourites_view(request):
     
 def search(request):
     user = request.user
-    query = request.POST.get("q")
     recipes = Recipe.objects.all()
+    form = RecipeFilterForm()
     
-    # If query read
+    # Get query from search form
+    query = request.GET.get("q", "").strip()
+
     if query:
-        results = []
-        
-        # If search query substring in recipe name then add to list of search results
-        for recipe in recipes:
-            if query.lower() in recipe.name.lower():
-                results.append(recipe)
+        results = Recipe.objects.filter(name__icontains=query)
         
         # If there are any recipes, paginate
         if results:
@@ -370,15 +374,17 @@ def search(request):
             return render(request, 'no_results.html')
             
         # Else render index page with search results
-        return render(request, 'index.html', {
+        return render(request, "index.html", {
             "MEDIA_URL": settings.MEDIA_URL,
             "user": user,
-            "recipes": results,
+            "form": form,
+            "recipes": recipes,
             "page_obj": page_obj
         })
-    # If query cannot be read, display error message
+    # If query cannot be read, display error message and redirect to index
     else:     
-        messages.error("Query could not be read!")
+        messages.error(request, "Query could not be read!")
+        return HttpResponseRedirect(reverse("index"))
 
 
 def login_view(request):

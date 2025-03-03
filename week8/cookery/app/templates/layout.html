@@ -78,8 +78,10 @@
 
         <!-- Search Bar and Profile Icon (always visible) -->
         <div class="d-none d-md-flex justify-content-end align-items-center ms-3">
-          <input type="text" class="form-control search-bar me-2" placeholder="Search">
-          <button class="btn btn-outline-success" type="submit">Search</button>
+            <form action="{% url 'search' %}" method="get" class="d-flex">
+                <input type="text" class="form-control search-bar me-2" name="q" placeholder="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
           <button class="btn btn-outline-secondary">Profile</button>
         </div>
 
