@@ -97,30 +97,26 @@ def recipe(request, recipe_name):
         # Differentiate between rating and favourite forms
         form_type = request.POST.get("form_type")
         
-        # Check if there is an existing rating
-        existing_rating = Rating.objects.filter(user=user, recipe=recipe).first()
-        
         # If rating form has been submitted
         if form_type == "rating":
             rating_form = RatingForm(request.POST)
             if rating_form.is_valid():
                 # Check if user has rated before
+                existing_rating = Rating.objects.filter(user=user, recipe=recipe).first()
+        
                 if existing_rating:
                     existing_rating.value = rating_form.cleaned_data["value"]
                     existing_rating.save()
                     messages.success(request, "Your rating has been saved successfully!")
 
                 else:
-                    rating = Rating()
-                    rating.value = rating_form.cleaned_data["value"]
+                    rating = rating_form.save(commit=False)
                     rating.user = user
                     rating.recipe = recipe
                     rating.save()
                     recipe.ratings.add(rating)
                     messages.success(request, "Your rating has been placed successfully!")
                 
-                # Refresh recipe in db
-                recipe.refresh_from_db()
                 return HttpResponseRedirect(reverse("recipe", args=[recipe_name]))
             
         else:
@@ -131,21 +127,23 @@ def recipe(request, recipe_name):
                 if action == "add":
                     if not Favourites.objects.filter(user=user, recipe=recipe).exists():
                         Favourites.objects.create(user=user, recipe=recipe)
+                        messages.success(request, "Recipe has been added to favourites!")
                         
                 elif action == "remove":
                     favourite_instance = Favourites.objects.filter(user=user, recipe=recipe).first()
                     if favourite_instance:
                         favourite_instance.delete()
+                        messages.error(request, "Recipe removed from favourites.")
 
-
-                recipe.refresh_from_db()
                 return HttpResponseRedirect(reverse("recipe", args=[recipe_name]))
                     
         # If user is logged in but has not submitted any forms, display empty forms
         rating_form = RatingForm()
         favourite_form = FavouriteForm()
         is_favourited = Favourites.objects.filter(user=request.user, recipe=recipe).exists()
+        existing_rating = None
 
+    # Else if user is not logged in
     else:
         existing_rating = None
         rating_form = None
