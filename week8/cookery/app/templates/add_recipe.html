@@ -11,12 +11,18 @@
                 <!-- Formset management form -->
                 {{ formset.management_form }}
                 
-                <!-- Formset forms -->
-                {% for form in formset %}
-                    <div class="form-row">
-                        {{ form.as_p }}
-                    </div>
-                {% endfor %}
+                <div id="ingredient-container" data-url="{% url 'add_recipe' %}">
+                    {% for form in formset %}
+                        <div class="ingredient-form">
+                            {{ form.as_p }}
+                            <button class="remove-ingredient">Remove</button>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <button type="button" id="add-ingredient">Add Ingredient</button>
+
+
                 <input type="submit" value="Submit" class="btn btn-primary">
             </form>
         </div>

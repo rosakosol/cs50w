@@ -1,6 +1,6 @@
 from django.db import models
 from django import forms
-from django.forms import ModelForm, modelformset_factory
+from django.forms import ModelForm, inlineformset_factory
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from django.db.models import Avg
@@ -205,28 +205,33 @@ class RecipeIngredientForm(forms.ModelForm):
         model = RecipeIngredient
         fields = ["ingredient", "quantity", "unit"]
         
-RecipeIngredientFormSet = modelformset_factory(RecipeIngredient, form=RecipeIngredientForm, extra=1)
+RecipeIngredientFormSet = inlineformset_factory(
+    Recipe,
+    RecipeIngredient, 
+    form=RecipeIngredientForm, 
+    extra=1,
+    can_delete=False
+    )
 
     
-class RecipeFilterForm(forms.Form):
-    tags = forms.ModelMultipleChoiceField(
-        queryset=Tag.objects.all(),
-        widget=forms.CheckboxSelectMultiple,
-        required=False,
-        label="Tags"
-    )
-    cuisine = forms.ModelChoiceField(
-        queryset=Cuisine.objects.all(),
-        required=False,
-        label="Cuisine",
-        empty_label="Select a Cuisine"
-    )
-    meal_type = forms.ModelChoiceField(
-        queryset=MealType.objects.all(),
-        required=False,
-        label="Meal Type",
-        empty_label="Select a Meal Type"
-    )
+class RecipeFilterForm(forms.ModelForm):
+    class Meta:
+        model = Recipe
+        fields = ["tags", "cuisine", "meal_type"]
+        widgets = {
+            "tags": forms.CheckboxSelectMultiple(),
+        }
+        
+    # Initialise form so all fields are optional
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for field in self.fields.values():
+            field.required = False
+        
+        
+        
+        
     
 
 class Favourites(models.Model):

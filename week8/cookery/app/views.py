@@ -13,47 +13,51 @@ from django.utils import timezone
 import json
 
 
+# * Index Page
+# Displays all recipes by default, paginated.
+# Shows filter options
+# TODO: Sort recipes from a-z; recently added; calorie count
 
-# Create your views here.
 def index(request):
     user = request.user
     recipes = Recipe.objects.all().order_by("-created_at")
+    form_type = request.GET.get("form_type")
     
-    # Filter form 
-    form = RecipeFilterForm(request.GET)
+    # If user accessing filter form on index page
+    if form_type == "filter":
+        # Filter form 
+        form = RecipeFilterForm(request.GET)
 
-    # If the form is valid, filter the recipes
-    if form.is_valid():
-        # Get filter data from the form
-        tags = form.cleaned_data["tags"]
-        cuisine = form.cleaned_data["cuisine"]
-        meal_type = form.cleaned_data["meal_type"]
-
-        # Filter by tags (only if tags are selected)
-        if tags:
-            recipes = recipes.filter(tags__in=tags)
-
-        # Filter by cuisine (only if cuisine is selected)
-        if cuisine:
-            recipes = recipes.filter(cuisine=cuisine)
-
-        # Filter by meal type (only if meal type is selected)
-        if meal_type:
-            recipes = recipes.filter(meal_type=meal_type)
-    
-    # If user has passed through a filter to index page - i.e. from clicking a tag button on recipe page
-    tag_name = request.GET.get("tag")
-    cuisine_name = request.GET.get("cuisine")
-    meal_type_name = request.GET.get("meal_type")
-    
-    if tag_name:
-        recipes = recipes.filter(tags__name=tag_name)
+        # If the form is valid, filter the recipes
+        if form.is_valid():
+            # Dictionary for filters
+            filter_data = {
+                "tags__in": form.cleaned_data.get("tags"),
+                "cuisine": form.cleaned_data.get("cuisine"),
+                "meal_type": form.cleaned_data.get("meal_type")
+            }
+            
+            # Loop through filtered data and return recipes
+            for field, value in filter_data.items():
+                if value:
+                    recipes = recipes.filter(**{field: value})
         
-    if cuisine_name:
-        recipes = recipes.filter(cuisine__name=cuisine_name)
+    # Else if user is filtering from backlinked recipe buttons        
+    else:
+        # If user has passed through a filter to index page - i.e. from clicking a tag button on recipe page
+        filter_data = {
+            "tags__name": request.GET.get("tags"),
+            "cuisine__name": request.GET.get("cuisine"),
+            "meal_type__name": request.GET.get("meal_type")
+        }
         
-    if meal_type_name:
-        recipes = recipes.filter(meal_type__name=meal_type_name)
+        # Loop through filtered data and return recipes
+        for field, value in filter_data.items():
+            if value:
+                recipes = recipes.filter(**{field: value})
+    
+    # Display empty filter form  
+    form = RecipeFilterForm()
 
     
     # If there are any recipes, paginate
@@ -62,11 +66,10 @@ def index(request):
         page_number = request.GET.get("page", 1)
         page_obj = paginator.get_page(page_number)
         
-        # If no recipes, paginator is none
     else:
         page_obj = None
     
-    return render(request, 'index.html', {
+    return render(request, "index.html", {
         "MEDIA_URL": settings.MEDIA_URL,
         "user": user,
         "form": form,
@@ -156,6 +159,7 @@ def add_recipe_view(request):
             # Create Listing Form
             create_form = CreateRecipeForm(request.POST, request.FILES)
             formset = RecipeIngredientFormSet(request.POST)
+            
             if create_form.is_valid() and formset.is_valid():
                 
                 name = create_form.cleaned_data["name"]
@@ -188,18 +192,38 @@ def add_recipe_view(request):
                 schema = recipe.generate_schema()
                 recipe.schema = schema
                 recipe.tags.set(tags)
-                
                 recipe.save()
                 
                 for form in formset:
                     ingredient = form.cleaned_data.get("ingredient")
                     quantity = form.cleaned_data.get("quantity")
                     unit = form.cleaned_data.get("unit")
-                    recipe_ingredient = RecipeIngredient.objects.create(recipe=recipe, ingredient=ingredient, quantity=quantity, unit=unit)
+                    if ingredient and quantity:
+                        RecipeIngredient.objects.create(recipe=recipe, ingredient=ingredient, quantity=quantity, unit=unit)
                 
-                
-                # Redirect to the same page to show the new comment
+                # Redirect to the same page to show the new
                 return HttpResponseRedirect(reverse("index"))  
+        
+            
+            # Check for AJAX request
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest' and request.method == "POST":
+                
+                try:
+                    formset = RecipeIngredientFormSet(queryset=RecipeIngredient.objects.none())
+                    new_form = formset.empty_form
+                    html = render_to_string("ingredient_form_partial.html", {
+                        "form": new_form
+                    })
+                    
+                    
+                    return JsonResponse({
+                        "html": html
+                    }) 
+                except json.JSONDecodeError:
+                    return JsonResponse({
+                        "error": "Invalid JSON data"
+                    }, status=400)
+
         
         else:
             create_form = CreateRecipeForm()
@@ -212,6 +236,7 @@ def add_recipe_view(request):
         })
     else:
         return render(request, "access_denied.html")
+
     
     
 @login_required

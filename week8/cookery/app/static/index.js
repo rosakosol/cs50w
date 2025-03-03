@@ -205,3 +205,43 @@ function handleDeleteButton() {
     }
 }
 
+
+document.addEventListener('DOMContentLoaded', function() {
+    
+    // Add ingredient button
+    const addIngredientButton = document.querySelector("#add-ingredient")
+    const baseUrl = window.location.origin;
+    const addRecipeUrl = baseUrl + document.getElementById("ingredient-container").getAttribute('data-url')
+
+    if (addIngredientButton) {
+        addIngredientButton.addEventListener("click", function() {
+            console.log("Add Ingredient button clicked")
+            console.log(addRecipeUrl)
+
+            // Send data to the backend
+            fetch(`/add_recipe/`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                },
+            })
+            
+            .then(response => response.json())
+            .then(data => {
+                if (data.html) {
+                    document.getElementById('ingredient-container').insertAdjacentHTML('beforeend', data.html);
+                }
+            })
+            .catch(error => console.log('Error:', error));
+    
+        })
+    }
+
+    // Remove ingredient button
+    document.getElementById('ingredient-container').addEventListener('click', function(event) {
+        if (event.target && event.target.classList.contains('remove-ingredient')) {
+            event.target.closest('.ingredient-form').remove();
+        }
+    })
+})

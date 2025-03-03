@@ -6,11 +6,11 @@
     <form method="get" action="{% url 'index' %}">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Filter Recipes</button>
+        <button type="submit" name="form_type" value="filter" class="btn btn-primary">Filter Recipes</button>
     </form>
 
     <!-- Display active filters -->
-    
+
 
     <!-- Row to display recipes in 3-column grid -->
     <div class="row">
