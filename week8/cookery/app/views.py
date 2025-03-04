@@ -164,10 +164,8 @@ def recipe(request, recipe_name):
 
 # * Add Recipe
 # Displays add recipe form
-# Shows filter buttons for each recipe
-# Allows logged-in users to submit ratings and add recipe to favourites
-# If user is author, they can edit and delete recipes
-# Buttons: Share via email, socials, and print-friendly version  
+# TODO: Fix add ingredients formset
+
 def add_recipe_view(request):
     user = request.user
     
@@ -233,7 +231,6 @@ def add_recipe_view(request):
                         "form": new_form
                     })
                     
-                    
                     return JsonResponse({
                         "html": html
                     }) 
@@ -260,6 +257,9 @@ def add_recipe_view(request):
 
 # * Edit recipe
 # Allow users to edit recipe dynamically
+# TODO: Allow users to add/update/remove ingredients dynamically
+# TODO: Allow users to remove and add tags
+# TODO: Allow users to change cuisine, mealtype
 @login_required
 def edit_recipe(request, recipe_id):
     if request.method == "POST":
@@ -268,7 +268,7 @@ def edit_recipe(request, recipe_id):
         
         # If user is not the author, display unauthorised error
         if recipe.user != user:
-            return JsonResponse({"error": "Unauthorized"}, status=403)
+            return JsonResponse({"error": "Unauthorised"}, status=403)
     
         try:
             # Parse the JSON data from the request body
@@ -302,19 +302,21 @@ def edit_recipe(request, recipe_id):
     }, status=400)
     
     
+    
+    
+    
+# * Delete recipe
+# Allow users to delete recipe
 @login_required
 def delete_recipe(request, recipe_id):
     user = request.user
-    
-    # Get the recipe object if it exists
     recipe = get_object_or_404(Recipe, pk=recipe_id)
     
-    # Ensure the logged-in user is the author of the recipe
+    # If user is not author, display unauthorised error
     if recipe.user != user:
-        return JsonResponse({"error": "Unauthorized"}, status=403)
+        return JsonResponse({"error": "Unauthorised"}, status=403)
     
     try:
-        # Delete the recipe
         recipe.delete()
 
         return JsonResponse({
@@ -325,34 +327,38 @@ def delete_recipe(request, recipe_id):
         return JsonResponse({"error": str(e)}, status=500)
 
 
+
+
+# * Favourites
+# Display favourited recipes
 def favourites_view(request):
     user = request.user
     
     if user.is_authenticated:
-        # Display favourites
         favourites = Recipe.objects.filter(favourites__user=user)
-    else:
-        favourites = []
 
-    # If there are any recipes, paginate
-    if favourites:
-        paginator = Paginator(favourites, 6)
-        page_number = request.GET.get("page", 1)
-        page_obj = paginator.get_page(page_number)
+        # If there are any recipes, paginate
+        if favourites:
+            paginator = Paginator(favourites, 6)
+            page_number = request.GET.get("page", 1)
+            page_obj = paginator.get_page(page_number)
+            
+        # If no recipes, paginator is none
+        else:
+            favourites = []
+            page_obj = None      
         
-    # If no recipes, paginator is none
+        return render(request, "favourites.html", {
+            "user": user,
+            "favourites": favourites,
+            "page_obj": page_obj
+        })
+    
     else:
-        page_obj = None
+        return render(request, "access_denied.html")
         
-        
-    return render(request, "favourites.html", {
-        "user": user,
-        "favourites": favourites,
-        "page_obj": page_obj
-    })
     
-    
-    
+
     
 # * Search function
 # Return search results for query
