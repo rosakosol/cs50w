@@ -15,6 +15,7 @@ urlpatterns = [
     path('delete_recipe/<int:recipe_id>/', views.delete_recipe, name='delete_recipe'),
     path('favourites/', views.favourites_view, name='favourites'),
     path('search/', views.search, name="search"),
+    path('sort/', views.sort, name="sort")
 ]
 
 if settings.DEBUG:

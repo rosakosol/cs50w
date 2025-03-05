@@ -359,6 +359,42 @@ def favourites_view(request):
         
     
 
+
+def sort(request):
+    user = request.user
+    form = RecipeFilterForm()
+    sort_by = request.GET.get('sort_by', '')  # Default sorting
+    
+    if sort_by == "name_asc":
+        recipes = Recipe.objects.all().order_by("name")
+    elif sort_by == "name_desc":
+        recipes = Recipe.objects.all().order_by("-name")
+    elif sort_by == "oldest":
+        recipes = Recipe.objects.all().order_by("created_at")
+    elif sort_by == "newest":
+        recipes = Recipe.objects.all().order_by("created_at")
+        
+        
+        
+    # If there are any recipes, paginate
+    if recipes:
+        paginator = Paginator(recipes, 6)
+        page_number = request.GET.get("page", 1)
+        page_obj = paginator.get_page(page_number)
+        
+        # If no recipes, paginator is none and return no results page
+    else:
+        page_obj = None
+        return render(request, "no_results.html")
+        
+    # Else render index page with search results
+    return render(request, "index.html", {
+        "MEDIA_URL": settings.MEDIA_URL,
+        "user": user,
+        "form": form,
+        "recipes": recipes,
+        "page_obj": page_obj
+    })
     
 # * Search function
 # Return search results for query
