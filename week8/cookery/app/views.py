@@ -7,7 +7,8 @@ from django.core.paginator import Paginator
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.contrib import messages
-from .models import Ingredient, Unit, RecipeIngredient, Cuisine, Rating, RatingForm, MealType, Recipe, CreateRecipeForm, RecipeIngredientFormSet, Favourites, FavouriteForm, RecipeFilterForm
+from .models import Ingredient, Unit, RecipeIngredient, Cuisine, Rating, MealType, Recipe, Favourites
+from .forms import RatingForm, CreateRecipeForm, RecipeIngredientFormSet, FavouriteForm, RecipeFilterForm
 from django.db import IntegrityError
 from django.utils import timezone
 import json
