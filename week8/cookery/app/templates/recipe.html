@@ -13,7 +13,8 @@
              {% for tag in tags %}
                 <a href="{% url 'index' %}?tags={{ tag.name }}" class="btn btn-primary">{{ tag.name }}</a>
              {% endfor %}
-            
+             <p id="recipe-cuisine-{{ recipe.id }}">{{ recipe.cuisine }}</p>
+             <p id="recipe-mealtype-{{ recipe.id }}">{{ recipe.meal_type }}</p>
         </div>
     </div>
     {% endif %}

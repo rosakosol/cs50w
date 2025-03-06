@@ -16,9 +16,7 @@ import json
 
 # * Index
 # Displays all recipes by default, paginated.
-# Shows filter options
-# TODO: Sort recipes from a-z; recently added; calorie count
-
+# Shows filter options and sort recipes
 def index(request):
     user = request.user
     recipes = Recipe.objects.all().order_by("-created_at")
@@ -87,7 +85,6 @@ def index(request):
 # Allows logged-in users to submit ratings and add recipe to favourites
 # If user is author, they can edit and delete recipes
 # Buttons: Share via email, socials, and print-friendly version  
-
 def recipe(request, recipe_name):
     user = request.user
     recipe = get_object_or_404(Recipe, name=recipe_name)
@@ -166,7 +163,6 @@ def recipe(request, recipe_name):
 # * Add Recipe
 # Displays add recipe form
 # TODO: Fix add ingredients formset
-
 def add_recipe_view(request):
     user = request.user
     
@@ -188,8 +184,14 @@ def add_recipe_view(request):
                 prep_time = create_form.cleaned_data["prep_time"]
                 image = create_form.cleaned_data["image"]
                 image_alt_text = create_form.cleaned_data["image_alt_text"]
+                
+                if not image:
+                    image = "images/default_img.jpg"
+                    
+                
                 meal_type = create_form.cleaned_data["meal_type"]
                 tags = create_form.cleaned_data["tags"]
+
 
                 # Create a new Recipe instance
                 recipe = Recipe.objects.create(
@@ -248,7 +250,7 @@ def add_recipe_view(request):
         return render(request, "add_recipe.html", {
             "user": user,
             "create_form": create_form,
-            "formset": formset
+            "formset": formset,
         })
     else:
         return render(request, "access_denied.html")
@@ -277,11 +279,14 @@ def edit_recipe(request, recipe_id):
             new_name = data.get('name', recipe.name)  # Default to current name if not provided
             new_description = data.get('description', recipe.description)  # Default to current description if not provided
             new_instructions = data.get('instructions', recipe.instructions)  # Default to current instructions if not provided
+            # new_cuisine = data.get("cuisine", recipe.cuisine) # Default to current mealtype if not provided
+            
             
             # Update the recipe fields
             recipe.name = new_name
             recipe.description = new_description
             recipe.instructions = new_instructions 
+            # recipe.cuisine = new_cuisine
             
             # Save the updated recipe
             recipe.save()
@@ -291,7 +296,8 @@ def edit_recipe(request, recipe_id):
                 "success": True,
                 "updated_name": recipe.name,
                 "updated_description": recipe.description,
-                "updated_instructions": recipe.instructions
+                "updated_instructions": recipe.instructions,
+                # "updated_cuisine": recipe.cuisine
             })
         except json.JSONDecodeError:
             return JsonResponse({
@@ -396,7 +402,10 @@ def sort(request):
         "recipes": recipes,
         "page_obj": page_obj
     })
-    
+
+
+
+
 # * Search function
 # Return search results for query
 def search(request):

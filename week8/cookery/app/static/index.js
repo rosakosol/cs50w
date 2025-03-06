@@ -104,11 +104,13 @@ function handleEditButton() {
     const recipeNameElement = document.querySelector(`#recipe-name-${recipeId}`);
     const recipeDescriptionElement = document.querySelector(`#recipe-description-${recipeId}`);
     const recipeInstructionsElement = document.querySelector(`#recipe-instructions-${recipeId}`);
+    // const recipeCuisineElement = document.querySelector(`recipe-cuisine-${recipeId}`);
     const recipeContainer = document.querySelector('.recipe-container')
 
     const originalName = recipeNameElement.textContent.trim();
     const originalDescription = recipeDescriptionElement.textContent.trim();
     const originalInstructions = recipeInstructionsElement.textContent.trim();
+    // const originalCuisine = recipeCuisineElement.textContent.trim();
 
     // Avoid re-editing if already in editing mode
     if (!recipeNameElement.querySelector('input')) { 
@@ -117,6 +119,7 @@ function handleEditButton() {
         recipeNameElement.innerHTML = `<input type="text" value="${originalName}">`;
         recipeDescriptionElement.innerHTML = `<textarea>${originalDescription}</textarea>`;
         recipeInstructionsElement.innerHTML = `<textarea>${originalInstructions}</textarea>`;
+        // recipeCuisineElement.innerHTML = `<select name="cuisine" id="id_cuisine" class="form-control">${originalCuisine}$</select>`
 
         // Create the save button
         const saveButton = document.createElement('button');

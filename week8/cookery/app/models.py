@@ -1,6 +1,4 @@
 from django.db import models
-from django import forms
-from django.forms import ModelForm, inlineformset_factory
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from django.db.models import Avg
@@ -68,14 +66,14 @@ class Recipe(models.Model):
     user = models.ForeignKey("auth.User", on_delete=models.CASCADE, default="")
     name = models.CharField(max_length=64, default="")
     cuisine = models.ForeignKey(Cuisine, on_delete=models.CASCADE, null=True, blank=True, related_name="recipes")
-    ratings = models.ManyToManyField(Rating, related_name="recipes")
+    ratings = models.ManyToManyField(Rating, related_name="recipes", blank=True)
     ingredients = models.ManyToManyField(RecipeIngredient,  related_name="recipes")
     description = models.TextField(default="")  
     instructions = models.TextField(default="")
     servings = models.PositiveBigIntegerField(default=1)
     cook_time = models.PositiveBigIntegerField(default=0)
     prep_time = models.PositiveBigIntegerField(default=0)
-    image = models.ImageField(upload_to="images/%d/%m/%y", default=None)    
+    image = models.ImageField(upload_to="images/%d/%m/%y", default="images/default-img.jpg")    
     image_alt_text = models.CharField(max_length=64, blank=True) 
     meal_type = models.ForeignKey(MealType, on_delete=models.CASCADE, related_name="recipes", null=True)
     created_at = models.DateTimeField(auto_now_add=True)
