@@ -1,10 +1,11 @@
 {% extends "layout.html" %}
+{% load static %}
 
 {% block body %}
 <div class="container-md recipe-container p-0 mt-5 mb-5 shadow-sm rounded">
     {% if recipe %}
     <div class="container-fluid p-0">
-        <div class="recipe-img-container p-5 text-left rounded-top" style="{% if recipe.image %}background-image: url('{{ recipe.image.url }}'){% endif %}; background-size: cover; background-position: center;">
+        <div class="recipe-img-container p-5 text-left rounded-top" style="{% if recipe.image %}background-image: url('{{ recipe.image.url }}'){% else %}background-image: url('{% static 'images/default-img.jpg' %}') {% endif %}; background-size: cover; background-position: center;">
             <!-- Display recipe name -->
             <h2 id="recipe-name-{{ recipe.id }}">{{ recipe.name }}</h2>
             <!-- Display recipe average rating -->
