@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% load static %}
 
 {% block body %}
 <div class="container mt-5">
@@ -29,7 +30,9 @@
         <div class="col-12 col-md-4 mb-4">
             <div class="card">
                 {% if recipe.image %}
-                <img src="{{ recipe.image.url }}" class="card-img-top" alt="{{ recipe.name }}">
+                    <img src="{{ recipe.image.url }}" class="card-img-top" alt="{{ recipe.name }}">
+                {% else %}
+                    <img src="{% static 'images/default-img.jpg' %}" class="card-img-top" alt="Default image">
                 {% endif %}
                 <div class="card-body">
                     <h5 class="card-title text-center"><a href="{% url 'recipe' recipe.name %}">{{ recipe.name }}</a></h5>

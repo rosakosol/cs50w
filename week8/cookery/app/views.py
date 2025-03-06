@@ -147,6 +147,7 @@ def recipe(request, recipe_name):
         rating_form = None
         favourite_form = None
         is_favourited = False
+
     
     return render(request, "recipe.html", {
         "user": user,
@@ -185,10 +186,6 @@ def add_recipe_view(request):
                 image = create_form.cleaned_data["image"]
                 image_alt_text = create_form.cleaned_data["image_alt_text"]
                 
-                if not image:
-                    image = "images/default_img.jpg"
-                    
-                
                 meal_type = create_form.cleaned_data["meal_type"]
                 tags = create_form.cleaned_data["tags"]
 
@@ -206,7 +203,9 @@ def add_recipe_view(request):
                     image=image,
                     image_alt_text=image_alt_text,
                     meal_type=meal_type,
-                )           
+                )        
+                
+                print(recipe.image)   
                 
                 schema = recipe.generate_schema()
                 recipe.schema = schema
