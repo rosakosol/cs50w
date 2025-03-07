@@ -64,7 +64,7 @@ class MealType(models.Model):
 
 class Recipe(models.Model):
     user = models.ForeignKey("auth.User", on_delete=models.CASCADE, default="")
-    name = models.CharField(max_length=64, default="")
+    name = models.CharField(max_length=64, default="", unique=True)
     cuisine = models.ForeignKey(Cuisine, on_delete=models.CASCADE, null=True, blank=True, related_name="recipes")
     ratings = models.ManyToManyField(Rating, related_name="recipes", blank=True)
     ingredients = models.ManyToManyField(RecipeIngredient,  related_name="recipes")

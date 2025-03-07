@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener("DOMContentLoaded", function() {
     starRating();
     fadeMessage();
     averageRating();
@@ -36,11 +36,11 @@ function fadeMessage() {
 
     // Ensure both elements are found
     if (message && starRatingContainer) {
-        // Add 'hide' class to the message after 3 seconds
+        // Add "hide" class to the message after 3 seconds
         setTimeout(function() {
             message.classList.add("hide");
 
-            // Add 'move-up' class to the star rating container after the message fades
+            // Add "move-up" class to the star rating container after the message fades
             setTimeout(function() {
                 starRatingContainer.classList.add("move-up");
             }, 250); // Match the fade duration of the alert (250ms delay)
@@ -92,8 +92,8 @@ function existingRating() {
 // Initialise edit button on author posts
 function initEditButton() {
     // Function to edit posts
-    const editButton = document.querySelector('.edit-btn');
-    editButton.addEventListener('click', handleEditButton); 
+    const editButton = document.querySelector(".edit-btn");
+    editButton.addEventListener("click", handleEditButton); 
 }
 
 // Function to handle edit button click and create text area, save button
@@ -105,7 +105,7 @@ function handleEditButton() {
     const recipeDescriptionElement = document.querySelector(`#recipe-description-${recipeId}`);
     const recipeInstructionsElement = document.querySelector(`#recipe-instructions-${recipeId}`);
     const recipeCuisineElement = document.querySelector(`#recipe-cuisine-${recipeId}`);
-    const recipeContainer = document.querySelector('.recipe-container')
+    const recipeContainer = document.querySelector(".recipe-container")
 
     const originalName = recipeNameElement.textContent.trim();
     const originalDescription = recipeDescriptionElement.textContent.trim();
@@ -113,7 +113,7 @@ function handleEditButton() {
     const originalCuisine = recipeCuisineElement.textContent.trim();
 
     // Avoid re-editing if already in editing mode
-    if (!recipeNameElement.querySelector('input')) { 
+    if (!recipeNameElement.querySelector("input")) { 
 
         // Replace content with input fields for editing
         recipeNameElement.innerHTML = `<input type="text" value="${originalName}">`;
@@ -121,25 +121,25 @@ function handleEditButton() {
         recipeInstructionsElement.innerHTML = `<textarea>${originalInstructions}</textarea>`;
 
         // Create the save button
-        const saveButton = document.createElement('button');
-        saveButton.textContent = 'Save';
-        saveButton.classList.add('btn', 'btn-success');
+        const saveButton = document.createElement("button");
+        saveButton.textContent = "Save";
+        saveButton.classList.add("btn", "btn-success");
 
         // Add button to recipe container
         recipeContainer.appendChild(saveButton);
 
         // Handle saving the updated post
-        saveButton.addEventListener('click', function() {
-            const updatedName = recipeNameElement.querySelector('input').value;
-            const updatedDescription = recipeDescriptionElement.querySelector('textarea').value;
-            const updatedInstructions = recipeInstructionsElement.querySelector('textarea').value;
+        saveButton.addEventListener("click", function() {
+            const updatedName = recipeNameElement.querySelector("input").value;
+            const updatedDescription = recipeDescriptionElement.querySelector("textarea").value;
+            const updatedInstructions = recipeInstructionsElement.querySelector("textarea").value;
 
             // Send data to the backend
             fetch(`/edit_recipe/${recipeId}/`, {
-                method: 'POST',
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
                 },
                 body: JSON.stringify({
                     name: updatedName,
@@ -158,12 +158,12 @@ function handleEditButton() {
                     // Remove the save button after saving
                     saveButton.remove();
                 } else {
-                    alert('Error: Could not update recipe.');
+                    alert("Error: Could not update recipe.");
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred while saving your recipe.');
+                console.error("Error:", error);
+                alert("An error occurred while saving your recipe.");
             });
         });
     }
@@ -171,12 +171,12 @@ function handleEditButton() {
 
 // Initialise the delete button click event
 function initDeleteButton() {
-    const deleteButton = document.querySelector('.delete-btn');
-    deleteButton.addEventListener('click', handleDeleteButton);
+    const deleteButton = document.querySelector(".delete-btn");
+    deleteButton.addEventListener("click", handleDeleteButton);
 }
 
 // Ensure delete button is initialised
-document.addEventListener('DOMContentLoaded', initDeleteButton);
+document.addEventListener("DOMContentLoaded", initDeleteButton);
 
 
 function handleDeleteButton() {
@@ -184,10 +184,10 @@ function handleDeleteButton() {
 
     if (confirm("Are you sure you want to delete this recipe?")) {
         fetch(`/delete_recipe/${recipeId}/`, {
-            method: 'POST',
+            method: "POST",
             headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                "Content-Type": "application/json",
+                "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
             },
         })
         .then(response => response.json())
@@ -195,20 +195,20 @@ function handleDeleteButton() {
             if (data.success) {
                 alert("Recipe deleted successfully.");
                 // Redirect to index page
-                window.location.href = '/';
+                window.location.href = "/";
             } else {
                 alert("Error: " + data.error);
             }
         })
         .catch(error => {
-            console.error('Error:', error);
+            console.error("Error:", error);
             alert("An error occurred while deleting the recipe.");
         });
     }
 }
 
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener("DOMContentLoaded", function() {
     const ingredientContainer = document.querySelector("#ingredient-container");
     const addIngredientButton = document.querySelector("#add-ingredient");
 
@@ -242,3 +242,4 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     })
 })
+

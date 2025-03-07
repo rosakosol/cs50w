@@ -169,7 +169,6 @@ def add_recipe_view(request):
     
     if user.is_authenticated:
         if request.method == "POST":
-            print(request.POST)
             
             # Create Listing Form
             create_form = CreateRecipeForm(request.POST, request.FILES)
@@ -215,10 +214,10 @@ def add_recipe_view(request):
                     ingredient = form.cleaned_data.get("ingredient")
                     quantity = form.cleaned_data.get("quantity")
                     unit = form.cleaned_data.get("unit")
-                    print(f"Ingredient added: {quantity} of {unit} {ingredient}")
+
                     if ingredient and quantity:
                         RecipeIngredient.objects.create(recipe=recipe, ingredient=ingredient, quantity=quantity, unit=unit)
-                        print(f"Ingredient created: {quantity} of {unit } {ingredient}")
+
                 
                 # Redirect to newly created recipe page
                 return HttpResponseRedirect(reverse("recipe", args=[recipe.name])) 
@@ -237,8 +236,8 @@ def add_recipe_view(request):
         return render(request, "access_denied.html")
 
     
-
-
+    
+    
 # * Edit recipe
 # Allow users to edit recipe name, description and instructions dynamically
 @login_required

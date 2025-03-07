@@ -67,6 +67,12 @@ class CreateRecipeForm(forms.Form):
         required=True
     )
     
+    def clean_name(self):
+        name = self.cleaned_data.get("name")
+        if Recipe.objects.filter(name=name).exists():
+            raise forms.ValidationError("A recipe with this name already exists.")
+        return name
+    
 class RecipeIngredientForm(forms.ModelForm):
     ingredient = forms.ModelChoiceField(
         queryset=Ingredient.objects.all(),
