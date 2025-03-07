@@ -343,10 +343,12 @@ def favourites_view(request):
     
     else:
         return render(request, "access_denied.html")
+       
         
     
 
-
+# * Sort
+# Sort recipes on index page
 def sort(request):
     user = request.user
     form = RecipeFilterForm()
@@ -359,9 +361,7 @@ def sort(request):
     elif sort_by == "oldest":
         recipes = Recipe.objects.all().order_by("created_at")
     elif sort_by == "newest":
-        recipes = Recipe.objects.all().order_by("created_at")
-        
-        
+        recipes = Recipe.objects.all().order_by("-created_at")
         
     # If there are any recipes, paginate
     if recipes:

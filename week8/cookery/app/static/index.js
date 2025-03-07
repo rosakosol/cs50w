@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function() {
     existingRating();
     initEditButton();
     initDeleteButton();
+    handleRecipeIngredientFormset();
 });
 
 // Function to colour rating stars when clicked
@@ -73,11 +74,17 @@ function averageRating() {
 function existingRating() {
     // Get the existing rating from the data attribute
     var existingRatingElement = document.querySelector("[data-avg-rating]");
-    var existingRating = parseInt(existingRatingElement.getAttribute("data-avg-rating"));
+
+    if (existingRatingElement) {
+        var existingRating = parseInt(existingRatingElement.getAttribute("data-avg-rating"));
+    }
+
     const ratingForm = document.querySelector(".form-group")
 
-    const stars = document.querySelectorAll(".star-rating-input");
-    const labels = ratingForm.querySelectorAll(".star-rating-label");
+    if (ratingForm) {
+        const stars = document.querySelectorAll(".star-rating-input");
+        const labels = ratingForm.querySelectorAll(".star-rating-label");
+    }
 
     // Click event: Mark stars gold up to current rating
     for (let i = 0; i < existingRating; i++) {
@@ -93,7 +100,11 @@ function existingRating() {
 function initEditButton() {
     // Function to edit posts
     const editButton = document.querySelector(".edit-btn");
-    editButton.addEventListener("click", handleEditButton); 
+
+    if (editButton) {
+        editButton.addEventListener("click", handleEditButton); 
+    }
+
 }
 
 // Function to handle edit button click and create text area, save button
@@ -172,7 +183,11 @@ function handleEditButton() {
 // Initialise the delete button click event
 function initDeleteButton() {
     const deleteButton = document.querySelector(".delete-btn");
-    deleteButton.addEventListener("click", handleDeleteButton);
+
+    if (deleteButton) {
+        deleteButton.addEventListener("click", handleDeleteButton);
+    }
+
 }
 
 // Ensure delete button is initialised
@@ -208,38 +223,40 @@ function handleDeleteButton() {
 }
 
 
-document.addEventListener("DOMContentLoaded", function() {
+function handleRecipeIngredientFormset() {
     const ingredientContainer = document.querySelector("#ingredient-container");
     const addIngredientButton = document.querySelector("#add-ingredient");
 
-    addIngredientButton.addEventListener("click", function() {
-        const totalForms = document.querySelector("#id_recipe_ingredients-TOTAL_FORMS");
-        const currentFormCount = parseInt(totalForms.value);
-        const newFormCount = currentFormCount + 1;
-
-        const newFormHtml = `
-            <div class="ingredient-form" data-id="${newFormCount}">
-                ${document.querySelector(".ingredient-form").innerHTML
-                    .replace(/id_recipe_ingredients-0-/g, `id_recipe_ingredients-${currentFormCount}-`)
-                    .replace(/recipe_ingredients-0-/g, `recipe_ingredients-${currentFormCount}-`)
-                    .replace(/data-id="1"/g, `data-id="${newFormCount}"`)}                
-            </div>
-        `;
-
-        ingredientContainer.insertAdjacentHTML("beforeend", newFormHtml);
-
-        totalForms.value = currentFormCount + 1;
-    });
-
-    ingredientContainer.addEventListener("click", function(event) {
-        if (event.target && event.target.classList.contains("remove-ingredient")) {
-            const formId = event.target.dataset.id;
-            const formToRemove = document.querySelector(`.ingredient-form[data-id="${formId}"]`)
-            formToRemove.remove();
-
+    if (addIngredientButton) {
+        addIngredientButton.addEventListener("click", function() {
             const totalForms = document.querySelector("#id_recipe_ingredients-TOTAL_FORMS");
-            totalForms.value = parseInt(totalForms.value) - 1;
-        }
-    })
-})
+            const currentFormCount = parseInt(totalForms.value);
+            const newFormCount = currentFormCount + 1;
+    
+            const newFormHtml = `
+                <div class="ingredient-form" data-id="${newFormCount}">
+                    ${document.querySelector(".ingredient-form").innerHTML
+                        .replace(/id_recipe_ingredients-0-/g, `id_recipe_ingredients-${currentFormCount}-`)
+                        .replace(/recipe_ingredients-0-/g, `recipe_ingredients-${currentFormCount}-`)
+                        .replace(/data-id="1"/g, `data-id="${newFormCount}"`)}                
+                </div>
+            `;
+    
+            ingredientContainer.insertAdjacentHTML("beforeend", newFormHtml);
+    
+            totalForms.value = currentFormCount + 1;
+        });
+    
+        ingredientContainer.addEventListener("click", function(event) {
+            if (event.target && event.target.classList.contains("remove-ingredient")) {
+                const formId = event.target.dataset.id;
+                const formToRemove = document.querySelector(`.ingredient-form[data-id="${formId}"]`)
+                formToRemove.remove();
+    
+                const totalForms = document.querySelector("#id_recipe_ingredients-TOTAL_FORMS");
+                totalForms.value = parseInt(totalForms.value) - 1;
+            }
+        })
+    }
+}
 

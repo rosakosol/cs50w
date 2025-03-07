@@ -35,6 +35,11 @@ h2, h3, h4, h5, h6, p, li, a {
   font-family: "Inter", sans-serif;
 }
 
+a {
+  color: #000 !important;
+  text-decoration: none !important;
+}
+
 p {
   margin-bottom: 0 !important;
 }
@@ -60,6 +65,10 @@ i {
   width: 100%;
   -o-object-fit: cover;
      object-fit: cover;
+}
+
+.recipe-byline p {
+  color: #0d6efd;
 }
 
 .recipe-container {
