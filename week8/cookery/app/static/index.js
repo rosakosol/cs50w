@@ -221,6 +221,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="ingredient-form" data-id="${newFormCount}">
                 ${document.querySelector(".ingredient-form").innerHTML
                     .replace(/id_recipe_ingredients-0-/g, `id_recipe_ingredients-${currentFormCount}-`)
+                    .replace(/recipe_ingredients-0-/g, `recipe_ingredients-${currentFormCount}-`)
                     .replace(/data-id="1"/g, `data-id="${newFormCount}"`)}                
             </div>
         `;
