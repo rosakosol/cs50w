@@ -104,13 +104,13 @@ function handleEditButton() {
     const recipeNameElement = document.querySelector(`#recipe-name-${recipeId}`);
     const recipeDescriptionElement = document.querySelector(`#recipe-description-${recipeId}`);
     const recipeInstructionsElement = document.querySelector(`#recipe-instructions-${recipeId}`);
-    // const recipeCuisineElement = document.querySelector(`recipe-cuisine-${recipeId}`);
+    const recipeCuisineElement = document.querySelector(`#recipe-cuisine-${recipeId}`);
     const recipeContainer = document.querySelector('.recipe-container')
 
     const originalName = recipeNameElement.textContent.trim();
     const originalDescription = recipeDescriptionElement.textContent.trim();
     const originalInstructions = recipeInstructionsElement.textContent.trim();
-    // const originalCuisine = recipeCuisineElement.textContent.trim();
+    const originalCuisine = recipeCuisineElement.textContent.trim();
 
     // Avoid re-editing if already in editing mode
     if (!recipeNameElement.querySelector('input')) { 
@@ -119,7 +119,6 @@ function handleEditButton() {
         recipeNameElement.innerHTML = `<input type="text" value="${originalName}">`;
         recipeDescriptionElement.innerHTML = `<textarea>${originalDescription}</textarea>`;
         recipeInstructionsElement.innerHTML = `<textarea>${originalInstructions}</textarea>`;
-        // recipeCuisineElement.innerHTML = `<select name="cuisine" id="id_cuisine" class="form-control">${originalCuisine}$</select>`
 
         // Create the save button
         const saveButton = document.createElement('button');
@@ -210,41 +209,35 @@ function handleDeleteButton() {
 
 
 document.addEventListener('DOMContentLoaded', function() {
-    
-    // Add ingredient button
-    const addIngredientButton = document.querySelector("#add-ingredient")
-    const baseUrl = window.location.origin;
-    const addRecipeUrl = baseUrl + document.getElementById("ingredient-container").getAttribute('data-url')
+    const ingredientContainer = document.querySelector("#ingredient-container");
+    const addIngredientButton = document.querySelector("#add-ingredient");
 
-    if (addIngredientButton) {
-        addIngredientButton.addEventListener("click", function() {
-            console.log("Add Ingredient button clicked")
-            console.log(addRecipeUrl)
+    addIngredientButton.addEventListener("click", function() {
+        const totalForms = document.querySelector("#id_recipe_ingredients-TOTAL_FORMS");
+        const currentFormCount = parseInt(totalForms.value);
+        const newFormCount = currentFormCount + 1;
 
-            // Send data to the backend
-            fetch(`/add_recipe/`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-                },
-            })
-            
-            .then(response => response.json())
-            .then(data => {
-                if (data.html) {
-                    document.getElementById('ingredient-container').insertAdjacentHTML('beforeend', data.html);
-                }
-            })
-            .catch(error => console.log('Error:', error));
-    
-        })
-    }
+        const newFormHtml = `
+            <div class="ingredient-form" data-id="${newFormCount}">
+                ${document.querySelector(".ingredient-form").innerHTML
+                    .replace(/id_recipe_ingredients-0-/g, `id_recipe_ingredients-${currentFormCount}-`)
+                    .replace(/data-id="1"/g, `data-id="${newFormCount}"`)}                
+            </div>
+        `;
 
-    // Remove ingredient button
-    document.getElementById('ingredient-container').addEventListener('click', function(event) {
-        if (event.target && event.target.classList.contains('remove-ingredient')) {
-            event.target.closest('.ingredient-form').remove();
+        ingredientContainer.insertAdjacentHTML("beforeend", newFormHtml);
+
+        totalForms.value = currentFormCount + 1;
+    });
+
+    ingredientContainer.addEventListener("click", function(event) {
+        if (event.target && event.target.classList.contains("remove-ingredient")) {
+            const formId = event.target.dataset.id;
+            const formToRemove = document.querySelector(`.ingredient-form[data-id="${formId}"]`)
+            formToRemove.remove();
+
+            const totalForms = document.querySelector("#id_recipe_ingredients-TOTAL_FORMS");
+            totalForms.value = parseInt(totalForms.value) - 1;
         }
     })
 })

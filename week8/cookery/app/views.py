@@ -169,6 +169,7 @@ def add_recipe_view(request):
     
     if user.is_authenticated:
         if request.method == "POST":
+            print(request.POST)
             
             # Create Listing Form
             create_form = CreateRecipeForm(request.POST, request.FILES)
@@ -205,8 +206,6 @@ def add_recipe_view(request):
                     meal_type=meal_type,
                 )        
                 
-                print(recipe.image)   
-                
                 schema = recipe.generate_schema()
                 recipe.schema = schema
                 recipe.tags.set(tags)
@@ -216,30 +215,13 @@ def add_recipe_view(request):
                     ingredient = form.cleaned_data.get("ingredient")
                     quantity = form.cleaned_data.get("quantity")
                     unit = form.cleaned_data.get("unit")
+                    print(f"Ingredient added: {quantity} of {unit} {ingredient}")
                     if ingredient and quantity:
                         RecipeIngredient.objects.create(recipe=recipe, ingredient=ingredient, quantity=quantity, unit=unit)
+                        print(f"Ingredient created: {quantity} of {unit } {ingredient}")
                 
-                # Redirect to the same page to show the new
-                return HttpResponseRedirect(reverse("index"))  
-        
-            
-            # Check for AJAX request
-            if request.headers.get('x-requested-with') == 'XMLHttpRequest' and request.method == "POST":
-                
-                try:
-                    formset = RecipeIngredientFormSet(queryset=RecipeIngredient.objects.none())
-                    new_form = formset.empty_form
-                    html = render_to_string("ingredient_form_partial.html", {
-                        "form": new_form
-                    })
-                    
-                    return JsonResponse({
-                        "html": html
-                    }) 
-                except json.JSONDecodeError:
-                    return JsonResponse({
-                        "error": "Invalid JSON data"
-                    }, status=400)
+                # Redirect to newly created recipe page
+                return HttpResponseRedirect(reverse("recipe", args=[recipe.name])) 
 
         
         else:
@@ -258,10 +240,7 @@ def add_recipe_view(request):
 
 
 # * Edit recipe
-# Allow users to edit recipe dynamically
-# TODO: Allow users to add/update/remove ingredients dynamically
-# TODO: Allow users to remove and add tags
-# TODO: Allow users to change cuisine, mealtype
+# Allow users to edit recipe name, description and instructions dynamically
 @login_required
 def edit_recipe(request, recipe_id):
     if request.method == "POST":
@@ -275,17 +254,20 @@ def edit_recipe(request, recipe_id):
         try:
             # Parse the JSON data from the request body
             data = json.loads(request.body)
-            new_name = data.get('name', recipe.name)  # Default to current name if not provided
-            new_description = data.get('description', recipe.description)  # Default to current description if not provided
-            new_instructions = data.get('instructions', recipe.instructions)  # Default to current instructions if not provided
-            # new_cuisine = data.get("cuisine", recipe.cuisine) # Default to current mealtype if not provided
-            
+            print(data)
+            new_name = data.get("name", recipe.name)  # Default to current name if not provided
+            new_description = data.get("description", recipe.description)  # Default to current description if not provided
+            new_instructions = data.get("instructions", recipe.instructions)  # Default to current instructions if not provided
             
             # Update the recipe fields
             recipe.name = new_name
             recipe.description = new_description
             recipe.instructions = new_instructions 
-            # recipe.cuisine = new_cuisine
+            
+            cuisine_id = data.get("cuisine")
+            
+            if cuisine_id:
+                recipe.cuisine = get_object_or_404(Cuisine, id=cuisine_id)
             
             # Save the updated recipe
             recipe.save()
@@ -296,7 +278,7 @@ def edit_recipe(request, recipe_id):
                 "updated_name": recipe.name,
                 "updated_description": recipe.description,
                 "updated_instructions": recipe.instructions,
-                # "updated_cuisine": recipe.cuisine
+                "updated_cuisine": recipe.cuisine.name
             })
         except json.JSONDecodeError:
             return JsonResponse({
@@ -369,7 +351,7 @@ def favourites_view(request):
 def sort(request):
     user = request.user
     form = RecipeFilterForm()
-    sort_by = request.GET.get('sort_by', '')  # Default sorting
+    sort_by = request.GET.get("sort_by", "")  # Default sorting
     
     if sort_by == "name_asc":
         recipes = Recipe.objects.all().order_by("name")
@@ -427,7 +409,7 @@ def search(request):
             # If no recipes, paginator is none and return no results page
         else:
             page_obj = None
-            return render(request, 'no_results.html')
+            return render(request, "no_results.html")
             
         # Else render index page with search results
         return render(request, "index.html", {

@@ -13,9 +13,9 @@
                 
                 <div id="ingredient-container" data-url="{% url 'add_recipe' %}">
                     {% for form in formset %}
-                        <div class="ingredient-form">
+                        <div class="ingredient-form" data-id="{{ forloop.counter }}">
                             {{ form.as_p }}
-                            <button class="remove-ingredient">Remove</button>
+                            <button class="remove-ingredient" type="button" data-id="{{ forloop.counter }}">Remove</button>
                         </div>
                     {% endfor %}
                 </div>
