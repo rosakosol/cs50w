@@ -17,9 +17,9 @@
       <a href="#about">About</a>
     </li>
     <li>
-      <a href="#distinctiveness">Distinctiveness and Complexity</a>
+      <a href="#distinctiveness-and-complexity">Distinctiveness and Complexity</a>
     </li>
-        <li>
+      <li>
       <a href="#file-contents">File Contents</a>
     </li>
     <li>
@@ -34,8 +34,7 @@
 
 
 <!-- ABOUT THE PROJECT -->
-:information_source:
-## About 
+## About
 
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
 
@@ -57,9 +56,11 @@ This is a Django web app that allows users to create, edit, and delete recipes. 
 
 ### Built With
 
-* ![image]({https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=green})
-* ![image]({https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white})
-* ![image]({https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E})
+* Django
+* Javascript
+* Bootstrap
+* HTML
+* CSS
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -88,15 +89,24 @@ users can also click on attribute buttons including tags, cuisine and mealtype, 
 Finally, users can share recipes with friends and family via email, Facebook or X, and can generate a printer-friendly version with custom CSS that minimises 
 graphic contents.
 
+<!-- Distinctiveness and Complexity -->
+## File Contents
 
-### Prerequisites
+
+* 
+* 
+* 
+*
+
+
+## Prerequisites
 
 
 * Python 3.x
 * Django
 
 
-### Installation
+## Installation
 
 1. Clone the repo
    ```sh
@@ -155,7 +165,7 @@ SOFTWARE.
 
 Rosa Kosol - [Email](kosolrosa@gmail.com) | [Github](github.com/rosakosol) 
 
-[Cookery Project Link](https://github.com/rosakosol/cs50w/week8/)
+[Cookery Personal Github Project Link](https://github.com/rosakosol/cs50w/week8/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
