@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+        <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.png' %}">
         <title>{% block title %}Cookery{% endblock %}</title>
         <link rel="icon" type="image/x-icon" href="{% static 'images/default-img.jpg' %}">
         <link href="{% static 'css/style.css' %}" rel="stylesheet">
@@ -132,36 +132,39 @@
             <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Logout</a></li>
         </ul>
       </div>
-
-        <div class="col-sm-12 col-md-4 mb-3">
+      <div class="col-sm-12 col-md-8 mb-3">
+        <div class="col-12">
           <h5>Recipes</h5>
-            <ul class="nav flex-column">
-              <h6>Meal Type</h6>
-              {% for meal_type in meal_types %}
-                <li class="nav-item mb-2"><a href="{% url 'index' %}?meal_type={{ meal_type.name }}" class="nav-link p-0 text-body-secondary">{{ meal_type }}</a></li>
-              {% endfor %}
-              <h6>Top Picks</h6>
+        </div>
+        <div class="col-sm-12 d-md-flex">
+          <div class="col-sm-12 col-md-6 mb-3">
+              <ul class="nav flex-column">
+                <h6>Top Picks</h6>
                 <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Most Popular Recipes</a></li>
                 <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Seasonal Recipes</a></li>
-            </ul>
-            <ul class="nav flex-column">
-              <h6>Cuisine</h6>
-              {% for cuisine in cuisines %}
-                <li class="nav-item mb-2"><a href="{% url 'index' %}?cuisine={{ cuisine.name }}" class="nav-link p-0 text-body-secondary">{{ cuisine.name }}</a></li>
-              {% endfor %}
-            </ul>
-        </div>
-
-        
-        <div class="col-sm-12 col-md-4 mb-3">
-          <h5>Recipes</h5>
-            <ul class="nav flex-column">
-              <h6>Tags</h6>
-              {% for tag in tags %}
-                <li class="nav-item mb-2"><a href="{% url 'index' %}?tags={{ tag.name }}" class="nav-link p-0 text-body-secondary">{{ tag.name }}</a></li>
-              {% endfor %}
-            </ul>
-        </div>
+                <h6>Meal Type</h6>
+                {% for meal_type in meal_types %}
+                  <li class="nav-item mb-2"><a href="{% url 'index' %}?meal_type={{ meal_type.name }}" class="nav-link p-0 text-body-secondary">{{ meal_type }}</a></li>
+                {% endfor %}
+              </ul>
+              <ul class="nav flex-column">
+                <h6>Cuisine</h6>
+                {% for cuisine in cuisines %}
+                  <li class="nav-item mb-2"><a href="{% url 'index' %}?cuisine={{ cuisine.name }}" class="nav-link p-0 text-body-secondary">{{ cuisine.name }}</a></li>
+                {% endfor %}
+              </ul>
+          </div>
+          
+          <div class="col-sm-12 col-md-6 mb-3">
+              <ul class="nav flex-column">
+                <h6>Tags</h6>
+                {% for tag in tags %}
+                  <li class="nav-item mb-2"><a href="{% url 'index' %}?tags={{ tag.name }}" class="nav-link p-0 text-body-secondary">{{ tag.name }}</a></li>
+                {% endfor %}
+              </ul>
+          </div>
+      </div>
+      </div>
     </div>
 
     <div class="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
