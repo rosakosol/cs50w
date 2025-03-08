@@ -8,7 +8,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.contrib import messages
 from .models import Ingredient, Unit, RecipeIngredient, Cuisine, Rating, MealType, Recipe, Favourites
-from .forms import RatingForm, CreateRecipeForm, RecipeIngredientFormSet, FavouriteForm, RecipeFilterForm
+from .forms import RatingForm, CreateRecipeForm, RecipeIngredientFormSet, FavouriteForm, RecipeFilterForm, SortForm
 from django.db import IntegrityError
 from django.utils import timezone
 import json
@@ -25,15 +25,15 @@ def index(request):
     # If user accessing filter form on index page
     if form_type == "filter":
         # Filter form 
-        form = RecipeFilterForm(request.GET)
+        filter_form = RecipeFilterForm(request.GET)
 
         # If the form is valid, filter the recipes
-        if form.is_valid():
+        if filter_form.is_valid():
             # Dictionary for filters
             filter_data = {
-                "tags__in": form.cleaned_data.get("tags"),
-                "cuisine": form.cleaned_data.get("cuisine"),
-                "meal_type": form.cleaned_data.get("meal_type")
+                "tags__in": filter_form.cleaned_data.get("tags"),
+                "cuisine": filter_form.cleaned_data.get("cuisine"),
+                "meal_type": filter_form.cleaned_data.get("meal_type")
             }
             
             # Loop through filtered data and return recipes
@@ -56,7 +56,19 @@ def index(request):
                 recipes = recipes.filter(**{field: value})
     
     # Display empty filter form  
-    form = RecipeFilterForm()
+    filter_form = RecipeFilterForm()
+    sort_form = SortForm(request.GET)
+    
+    if sort_form.is_valid():
+        sort_by = sort_form.cleaned_data.get('sort_by')
+        if sort_by == "name_asc":
+            recipes = recipes.order_by("name")
+        elif sort_by == "name_desc":
+            recipes = recipes.order_by("-name")
+        elif sort_by == "oldest":
+            recipes = recipes.order_by("created_at")
+        elif sort_by == "newest":
+            recipes = recipes.order_by("-created_at")
 
     
     # If there are any recipes, paginate
@@ -71,10 +83,48 @@ def index(request):
     return render(request, "index.html", {
         "MEDIA_URL": settings.MEDIA_URL,
         "user": user,
-        "form": form,
+        "filter_form": filter_form,
+        "sort_form": sort_form,
         "recipes": recipes,
         "page_obj": page_obj
     })
+    
+    
+# # * Sort
+# # Sort recipes on index page
+# def sort(request):
+#     user = request.user
+#     form = RecipeFilterForm()
+#     sort_by = request.GET.get("sort_by", "")  # Default sorting
+    
+#     if sort_by == "name_asc":
+#         recipes = Recipe.objects.all().order_by("name")
+#     elif sort_by == "name_desc":
+#         recipes = Recipe.objects.all().order_by("-name")
+#     elif sort_by == "oldest":
+#         recipes = Recipe.objects.all().order_by("created_at")
+#     elif sort_by == "newest":
+#         recipes = Recipe.objects.all().order_by("-created_at")
+        
+#     # If there are any recipes, paginate
+#     if recipes:
+#         paginator = Paginator(recipes, 6)
+#         page_number = request.GET.get("page", 1)
+#         page_obj = paginator.get_page(page_number)
+        
+#         # If no recipes, paginator is none and return no results page
+#     else:
+#         page_obj = None
+#         return render(request, "no_results.html")
+        
+#     # Else render index page with search results
+#     return render(request, "index.html", {
+#         "MEDIA_URL": settings.MEDIA_URL,
+#         "user": user,
+#         "form": form,
+#         "recipes": recipes,
+#         "page_obj": page_obj
+#     })
     
     
     

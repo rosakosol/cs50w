@@ -117,6 +117,18 @@ class RecipeFilterForm(forms.ModelForm):
         for field in self.fields.values():
             field.required = False
         
+        
+        
+        
+class SortForm(forms.Form):
+    SORT_CHOICES = [
+        ('name_asc', 'A-Z'),
+        ('name_desc', 'Z-A'),
+        ('-created_at', 'Newest to Oldest'),
+        ('created_at', 'Oldest to Newst'),
+    ]
+    
+    sort_by = forms.ChoiceField(choices=SORT_CHOICES, required=False)
     
 class FavouriteForm(forms.Form):
     recipe_id = forms.IntegerField(widget=forms.HiddenInput())
