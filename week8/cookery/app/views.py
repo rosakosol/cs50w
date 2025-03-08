@@ -7,11 +7,12 @@ from django.core.paginator import Paginator
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.contrib import messages
-from .models import Ingredient, Unit, RecipeIngredient, Cuisine, Rating, MealType, Recipe, Favourites
+from .models import Ingredient, Unit, Tag, RecipeIngredient, Cuisine, Rating, MealType, Recipe, Favourites
 from .forms import RatingForm, CreateRecipeForm, RecipeIngredientFormSet, FavouriteForm, RecipeFilterForm, SortForm
 from django.db import IntegrityError
 from django.utils import timezone
 import json
+
 
 
 # * Index
@@ -19,6 +20,9 @@ import json
 # Shows filter options and sort recipes
 def index(request):
     user = request.user
+    meal_types = MealType.objects.all()
+    cuisines = Cuisine.objects.all()
+    tags = Tag.objects.all()
     recipes = Recipe.objects.all().order_by("-created_at")
     form_type = request.GET.get("form_type")
     sort_form = SortForm(request.GET)
@@ -86,7 +90,10 @@ def index(request):
         "filter_form": filter_form,
         "sort_form": sort_form,
         "recipes": recipes,
-        "page_obj": page_obj
+        "page_obj": page_obj,
+        "cuisines": cuisines,
+        "tags": tags,
+        "meal_types": meal_types
     })
     
     

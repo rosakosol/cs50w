@@ -121,56 +121,53 @@
 <div class="container no-print">
     <footer class="py-5">
     <div class="row">
-        <div class="col-6 col-md-2 mb-3">
-        <h5>Section</h5>
+      <div class="col-sm-12 col-md-4 mb-3">
+        <h5>Home</h5>
         <ul class="nav flex-column">
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Home</a></li>
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Features</a></li>
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Pricing</a></li>
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">FAQs</a></li>
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">About</a></li>
+            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">All Recipes</a></li>
+            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Add New Recipe</a></li>
+            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Favourites</a></li>
+            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Login</a></li>
+            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Register</a></li>
+            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Logout</a></li>
         </ul>
+      </div>
+
+        <div class="col-sm-12 col-md-4 mb-3">
+          <h5>Recipes</h5>
+            <ul class="nav flex-column">
+              <h6>Meal Type</h6>
+              {% for meal_type in meal_types %}
+                <li class="nav-item mb-2"><a href="{% url 'index' %}?meal_type={{ meal_type.name }}" class="nav-link p-0 text-body-secondary">{{ meal_type }}</a></li>
+              {% endfor %}
+              <h6>Top Picks</h6>
+                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Most Popular Recipes</a></li>
+                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Seasonal Recipes</a></li>
+            </ul>
+            <ul class="nav flex-column">
+              <h6>Cuisine</h6>
+              {% for cuisine in cuisines %}
+                <li class="nav-item mb-2"><a href="{% url 'index' %}?cuisine={{ cuisine.name }}" class="nav-link p-0 text-body-secondary">{{ cuisine.name }}</a></li>
+              {% endfor %}
+            </ul>
         </div>
 
-        <div class="col-6 col-md-2 mb-3">
-        <h5>Section</h5>
-        <ul class="nav flex-column">
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Home</a></li>
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Features</a></li>
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Pricing</a></li>
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">FAQs</a></li>
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">About</a></li>
-        </ul>
-        </div>
-
-        <div class="col-6 col-md-2 mb-3">
-        <h5>Section</h5>
-        <ul class="nav flex-column">
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Home</a></li>
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Features</a></li>
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Pricing</a></li>
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">FAQs</a></li>
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">About</a></li>
-        </ul>
-        </div>
-
-        <div class="col-md-5 offset-md-1 mb-3">
-        <form>
-            <h5>Subscribe to our newsletter</h5>
-            <p>Monthly digest of what's new and exciting from us.</p>
-            <div class="d-flex flex-column flex-sm-row w-100 gap-2">
-            <label for="newsletter1" class="visually-hidden">Email address</label>
-            <input id="newsletter1" type="text" class="form-control" placeholder="Email address">
-            <button class="btn btn-primary" type="button">Subscribe</button>
-            </div>
-        </form>
+        
+        <div class="col-sm-12 col-md-4 mb-3">
+          <h5>Recipes</h5>
+            <ul class="nav flex-column">
+              <h6>Tags</h6>
+              {% for tag in tags %}
+                <li class="nav-item mb-2"><a href="{% url 'index' %}?tags={{ tag.name }}" class="nav-link p-0 text-body-secondary">{{ tag.name }}</a></li>
+              {% endfor %}
+            </ul>
         </div>
     </div>
 
     <div class="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
         <p>&copy; 2025 Rosa Kosol. All rights reserved.</p>
         <ul class="list-unstyled d-flex">
-        <li class="ms-3"><a class="link-body-emphasis" href="#"><i class="bi bi-github"></i></a></li>
+        <li class="ms-3"><a class="link-body-emphasis" href="https://www.github.com/rosakosol" target="_blank"><i class="bi bi-github"></i></a></li>
         </ul>
     </div>
     </footer>
