@@ -2,8 +2,11 @@
 {% load static %}
 
 {% block body %}
+
 <div class="container mt-5">
     <h2>Home</h2>
+
+    <!-- Filter and sort form -->
     <form method="get" action="{% url 'index' %}">
         {% csrf_token %}
         {{ filter_form.as_p }}
@@ -12,18 +15,20 @@
     </form>
 
 
-
     <!-- Row to display recipes in 3-column grid -->
     <div class="row">
         {% for recipe in page_obj %}
         <div class="col-12 col-md-4 mb-4">
             <div class="card">
+                <!-- Display recipe image -->
                 {% if recipe.image %}
                     <img src="{{ recipe.image.url }}" class="card-img-top" alt="{{ recipe.name }}">
                 {% else %}
                     <img src="{% static 'images/default-img.jpg' %}" class="card-img-top" alt="Default image">
                 {% endif %}
+
                 <div class="card-body">
+                    
                     <!-- Display author name and created at -->
                     <div class="recipe-byline d-flex justify-content-between">
                         <p class="card-title text-center"><small>{{ recipe.user.username }}</small></p>
@@ -32,12 +37,13 @@
                     
                     <!-- Display recipe name -->
                     <h5 class="card-title text-center"><a href="{% url 'recipe' recipe.name %}">{{ recipe.name }}</a></h5>
+
                     <!-- Display average ratings -->
                     {% if recipe.average_rating %}
                         <p class="star-avg-rating" data-avg-rating="{{ recipe.average_rating }}">Average Rating: {{ recipe.average_rating }}
                     {% endif %}
 
-                    <!-- Display cuisine and mealtype -->
+                    <!-- Display tags, cuisine and mealtype -->
                     {% for tag in recipe.tags.all %}
                         <a href="{% url 'index' %}?tags={{ tag.name }}" class="btn btn-primary">{{ tag.name }}</a>
                     {% endfor %}

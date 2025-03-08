@@ -10,7 +10,7 @@ class RatingForm(forms.ModelForm):
 
     value = forms.ChoiceField(
         choices=[(str(i), i) for i in range(1, 6)],
-        widget=forms.RadioSelect(attrs={'class': 'star-rating'}),
+        widget=forms.RadioSelect(attrs={"class": "star-rating"}),
         required=True
     )
 
@@ -19,7 +19,7 @@ class CreateRecipeForm(forms.Form):
     name = forms.CharField(max_length=64)
     image = forms.ImageField(required=False)
     image_alt_text = forms.CharField(
-        widget=forms.TextInput(attrs={'placeholder': 'Enter alt text for image'}),
+        widget=forms.TextInput(attrs={"placeholder": "Enter alt text for image"}),
         required=False
     )
     meal_type = forms.ModelChoiceField(
@@ -122,10 +122,10 @@ class RecipeFilterForm(forms.ModelForm):
         
 class SortForm(forms.Form):
     SORT_CHOICES = [
-        ('name_asc', 'A-Z'),
-        ('name_desc', 'Z-A'),
-        ('-created_at', 'Newest to Oldest'),
-        ('created_at', 'Oldest to Newst'),
+        ("name_asc", "A-Z"),
+        ("name_desc", "Z-A"),
+        ("-created_at", "Newest to Oldest"),
+        ("created_at", "Oldest to Newest"),
     ]
     
     sort_by = forms.ChoiceField(choices=SORT_CHOICES, required=False)

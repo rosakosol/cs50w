@@ -21,6 +21,7 @@ def index(request):
     user = request.user
     recipes = Recipe.objects.all().order_by("-created_at")
     form_type = request.GET.get("form_type")
+    sort_form = SortForm(request.GET)
     
     # If user accessing filter form on index page
     if form_type == "filter":
@@ -43,6 +44,8 @@ def index(request):
         
     # Else if user is filtering from backlinked recipe buttons        
     else:
+        filter_form = RecipeFilterForm()
+        
         # If user has passed through a filter to index page - i.e. from clicking a tag button on recipe page
         filter_data = {
             "tags__name": request.GET.get("tags"),
@@ -54,13 +57,10 @@ def index(request):
         for field, value in filter_data.items():
             if value:
                 recipes = recipes.filter(**{field: value})
-    
-    # Display empty filter form  
-    filter_form = RecipeFilterForm()
-    sort_form = SortForm(request.GET)
+
     
     if sort_form.is_valid():
-        sort_by = sort_form.cleaned_data.get('sort_by')
+        sort_by = sort_form.cleaned_data.get("sort_by")
         if sort_by == "name_asc":
             recipes = recipes.order_by("name")
         elif sort_by == "name_desc":
@@ -88,43 +88,6 @@ def index(request):
         "recipes": recipes,
         "page_obj": page_obj
     })
-    
-    
-# # * Sort
-# # Sort recipes on index page
-# def sort(request):
-#     user = request.user
-#     form = RecipeFilterForm()
-#     sort_by = request.GET.get("sort_by", "")  # Default sorting
-    
-#     if sort_by == "name_asc":
-#         recipes = Recipe.objects.all().order_by("name")
-#     elif sort_by == "name_desc":
-#         recipes = Recipe.objects.all().order_by("-name")
-#     elif sort_by == "oldest":
-#         recipes = Recipe.objects.all().order_by("created_at")
-#     elif sort_by == "newest":
-#         recipes = Recipe.objects.all().order_by("-created_at")
-        
-#     # If there are any recipes, paginate
-#     if recipes:
-#         paginator = Paginator(recipes, 6)
-#         page_number = request.GET.get("page", 1)
-#         page_obj = paginator.get_page(page_number)
-        
-#         # If no recipes, paginator is none and return no results page
-#     else:
-#         page_obj = None
-#         return render(request, "no_results.html")
-        
-#     # Else render index page with search results
-#     return render(request, "index.html", {
-#         "MEDIA_URL": settings.MEDIA_URL,
-#         "user": user,
-#         "form": form,
-#         "recipes": recipes,
-#         "page_obj": page_obj
-#     })
     
     
     
@@ -213,7 +176,6 @@ def recipe(request, recipe_name):
 
 # * Add Recipe
 # Displays add recipe form
-# TODO: Fix add ingredients formset
 def add_recipe_view(request):
     user = request.user
     
