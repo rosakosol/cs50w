@@ -16,53 +16,59 @@ class RatingForm(forms.ModelForm):
 
     
 class CreateRecipeForm(forms.Form):
-    name = forms.CharField(max_length=64)
-    image = forms.ImageField(required=False)
+    name = forms.CharField(
+            max_length=64,
+            widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Enter recipe name"})
+        )
+    image = forms.ImageField(
+        required=False,
+        widget=forms.ClearableFileInput(attrs={"class": "form-control-file"})
+    )
     image_alt_text = forms.CharField(
-        widget=forms.TextInput(attrs={"placeholder": "Enter alt text for image"}),
+        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Enter alt text for image"}),
         required=False
     )
     meal_type = forms.ModelMultipleChoiceField(
         queryset=MealType.objects.all(),
-        widget=forms.CheckboxSelectMultiple,
+        widget=forms.CheckboxSelectMultiple(),
         required=True
     )
     cuisine = forms.ModelMultipleChoiceField(
         queryset=Cuisine.objects.all(),
-        widget=forms.CheckboxSelectMultiple,
+        widget=forms.CheckboxSelectMultiple(),
         required=True
-    )
-    description = forms.CharField(
-        label="Description",
-        widget=forms.Textarea(attrs={
-            "rows": 10,
-            "cols": 80
-        }))
-    instructions = forms.CharField(
-        label="Instructions",
-        widget=forms.Textarea(attrs={
-            "rows": 10,
-            "cols": 80
-        }))
-    tags = forms.ModelMultipleChoiceField(
-        queryset=Tag.objects.all(),
-        widget=forms.CheckboxSelectMultiple,
-        required=False
     )
     servings = forms.IntegerField(
         min_value=1,
         max_value=99,
-        required=True
+        required=True,
+        widget=forms.NumberInput(attrs={"class": "form-control"})
     )
     cook_time = forms.IntegerField(
         min_value=1,
         max_value=1000,
-        required=True
+        required=True,
+        widget=forms.NumberInput(attrs={"class": "form-control"})
     )
     prep_time = forms.IntegerField(
         min_value=1,
         max_value=1000,
-        required=True
+        required=True,
+        widget=forms.NumberInput(attrs={"class": "form-control"})
+    )
+    description = forms.CharField(
+        label="Description",
+        widget=forms.Textarea(attrs={"class": "form-control", "rows": 10, "cols": 80})
+    )
+    instructions = forms.CharField(
+        label="Instructions",
+        widget=forms.Textarea(attrs={"class": "form-control", "rows": 10, "cols": 80})
+    )
+
+    tags = forms.ModelMultipleChoiceField(
+        queryset=Tag.objects.all(),
+        widget=forms.CheckboxSelectMultiple(),
+        required=False
     )
     
     def clean_name(self):

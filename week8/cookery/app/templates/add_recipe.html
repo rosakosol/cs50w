@@ -2,30 +2,173 @@
 
 {% block body %}
     {% if user.is_authenticated %}
+    <div class="container mt-5">
         <h2>Add a New Recipe</h2>
-        <div>
-            <!-- Create Listing Form -->
+        <div class="container filter-container p-3 mb-5 rounded">
+
+            <!-- Add Recipe Form -->
             <form action="{% url 'add_recipe' %}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-                {{ create_form }}
-                <!-- Formset management form -->
+                <!-- Recipe Name -->
+                <div class="form-group">
+                    <label for="{{ create_form.name.id_for_label }}">Recipe Name</label>
+                    {{ create_form.name }}
+                    {% if create_form.name.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in create_form.name.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Image -->
+                <div class="form-group">
+                    <label for="{{ create_form.image.id_for_label }}">Image</label>
+                    {{ create_form.image }}
+                    {% if create_form.image.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in create_form.image.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Image Alt Text -->
+                <div class="form-group">
+                    <label for="{{ create_form.image_alt_text.id_for_label }}">Image Alt Text</label>
+                    {{ create_form.image_alt_text }}
+                    {% if create_form.image_alt_text.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in create_form.image_alt_text.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Meal Type -->
+                <div class="form-group">
+                    <label for="{{ create_form.meal_type.id_for_label }}">Meal Type</label>
+                    {{ create_form.meal_type }}
+                    {% if create_form.meal_type.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in create_form.meal_type.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Cuisine -->
+                <div class="form-group">
+                    <label for="{{ create_form.cuisine.id_for_label }}">Cuisine</label>
+                    {{ create_form.cuisine }}
+                    {% if create_form.cuisine.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in create_form.cuisine.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Servings -->
+                <div class="form-group">
+                    <label for="{{ create_form.servings.id_for_label }}">Servings</label>
+                    {{ create_form.servings }}
+                    {% if create_form.servings.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in create_form.servings.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Cook Time -->
+                <div class="form-group">
+                    <label for="{{ create_form.cook_time.id_for_label }}">Cook Time</label>
+                    {{ create_form.cook_time }}
+                    {% if create_form.cook_time.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in create_form.cook_time.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Prep Time -->
+                <div class="form-group">
+                    <label for="{{ create_form.prep_time.id_for_label }}">Prep Time</label>
+                    {{ create_form.prep_time }}
+                    {% if create_form.prep_time.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in create_form.prep_time.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Recipe Ingredient formset -->
                 {{ formset.management_form }}
-                
                 <div id="ingredient-container" data-url="{% url 'add_recipe' %}">
                     {% for form in formset %}
                         <div class="ingredient-form" data-id="{{ forloop.counter }}">
                             {{ form.as_p }}
-                            <button class="remove-ingredient" type="button" data-id="{{ forloop.counter }}">Remove</button>
+                            <button class="remove-ingredient btn btn-secondary" type="button" data-id="{{ forloop.counter }}">Remove</button>
                         </div>
                     {% endfor %}
                 </div>
+                <button type="button" id="add-ingredient" class="btn btn-secondary">Add Ingredient</button>
 
-                <button type="button" id="add-ingredient">Add Ingredient</button>
+                <!-- Description -->
+                <div class="form-group">
+                    <label for="{{ create_form.description.id_for_label }}">Description</label>
+                    {{ create_form.description }}
+                    {% if create_form.description.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in create_form.description.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Instructions -->
+                <div class="form-group">
+                    <label for="{{ create_form.instructions.id_for_label }}">Instructions</label>
+                    {{ create_form.instructions }}
+                    {% if create_form.instructions.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in create_form.instructions.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Tags -->
+                <div class="form-group">
+                    <label for="{{ create_form.tags.id_for_label }}">Tags</label>
+                    {{ create_form.tags }}
+                    {% if create_form.tags.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in create_form.tags.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
 
 
                 <input type="submit" value="Submit" class="btn btn-primary">
             </form>
         </div>
+    </div>
     {% endif %}
 
 {% endblock %}

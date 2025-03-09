@@ -251,12 +251,21 @@ function handleRecipeIngredientFormset() {
     
         ingredientContainer.addEventListener("click", function(event) {
             if (event.target && event.target.classList.contains("remove-ingredient")) {
-                const formId = event.target.dataset.id;
-                const formToRemove = document.querySelector(`.ingredient-form[data-id="${formId}"]`)
-                formToRemove.remove();
-    
                 const totalForms = document.querySelector("#id_recipe_ingredients-TOTAL_FORMS");
-                totalForms.value = parseInt(totalForms.value) - 1;
+                totalForms.value = parseInt(totalForms.value)
+
+                // Users can only delete ingredients if there is at least 1 ingredient form in recipe form
+                if (totalForms.value > 1) {
+                    const formId = event.target.dataset.id;
+                    const formToRemove = document.querySelector(`.ingredient-form[data-id="${formId}"]`)
+                    formToRemove.remove();
+                    totalForms.value = parseInt(totalForms.value) - 1;
+                }
+                else {
+                    alert("Recipe must have at least one ingredient!"); 
+                }
+                
+
             }
         })
     }

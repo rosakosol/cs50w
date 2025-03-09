@@ -60,6 +60,10 @@ i {
   font-size: 20px;
 }
 
+textarea {
+  max-width: 90%;
+}
+
 @media (min-width: 768px) {
   .navbar {
     height: 100px;
