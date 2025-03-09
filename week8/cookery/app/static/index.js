@@ -245,7 +245,7 @@ function handleRecipeIngredientFormset() {
             const newFormCount = currentFormCount + 1;
     
             const newFormHtml = `
-                <div class="ingredient-form" data-id="${newFormCount}">
+                <div class="ingredient-form form-group d-flex m-0 align-items-end" data-id="${newFormCount}">
                     ${document.querySelector(".ingredient-form").innerHTML
                         .replace(/id_recipe_ingredients-0-/g, `id_recipe_ingredients-${currentFormCount}-`)
                         .replace(/recipe_ingredients-0-/g, `recipe_ingredients-${currentFormCount}-`)

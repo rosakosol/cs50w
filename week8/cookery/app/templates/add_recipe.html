@@ -112,18 +112,40 @@
                         </div>
                     {% endif %}
                 </div>
-
+                <hr/>
                 <!-- Recipe Ingredient formset -->
                 {{ formset.management_form }}
-                <div id="ingredient-container" data-url="{% url 'add_recipe' %}">
+                <h4>Ingredients</h4>
+                <div class="mb-2 d-flex flex-column" id="ingredient-container" data-url="{% url 'add_recipe' %}">
                     {% for form in formset %}
-                        <div class="ingredient-form" data-id="{{ forloop.counter }}">
-                            {{ form.as_p }}
-                            <button class="remove-ingredient btn btn-secondary" type="button" data-id="{{ forloop.counter }}">Remove</button>
+                        <div class="ingredient-form form-group d-flex align-items-end m-0" data-id="{{ forloop.counter }}">
+                            <!-- Ingredient Field -->
+                            <div class="ingredient-field form-field form-group me-2">
+                                <label for="{{ form.ingredient.id_for_label }}">Ingredient</label>
+                                {{ form.ingredient }}
+                                {{ form.ingredient.errors }}
+                            </div>
+                
+                            <!-- Quantity Field -->
+                            <div class="quantity-field form-field form-group me-2">
+                                <label for="{{ form.quantity.id_for_label }}">Quantity</label>
+                                {{ form.quantity }}
+                                {{ form.quantity.errors }}
+                            </div>
+                
+                            <!-- Unit Field -->
+                            <div class="unit-field form-field form-group me-2">
+                                <label for="{{ form.unit.id_for_label }}">Unit</label>
+                                {{ form.unit }}
+                                {{ form.unit.errors }}
+                            </div>
+                
+                            <button class="remove-ingredient btn btn-danger" type="button" data-id="{{ forloop.counter }}">Remove</button>
                         </div>
                     {% endfor %}
                 </div>
-                <button type="button" id="add-ingredient" class="btn btn-secondary">Add Ingredient</button>
+                <button type="button" id="add-ingredient" class="btn btn-success">Add Ingredient</button>
+                <hr/>
 
                 <!-- Description -->
                 <div class="form-group">
@@ -165,7 +187,7 @@
                 </div>
 
 
-                <input type="submit" value="Submit" class="btn btn-primary">
+                <input type="submit" value="Submit Recipe" class="btn btn-primary">
             </form>
         </div>
     </div>

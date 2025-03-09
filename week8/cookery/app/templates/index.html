@@ -15,6 +15,8 @@
         <form method="get" action="{% url 'index' %}">
             {% csrf_token %}
             <h5>Filter and Sort</h5>
+            <button class="btn btn-link text-black hide"><i class="bi bi-funnel-fill"></i></button>
+            <button class="btn btn-link text-black hide"><i class="bi bi-funnel"></i></button>
             <p class="field-tags filter-field">
                 <label for="{{ form.tags.id_for_label }}">Tags:</label>
                 {{ filter_form.tags }}
@@ -65,13 +67,13 @@
                     <div>
                         <!-- Display tags, cuisine and mealtype -->
                         {% for tag in recipe.tags.all %}
-                            <a href="{% url 'index' %}?tags={{ tag.name }}" class="btn btn-warning">{{ tag.name }}</a>
+                            <a href="{% url 'index' %}?tags={{ tag.name }}" class="btn btn-warning mt-2 mb-2">{{ tag.name }}</a>
                         {% endfor %}
                         {% for cuisine in recipe.cuisine.all %}
-                            <a href="{% url 'index' %}?cuisine={{ cuisine.name }}" class="btn btn-info">{{ cuisine.name }}</a>
+                            <a href="{% url 'index' %}?cuisine={{ cuisine.name }}" class="btn btn-info mt-2 mb-2">{{ cuisine.name }}</a>
                         {% endfor %}
                         {% for meal_type in recipe.meal_type.all %}
-                                <a href="{% url 'index' %}?meal_type={{ meal_type.name }}" class="btn btn-success">{{ meal_type.name }}</a>
+                                <a href="{% url 'index' %}?meal_type={{ meal_type.name }}" class="btn btn-success mt-2 mb-2">{{ meal_type.name }}</a>
                         {% endfor %}
                     </div>
                 </div>

@@ -1,9 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lobster&display=swap");
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
-* {
-  outline: 1px solid red;
-}
-
 .lobster-regular {
   font-family: "Lobster", serif;
   font-weight: 400;
@@ -65,12 +61,32 @@ i {
 }
 
 textarea {
-  max-width: 90%;
+  width: 100%;
 }
 
 @media (min-width: 768px) {
   .navbar {
     height: 100px;
+  }
+}
+.dropdown-menu {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 20px;
+  background-color: #f8f9fa;
+}
+
+.dropdown-menu .col-md-4 {
+  padding: 10px;
+}
+
+.search-bar {
+  max-width: 300px;
+}
+
+@media (max-width: 768px) {
+  .navbar-nav {
+    display: none;
   }
 }
 .card img {
@@ -91,17 +107,23 @@ textarea {
 #id_tags {
   max-height: 200px;
   overflow-y: auto;
-  margin-bottom: 1rem;
+  margin: 1rem 0;
+  padding: 0.5rem;
+  background-color: white;
 }
 
 #id_cuisine {
   max-height: 200px;
   overflow-y: auto;
-  margin-bottom: 1rem;
+  margin: 1rem 0;
+  padding: 0.5rem;
+  background-color: white;
 }
 
 #id_meal_type {
-  margin-bottom: 1rem;
+  margin: 1rem 0;
+  padding: 0.5rem;
+  background-color: white;
 }
 
 .recipe-container {
@@ -154,26 +176,6 @@ textarea {
     top: 600px;
   }
 }
-.dropdown-menu {
-  display: flex;
-  flex-wrap: wrap;
-  padding: 20px;
-  background-color: #f8f9fa;
-}
-
-.dropdown-menu .col-md-4 {
-  padding: 10px;
-}
-
-.search-bar {
-  max-width: 300px;
-}
-
-@media (max-width: 768px) {
-  .navbar-nav {
-    display: none;
-  }
-}
 .email-print-container button, .email-print-container a, .social-sharing-container button, .social-sharing-container a {
   padding: 0;
   border: 0;
@@ -191,4 +193,24 @@ textarea {
 
 .pagination .page-link {
   color: black;
+}
+
+.form-group {
+  margin: 1rem 0;
+}
+
+.ingredient-field {
+  flex-grow: 2;
+}
+
+.quantity-field {
+  width: 20%;
+}
+
+.unit-field {
+  flex-grow: 1;
+}
+
+.remove-ingredient {
+  margin: 1rem 0;
 }/*# sourceMappingURL=style.css.map */

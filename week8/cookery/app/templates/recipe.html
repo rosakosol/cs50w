@@ -10,21 +10,24 @@
         <div class="container mt-5 p-md-5">
             <!-- Display recipe name -->
             <h2 id="recipe-name-{{ recipe.id }}">{{ recipe.name }}</h2>
-            <!-- Display recipe average rating -->
-            <p class="star-avg-rating mb-2" data-avg-rating="{{ recipe.average_rating }}">Average Rating: {{ recipe.average_rating }}</p>
-            <!-- Display tags -->
-                {% for tag in recipe.tags.all %}
-                <a href="{% url 'index' %}?tags={{ tag.name }}" class="btn btn-warning">{{ tag.name }}</a>
+            <div class="no-print">
+                <!-- Display recipe average rating -->
+                <p class="star-avg-rating mb-2" data-avg-rating="{{ recipe.average_rating }}">Average Rating: {{ recipe.average_rating }}</p>
+                <!-- Display tags -->
+                    {% for tag in recipe.tags.all %}
+                    <a href="{% url 'index' %}?tags={{ tag.name }}" class="btn btn-warning">{{ tag.name }}</a>
+                    {% endfor %}
+                    {% for cuisine in recipe.cuisine.all %}
+                    <a href="{% url 'index' %}?cuisine={{ cuisine.name }}" class="btn btn-info">{{ cuisine.name }}</a>
                 {% endfor %}
-                {% for cuisine in recipe.cuisine.all %}
-                <a href="{% url 'index' %}?cuisine={{ cuisine.name }}" class="btn btn-info">{{ cuisine.name }}</a>
-            {% endfor %}
-            {% for meal_type in recipe.meal_type.all %}
-                <a href="{% url 'index' %}?meal_type={{ meal_type.name }}" class="btn btn-success">{{ meal_type.name }}</a>
-            {% endfor %}
+                {% for meal_type in recipe.meal_type.all %}
+                    <a href="{% url 'index' %}?meal_type={{ meal_type.name }}" class="btn btn-success">{{ meal_type.name }}</a>
+                {% endfor %}
+            </div>
         </div>
     </div>
     {% endif %}
+    <hr/>
     <div class="pt-5 pt-md-0 ps-md-5 pe-md-5 no-print container">
         <div class="d-flex flex-row align-items-start justify-content-between">
             <!-- Display django message if rating saved/failed -->
@@ -93,7 +96,7 @@
             </div>
         </div>
 
-        <div class="d-flex align-items-center justify-content-end">
+        <div class="d-flex align-items-center justify-content-end mb-3">
             <div class="email-print-container d-flex align-items-center">
                 <a class="me-3" href="mailto:?subject=Check out this recipe: {{ recipe.name }}&body=Here is the recipe: {{ request.build_absolute_uri }}">
                     <i class="bi bi-envelope-fill"></i>
@@ -114,34 +117,31 @@
             </div>
         </div>
     </div>
-    <div class="container pt-5 pt-md-0 ps-md-5 pe-md-5">
 
+    
+    <div class="container pt-5 pt-md-0 ps-md-5 pe-md-5 pb-5">
         <!-- Display recipe description -->
-        <div class="mt-5 d-flex align-items-center justify-content-between">        
+        <div class="d-flex align-items-center justify-content-between">        
             <p id="recipe-description-{{ recipe.id }}">{{ recipe.description }}</p>
         </div>
 
         <div class="mt-5">
-            <div class="row">
-                <div class="col-md-6">
-                    <!-- Display recipe ingredients -->
-                    <h3>Ingredients</h3>
-                    <ul>
-                        {% for recipe_ingredient in recipe.recipe_ingredients.all %}
-                            <li>{{ recipe_ingredient.quantity}} {{ recipe_ingredient.unit }} of {{ recipe_ingredient.ingredient.name }} </li>
-                        {% empty %}
-                        <li>No ingredients added yet.</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-                <div class="col-md-6">
-                    <!-- Display recipe instructions -->
-                    <h3>Instructions</h3>
-                    <p id="recipe-instructions-{{ recipe.id }}">
-                        {{ recipe.instructions }}
-                    </p>
-                </div>
-            </div>
+            <!-- Display recipe ingredients -->
+            <h3>Ingredients</h3>
+            <ul>
+                {% for recipe_ingredient in recipe.recipe_ingredients.all %}
+                    <li>{{ recipe_ingredient.quantity}} {{ recipe_ingredient.unit }} of {{ recipe_ingredient.ingredient.name }} </li>
+                {% empty %}
+                <li>No ingredients added yet.</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="mt-5">
+            <!-- Display recipe instructions -->
+            <h3>Instructions</h3>
+            <p id="recipe-instructions-{{ recipe.id }}">
+                {{ recipe.instructions }}
+            </p>
         </div>
     </div>
 </div>

@@ -13,24 +13,22 @@
     </head>
     <body>
   <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+  <nav class="navbar navbar-expand-lg bg-body-tertiary w-100 w-md-75 m-auto">
     <div class="container-fluid">
-      <!-- Logo -->
       <a class="navbar-brand" href="{% url 'index' %}">
         <img src="{% static 'images/logo.png' %}" alt="Cookery Logo" class="p-2 mt-2">
       </a>
-
-      <!-- Hamburger Menu for Small Screens -->
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <!-- Mega Menu on Medium and Large Screens -->
-        <ul class="navbar-nav mega-menu-links d-none d-md-flex">
+      <div class="collapse navbar-collapse" id="navbarScroll">
+        <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+          <li class="nav-item p-md-3">
+              <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'index' %}">All Recipes</a>
+          </li>
           <li class="nav-item dropdown p-md-3">
             <a class="nav-link dropdown-toggle {% if request.path == '/' %}active{% endif %}" href="{% url 'index' %}" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                All Recipes
+                View Recipes By
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
               <div class="p-md-3">
@@ -78,39 +76,14 @@
             {% endif %}
         </ul>
 
-        <!-- Search Bar and Profile Icon (always visible) -->
-        <div class="d-none d-md-flex justify-content-end align-items-center ms-3">
-            <form action="{% url 'search' %}" method="get" class="d-flex">
-                <input type="text" class="form-control search-bar me-2" name="q" placeholder="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
-          <button class="btn btn-outline-secondary">Profile</button>
-        </div>
+        <!-- Searchbar-->
+        <form class="d-flex" role="search">
+          <form action="{% url 'search' %}" method="get" class="d-flex">
+            <input type="text" class="form-control search-bar me-2" name="q" placeholder="Search">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
 
-        <!-- Hamburger Menu Content for Small Screens (d-md-none) -->
-        <ul class="navbar-nav d-md-none">
-            {% if not user.is_authenticated %}
-            <li class="nav-item p-md-3">
-              <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'index' %}">All Recipes</a>
-          </li>
-            <li class="nav-item p-md-3">
-                <a class="nav-link {% if request.path == '/login' %}active{% endif %}" href="{% url 'login' %}">Login</a>
-            </li>
-            <li class="nav-item p-md-3">
-                <a class="nav-link {% if request.path == '/register' %}active{% endif %}" href="{% url 'register' %}">Register</a>
-            </li>
-        {% else %}
-            <li class="nav-item p-md-3">
-                <a class="nav-link {% if request.path == '/add_recipe' %}active{% endif %}" href="{% url 'add_recipe' %}">Add Recipe</a>
-            </li>
-            <li class="nav-item p-md-3">
-                <a class="nav-link {% if request.path == '/favourites' %}active{% endif %}" href="{% url 'favourites' %}">Favourites</a>
-            </li>
-            <li class="nav-item p-md-3">
-                <a class="nav-link {% if request.path == '/logout' %}active{% endif %}" href="{% url 'logout' %}">Logout</a>
-            </li>
-            {% endif %}
-        </ul>
+
       </div>
     </div>
   </nav>

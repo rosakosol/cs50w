@@ -86,24 +86,31 @@ class CreateRecipeForm(forms.Form):
         self.fields["cuisine"].queryset = Cuisine.objects.all().order_by("name")
     
 class RecipeIngredientForm(forms.ModelForm):
-    ingredient = forms.ModelChoiceField(
-        queryset=Ingredient.objects.all(),
-        required=True
-    )    
-    quantity = forms.DecimalField(
-        min_value=0,
-        max_value=1000,
-        required=True
-    )
-    unit = forms.ModelChoiceField(
-        queryset=Unit.objects.all(),
-        required=True
-    )   
-    
-    
     class Meta:
         model = RecipeIngredient
         fields = ["ingredient", "quantity", "unit"]
+        
+
+    # Initialise form so all fields are optional
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for field in self.fields.values():
+            field.required = False
+            
+        # Add placeholders for ingredient and unit fields
+        self.fields["ingredient"].empty_label = "Select ingredient"
+        self.fields["unit"].empty_label = "Select unit"
+        self.fields["ingredient"].widget.attrs["class"] = "form-control"
+        self.fields["quantity"].widget.attrs["class"] = "form-control"
+        self.fields["unit"].widget.attrs["class"] = "form-control"
+            
+        # Sort display of tags and cuisines from a-z
+        self.fields["ingredient"].queryset = Ingredient.objects.all().order_by("name")
+        self.fields["unit"].queryset = Unit.objects.all().order_by("name") 
+    
+    
+
         
 RecipeIngredientFormSet = inlineformset_factory(
     Recipe,
