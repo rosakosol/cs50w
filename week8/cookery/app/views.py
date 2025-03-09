@@ -38,14 +38,17 @@ def index(request):
             # Dictionary for filters
             filter_data = {
                 "tags__in": filter_form.cleaned_data.get("tags"),
-                "cuisine": filter_form.cleaned_data.get("cuisine"),
-                "meal_type": filter_form.cleaned_data.get("meal_type")
+                "cuisine__in": filter_form.cleaned_data.get("cuisine"),
+                "meal_type__in": filter_form.cleaned_data.get("meal_type")
             }
             
             # Loop through filtered data and return recipes
             for field, value in filter_data.items():
                 if value:
                     recipes = recipes.filter(**{field: value})
+                    
+            # Make sure the result is distinct with no dupe recipes
+            recipes = recipes.distinct()
         
     # Else if user is filtering from backlinked recipe buttons        
     else:

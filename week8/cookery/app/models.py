@@ -112,7 +112,8 @@ class Recipe(models.Model):
         "@type": "Recipe",
         "author": f"{self.user.first_name} {self.user.last_name}",
         "name": self.name,
-        # "recipeCuisine": self.cuisine.name.split('\n'),
+        # Cuisine
+        # Ingredients
         "description": self.description,
         "recipeInstructions": self.instructions.split('\n'),  # assuming instructions are also stored this way
         "recipeYield": self.servings,

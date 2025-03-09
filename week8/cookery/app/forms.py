@@ -45,7 +45,7 @@ class CreateRecipeForm(forms.Form):
         widget=forms.NumberInput(attrs={"class": "form-control"})
     )
     cook_time = forms.IntegerField(
-        min_value=1,
+        min_value=0,
         max_value=1000,
         required=True,
         widget=forms.NumberInput(attrs={"class": "form-control"})

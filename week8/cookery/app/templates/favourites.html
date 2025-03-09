@@ -5,23 +5,11 @@
 
     <div class="container mt-5">
         <h2>Favourites</h2>
+        {% if not page_obj %}
+          <h4>No favourites yet.</h4>
+          <a href="{% url 'index' %}">Go to Home Page</a>
+        {% endif %}
 
-        {% for list in favourites_list %}
-        <ul class="nav nav-tabs">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Active</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Link</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Link</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-            </li>
-          </ul>
-          {% endfor %}
         <!-- Row to display recipes in 3-column grid -->
         <div class="row">
             {% for recipe in page_obj %}
@@ -41,8 +29,8 @@
         </div>
     
         <!-- Pagination Links -->
-         {% if page_obj %}
-         <div class="pagination justify-content-center pb-5">
+        {% if page_obj %}
+        <div class="pagination justify-content-center pb-5">
             {% if page_obj.has_previous %}
                 <a href="?page=1" class="page-link">&laquo; first</a>
                 <a href="?page={{ page_obj.previous_page_number }}" class="page-link">previous</a>
