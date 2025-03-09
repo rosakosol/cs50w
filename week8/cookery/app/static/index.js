@@ -84,12 +84,14 @@ function existingRating() {
     if (ratingForm) {
         const stars = document.querySelectorAll(".star-rating-input");
         const labels = ratingForm.querySelectorAll(".star-rating-label");
+
+        // Click event: Mark stars gold up to current rating
+        for (let i = 0; i < existingRating; i++) {
+            labels[i].style.color = "gold"; 
+        }
     }
 
-    // Click event: Mark stars gold up to current rating
-    for (let i = 0; i < existingRating; i++) {
-        labels[i].style.color = "gold"; 
-    }
+
 }
 
 
