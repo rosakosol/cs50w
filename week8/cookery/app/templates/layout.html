@@ -143,9 +143,6 @@
         <div class="col-sm-12 d-md-flex">
           <div class="col-sm-12 col-md-6">
               <ul class="nav flex-column">
-                <h6>Top Picks</h6>
-                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Most Popular Recipes</a></li>
-                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Seasonal Recipes</a></li>
                 <h6>Meal Type</h6>
                 {% for meal_type in all_meal_types %}
                   <li class="nav-item mb-2"><a href="{% url 'index' %}?meal_type={{ meal_type.name }}" class="nav-link p-0 text-body-secondary">{{ meal_type }}</a></li>

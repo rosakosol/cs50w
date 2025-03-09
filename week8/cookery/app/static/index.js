@@ -55,7 +55,7 @@ function averageRating() {
     var avgRatingElements = document.querySelectorAll("[data-avg-rating]"); 
 
     avgRatingElements.forEach(function(avgRatingElement, index) {
-        var avgRating = parseInt(avgRatingElement.getAttribute("data-avg-rating"));
+        var avgRating = parseFloat(avgRatingElement.getAttribute("data-avg-rating"));
 
         // Select the correct pRating element based on the index
         var pRating = document.querySelectorAll(".star-avg-rating")[index]; 
@@ -63,11 +63,22 @@ function averageRating() {
         // Clear the current content inside the pRating element
         pRating.innerHTML = "";
 
-        // Loop to create the stars based on the avgRating value
-        for (let i = 0; i < avgRating; i++) {
-            pRating.innerHTML += `<label class="star-rating-label"><i class="bi bi-star-fill" style="color:gold;"></i></label>`;
+        if (!isNaN(avgRating) && avgRating > 0) {
+            // Loop to create the stars based on the avgRating value
+            for (let i = 0; i < avgRating; i++) {
+                pRating.innerHTML += `<label class="star-rating-label"><i class="bi bi-star-fill" style="color:gold;"></i></label>`;
+            }
+
+            // Handle half-stars if decimals
+            if (avgRating % 1 !== 0) {
+                pRating.innerHTML += `<label class="star-rating-label"><i class="bi bi-star-half" style="color:gold;"></i></label>`;
+            }
+
+            // Fill remaining stars if any
+            for (let i = Math.ceil(avgRating); i < 5; i++) {
+                pRating.innerHTML += `<label class="star-rating-label"><i class="bi bi-star" style="color:gold;"></i></label>`;
+            }
         }
-        
     });
 }
 
@@ -117,13 +128,11 @@ function handleEditButton() {
     const recipeNameElement = document.querySelector(`#recipe-name-${recipeId}`);
     const recipeDescriptionElement = document.querySelector(`#recipe-description-${recipeId}`);
     const recipeInstructionsElement = document.querySelector(`#recipe-instructions-${recipeId}`);
-    const recipeCuisineElement = document.querySelector(`#recipe-cuisine-${recipeId}`);
     const recipeContainer = document.querySelector(".recipe-container")
 
     const originalName = recipeNameElement.textContent.trim();
     const originalDescription = recipeDescriptionElement.textContent.trim();
     const originalInstructions = recipeInstructionsElement.textContent.trim();
-    const originalCuisine = recipeCuisineElement.textContent.trim();
 
     // Avoid re-editing if already in editing mode
     if (!recipeNameElement.querySelector("input")) { 

@@ -111,6 +111,9 @@ def index(request):
 # Buttons: Share via email, socials, and print-friendly version  
 def recipe(request, recipe_name):
     user = request.user
+    all_meal_types = MealType.objects.all()
+    all_cuisines = Cuisine.objects.all().order_by("name")
+    all_tags = Tag.objects.all().order_by("name")
     recipe = get_object_or_404(Recipe, name=recipe_name)
     
     # If user is logged-in, they can rate and favourite recipes
@@ -178,7 +181,10 @@ def recipe(request, recipe_name):
         "rating_form": rating_form,
         "favourite_form": favourite_form,
         "is_favourited": is_favourited,
-        "existing_rating": existing_rating
+        "existing_rating": existing_rating,
+        "all_cuisines": all_cuisines,
+        "all_tags": all_tags,
+        "all_meal_types": all_meal_types
     })
 
 
@@ -187,6 +193,9 @@ def recipe(request, recipe_name):
 # Displays add recipe form
 def add_recipe_view(request):
     user = request.user
+    all_meal_types = MealType.objects.all()
+    all_cuisines = Cuisine.objects.all().order_by("name")
+    all_tags = Tag.objects.all().order_by("name")
     
     if user.is_authenticated:
         if request.method == "POST":
@@ -257,6 +266,9 @@ def add_recipe_view(request):
             "user": user,
             "create_form": create_form,
             "formset": formset,
+            "all_cuisines": all_cuisines,
+            "all_tags": all_tags,
+            "all_meal_types": all_meal_types
         })
     else:
         return render(request, "access_denied.html")
@@ -267,7 +279,7 @@ def add_recipe_view(request):
 # * Edit recipe
 # Allow users to edit recipe name, description and instructions dynamically
 @login_required
-def edit_recipe(request, recipe_id):
+def edit_recipe(request, recipe_id):    
     if request.method == "POST":
         user = request.user
         recipe = get_object_or_404(Recipe, pk=recipe_id)
@@ -346,6 +358,9 @@ def delete_recipe(request, recipe_id):
 # Display favourited recipes
 def favourites_view(request):
     user = request.user
+    all_meal_types = MealType.objects.all()
+    all_cuisines = Cuisine.objects.all().order_by("name")
+    all_tags = Tag.objects.all().order_by("name")
     
     if user.is_authenticated:
         favourites = Recipe.objects.filter(favourites__user=user)
@@ -364,7 +379,10 @@ def favourites_view(request):
         return render(request, "favourites.html", {
             "user": user,
             "favourites": favourites,
-            "page_obj": page_obj
+            "page_obj": page_obj,
+            "all_cuisines": all_cuisines,
+            "all_tags": all_tags,
+            "all_meal_types": all_meal_types
         })
     
     else:
@@ -377,7 +395,7 @@ def favourites_view(request):
 # Sort recipes on index page
 def sort(request):
     user = request.user
-    form = RecipeFilterForm()
+    filter_form = RecipeFilterForm()
     sort_by = request.GET.get("sort_by", "")  # Default sorting
     
     if sort_by == "name_asc":
@@ -404,7 +422,7 @@ def sort(request):
     return render(request, "index.html", {
         "MEDIA_URL": settings.MEDIA_URL,
         "user": user,
-        "form": form,
+        "filter_form": filter_form,
         "recipes": recipes,
         "page_obj": page_obj
     })
@@ -416,8 +434,10 @@ def sort(request):
 # Return search results for query
 def search(request):
     user = request.user
+    all_meal_types = MealType.objects.all()
+    all_cuisines = Cuisine.objects.all().order_by("name")
+    all_tags = Tag.objects.all().order_by("name")
     recipes = Recipe.objects.all()
-    form = RecipeFilterForm()
     
     # Get query from search form
     query = request.GET.get("q", "").strip()
@@ -437,12 +457,15 @@ def search(request):
             return render(request, "no_results.html")
             
         # Else render index page with search results
-        return render(request, "index.html", {
+        return render(request, "search.html", {
             "MEDIA_URL": settings.MEDIA_URL,
             "user": user,
-            "form": form,
+            "query": query,
             "recipes": recipes,
-            "page_obj": page_obj
+            "page_obj": page_obj,
+            "all_cuisines": all_cuisines,
+            "all_tags": all_tags,
+            "all_meal_types": all_meal_types
         })
     # If query cannot be read, redirect to index
     else:     

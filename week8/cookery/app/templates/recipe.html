@@ -7,7 +7,7 @@
     <div class="container-fluid p-0">
         <div class="recipe-img-container p-5 text-left rounded-top" style="{% if recipe.image %}background-image: url('{{ recipe.image.url }}'){% else %}background-image: url('{% static 'images/default-img.jpg' %}') {% endif %}; background-size: cover; background-position: center;">
         </div>
-        <div class="container mt-5">
+        <div class="container mt-5 p-md-5">
             <!-- Display recipe name -->
             <h2 id="recipe-name-{{ recipe.id }}">{{ recipe.name }}</h2>
             <!-- Display recipe average rating -->
@@ -25,7 +25,7 @@
         </div>
     </div>
     {% endif %}
-    <div class="container p-5 no-print">
+    <div class="pt-5 pt-md-0 ps-md-5 pe-md-5 no-print container">
         <div class="d-flex flex-row align-items-start justify-content-between">
             <!-- Display django message if rating saved/failed -->
             {% if messages %}
@@ -114,7 +114,7 @@
             </div>
         </div>
     </div>
-    <div class="container p-5">
+    <div class="container pt-5 pt-md-0 ps-md-5 pe-md-5">
 
         <!-- Display recipe description -->
         <div class="mt-5 d-flex align-items-center justify-content-between">        
