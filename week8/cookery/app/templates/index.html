@@ -15,17 +15,17 @@
         <form method="get" action="{% url 'index' %}">
             {% csrf_token %}
             <h5>Filter and Sort</h5>
-            <p class="field-tags filter-field mb-3">
+            <p class="field-tags filter-field">
                 <label for="{{ form.tags.id_for_label }}">Tags:</label>
                 {{ filter_form.tags }}
             </p>
             
-            <p class="field-cuisine filter-field mb-3">
+            <p class="field-cuisine filter-field">
                 <label for="{{ form.cuisine.id_for_label }}">Cuisine:</label>
                 {{ filter_form.cuisine }}
             </p>
             
-            <p class="field-meal_type filter-field mb-3">
+            <p class="field-meal_type filter-field">
                 <label for="{{ form.meal_type.id_for_label }}">Meal Type:</label>
                 {{ filter_form.meal_type }}
             </p>

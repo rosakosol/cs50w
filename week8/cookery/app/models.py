@@ -65,7 +65,7 @@ class MealType(models.Model):
 class Recipe(models.Model):
     user = models.ForeignKey("auth.User", on_delete=models.CASCADE, default="")
     name = models.CharField(max_length=64, default="", unique=True)
-    cuisine = models.ForeignKey(Cuisine, on_delete=models.CASCADE, null=True, blank=True, related_name="recipes")
+    cuisine = models.ForeignKey(Cuisine, on_delete=models.CASCADE, related_name="recipes")
     ratings = models.ManyToManyField(Rating, related_name="recipes", blank=True)
     ingredients = models.ManyToManyField(RecipeIngredient,  related_name="recipes")
     description = models.TextField(default="")  
@@ -75,7 +75,7 @@ class Recipe(models.Model):
     prep_time = models.PositiveBigIntegerField(default=0)
     image = models.ImageField(upload_to="images/%d/%m/%y", default="images/default-img.jpg")    
     image_alt_text = models.CharField(max_length=64, blank=True) 
-    meal_type = models.ForeignKey(MealType, on_delete=models.CASCADE, related_name="recipes", null=True)
+    meal_type = models.ForeignKey(MealType, on_delete=models.CASCADE, related_name="recipes")
     created_at = models.DateTimeField(auto_now_add=True)
     tags = models.ManyToManyField(Tag, related_name="recipes")
     

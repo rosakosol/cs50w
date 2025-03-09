@@ -27,6 +27,10 @@ def index(request):
     form_type = request.GET.get("form_type")
     sort_form = SortForm(request.GET)
     
+    print(cuisines)
+    print(meal_types)
+ 
+    
     # If user accessing filter form on index page
     if form_type == "filter":
         # Filter form 

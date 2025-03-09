@@ -83,8 +83,15 @@ i {
 #id_tags {
   max-height: 200px;
   overflow-y: auto;
-  padding: 0 0.5rem;
-  margin: 1rem 0;
+  margin-bottom: 1rem;
+}
+
+#id_cuisine {
+  margin-bottom: 1rem;
+}
+
+#id_meal_type {
+  margin-bottom: 1rem;
 }
 
 .recipe-container {

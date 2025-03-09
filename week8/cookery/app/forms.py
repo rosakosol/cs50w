@@ -22,16 +22,14 @@ class CreateRecipeForm(forms.Form):
         widget=forms.TextInput(attrs={"placeholder": "Enter alt text for image"}),
         required=False
     )
-    meal_type = forms.ModelChoiceField(
+    meal_type = forms.ModelMultipleChoiceField(
         queryset=MealType.objects.all(),
-        empty_label="Select a category",
-        widget=forms.Select(attrs={"class": "form-control"}),
+        widget=forms.CheckboxSelectMultiple,
         required=True
     )
-    cuisine = forms.ModelChoiceField(
+    cuisine = forms.ModelMultipleChoiceField(
         queryset=Cuisine.objects.all(),
-        empty_label="Select a cuisine",
-        widget=forms.Select(attrs={"class": "form-control"}),
+        widget=forms.CheckboxSelectMultiple,
         required=True
     )
     description = forms.CharField(
@@ -108,8 +106,8 @@ class RecipeFilterForm(forms.ModelForm):
         fields = ["tags", "cuisine", "meal_type"]
         widgets = {
             "tags": forms.CheckboxSelectMultiple(),
-            "cuisine": forms.Select(attrs={"class": "form-select"}),
-            "meal_type": forms.Select(attrs={"class": "form-select"})
+            "cuisine": forms.CheckboxSelectMultiple(),
+            "meal_type": forms.CheckboxSelectMultiple()
         }
         
     # Initialise form so all fields are optional
@@ -122,14 +120,6 @@ class RecipeFilterForm(forms.ModelForm):
         # Sort display of tags and cuisines from a-z
         self.fields["tags"].queryset = Tag.objects.all().order_by("name")
         self.fields["cuisine"].queryset = Cuisine.objects.all().order_by("name")
-            
-        
-        # Change default choice with placeholder text
-        if self.fields["cuisine"].choices:
-            self.fields["cuisine"].choices = [("", "Select Cuisine")] + list(self.fields["cuisine"].choices)[1:]
-
-        if self.fields["meal_type"].choices:
-            self.fields["meal_type"].choices = [("", "Select Meal Type")] + list(self.fields["meal_type"].choices)[1:]
         
         
         
