@@ -21,8 +21,8 @@ import json
 def index(request):
     user = request.user
     meal_types = MealType.objects.all()
-    cuisines = Cuisine.objects.all()
-    tags = Tag.objects.all()
+    cuisines = Cuisine.objects.all().order_by("name")
+    tags = Tag.objects.all().order_by("name")
     recipes = Recipe.objects.all().order_by("-created_at")
     form_type = request.GET.get("form_type")
     sort_form = SortForm(request.GET)

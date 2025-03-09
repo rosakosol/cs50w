@@ -119,13 +119,17 @@ class RecipeFilterForm(forms.ModelForm):
         for field in self.fields.values():
             field.required = False
             
+        # Sort display of tags and cuisines from a-z
+        self.fields["tags"].queryset = Tag.objects.all().order_by("name")
+        self.fields["cuisine"].queryset = Cuisine.objects.all().order_by("name")
+            
         
         # Change default choice with placeholder text
-        if self.fields['cuisine'].choices:
-            self.fields['cuisine'].choices = [('', 'Select Cuisine')] + list(self.fields['cuisine'].choices)[1:]
+        if self.fields["cuisine"].choices:
+            self.fields["cuisine"].choices = [("", "Select Cuisine")] + list(self.fields["cuisine"].choices)[1:]
 
-        if self.fields['meal_type'].choices:
-            self.fields['meal_type'].choices = [('', 'Select Meal Type')] + list(self.fields['meal_type'].choices)[1:]
+        if self.fields["meal_type"].choices:
+            self.fields["meal_type"].choices = [("", "Select Meal Type")] + list(self.fields["meal_type"].choices)[1:]
         
         
         
