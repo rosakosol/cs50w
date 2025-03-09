@@ -11,11 +11,15 @@
             <!-- Display recipe average rating -->
             <p class="star-avg-rating mb-2" data-avg-rating="{{ recipe.average_rating }}">Average Rating: {{ recipe.average_rating }}</p>
             <!-- Display tags -->
-             {% for tag in tags %}
+             {% for tag in recipe.tags.all %}
                 <a href="{% url 'index' %}?tags={{ tag.name }}" class="btn btn-warning">{{ tag.name }}</a>
              {% endfor %}
-             <a id="recipe-cuisine-{{ recipe.id }}" href="{% url 'index' %}?cuisine={{ recipe.cuisine }}" class="btn btn-info">{{ recipe.cuisine }}</a>
-             <a id="recipe-mealtype-{{ recipe.id }}" href="{% url 'index' %}?meal_type={{ recipe.meal_type }}" class="btn btn-success">{{ recipe.meal_type }}</a>
+             {% for cuisine in recipe.cuisine.all %}
+                <a href="{% url 'index' %}?cuisine={{ cuisine.name }}" class="btn btn-info">{{ cuisine.name }}</a>
+            {% endfor %}
+            {% for meal_type in recipe.meal_type.all %}
+                <a href="{% url 'index' %}?meal_type={{ meal_type.name }}" class="btn btn-success">{{ meal_type.name }}</a>
+        {% endfor %}
         </div>
     </div>
     {% endif %}

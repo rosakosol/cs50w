@@ -22,7 +22,7 @@ class Unit(models.Model):
 class RecipeIngredient(models.Model):
     recipe = models.ForeignKey("Recipe", on_delete=models.CASCADE, related_name="recipe_ingredients", default="")
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE, default="")
-    quantity = models.IntegerField(default=1)
+    quantity = models.DecimalField(decimal_places=2, max_digits=6)
     unit = models.ForeignKey(Unit, on_delete=models.CASCADE, default="")
 
     def __str__(self):
@@ -112,8 +112,7 @@ class Recipe(models.Model):
         "@type": "Recipe",
         "author": f"{self.user.first_name} {self.user.last_name}",
         "name": self.name,
-        "recipeCuisine": self.cuisine.name,
-        # Ingredients
+        # "recipeCuisine": self.cuisine.name.split('\n'),
         "description": self.description,
         "recipeInstructions": self.instructions.split('\n'),  # assuming instructions are also stored this way
         "recipeYield": self.servings,

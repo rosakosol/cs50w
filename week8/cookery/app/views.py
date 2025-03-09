@@ -20,15 +20,12 @@ import json
 # Shows filter options and sort recipes
 def index(request):
     user = request.user
-    meal_types = MealType.objects.all()
-    cuisines = Cuisine.objects.all().order_by("name")
-    tags = Tag.objects.all().order_by("name")
+    all_meal_types = MealType.objects.all()
+    all_cuisines = Cuisine.objects.all().order_by("name")
+    all_tags = Tag.objects.all().order_by("name")
     recipes = Recipe.objects.all().order_by("-created_at")
     form_type = request.GET.get("form_type")
     sort_form = SortForm(request.GET)
-    
-    print(cuisines)
-    print(meal_types)
  
     
     # If user accessing filter form on index page
@@ -95,9 +92,9 @@ def index(request):
         "sort_form": sort_form,
         "recipes": recipes,
         "page_obj": page_obj,
-        "cuisines": cuisines,
-        "tags": tags,
-        "meal_types": meal_types
+        "all_cuisines": all_cuisines,
+        "all_tags": all_tags,
+        "all_meal_types": all_meal_types
     })
     
     
@@ -112,7 +109,6 @@ def index(request):
 def recipe(request, recipe_name):
     user = request.user
     recipe = get_object_or_404(Recipe, name=recipe_name)
-    tags = recipe.tags.all()
     
     # If user is logged-in, they can rate and favourite recipes
     if user.is_authenticated:
@@ -171,12 +167,11 @@ def recipe(request, recipe_name):
         rating_form = None
         favourite_form = None
         is_favourited = False
-
+    
     
     return render(request, "recipe.html", {
         "user": user,
         "recipe": recipe,
-        "tags": tags,
         "rating_form": rating_form,
         "favourite_form": favourite_form,
         "is_favourited": is_favourited,
@@ -208,16 +203,18 @@ def add_recipe_view(request):
                 prep_time = create_form.cleaned_data["prep_time"]
                 image = create_form.cleaned_data["image"]
                 image_alt_text = create_form.cleaned_data["image_alt_text"]
-                
                 meal_type = create_form.cleaned_data["meal_type"]
                 tags = create_form.cleaned_data["tags"]
+                
+                print(tags)
+                print(cuisine)
+                print(meal_type)
 
 
                 # Create a new Recipe instance
                 recipe = Recipe.objects.create(
                     user=user,
                     name=name,
-                    cuisine=cuisine,
                     description=description,
                     instructions=instructions,
                     servings=servings,
@@ -225,12 +222,15 @@ def add_recipe_view(request):
                     prep_time=prep_time,
                     image=image,
                     image_alt_text=image_alt_text,
-                    meal_type=meal_type,
                 )        
                 
                 schema = recipe.generate_schema()
                 recipe.schema = schema
+                
                 recipe.tags.set(tags)
+                recipe.cuisine.set(cuisine)
+                recipe.meal_type.set(meal_type)
+                
                 recipe.save()
                 
                 for form in formset:

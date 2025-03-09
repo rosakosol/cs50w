@@ -147,13 +147,13 @@
                 <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Most Popular Recipes</a></li>
                 <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Seasonal Recipes</a></li>
                 <h6>Meal Type</h6>
-                {% for meal_type in meal_types %}
+                {% for meal_type in all_meal_types %}
                   <li class="nav-item mb-2"><a href="{% url 'index' %}?meal_type={{ meal_type.name }}" class="nav-link p-0 text-body-secondary">{{ meal_type }}</a></li>
                 {% endfor %}
               </ul>
               <ul class="nav flex-column">
                 <h6>Cuisine</h6>
-                {% for cuisine in cuisines %}
+                {% for cuisine in all_cuisines %}
                   <li class="nav-item mb-2"><a href="{% url 'index' %}?cuisine={{ cuisine.name }}" class="nav-link p-0 text-body-secondary">{{ cuisine.name }}</a></li>
                 {% endfor %}
               </ul>
@@ -162,7 +162,7 @@
           <div class="col-sm-12 col-md-6 mb-3">
               <ul class="nav flex-column">
                 <h6>Tags</h6>
-                {% for tag in tags %}
+                {% for tag in all_tags %}
                   <li class="nav-item mb-2"><a href="{% url 'index' %}?tags={{ tag.name }}" class="nav-link p-0 text-body-secondary">{{ tag.name }}</a></li>
                 {% endfor %}
               </ul>

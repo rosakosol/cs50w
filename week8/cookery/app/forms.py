@@ -90,8 +90,8 @@ class RecipeIngredientForm(forms.ModelForm):
         queryset=Ingredient.objects.all(),
         required=True
     )    
-    quantity = forms.IntegerField(
-        min_value=1,
+    quantity = forms.DecimalField(
+        min_value=0,
         max_value=1000,
         required=True
     )
