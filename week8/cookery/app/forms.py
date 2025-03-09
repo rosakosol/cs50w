@@ -71,6 +71,14 @@ class CreateRecipeForm(forms.Form):
             raise forms.ValidationError("A recipe with this name already exists.")
         return name
     
+        # Initialise form so all fields are optional
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+            
+        # Sort display of tags and cuisines from a-z
+        self.fields["tags"].queryset = Tag.objects.all().order_by("name")
+        self.fields["cuisine"].queryset = Cuisine.objects.all().order_by("name")
+    
 class RecipeIngredientForm(forms.ModelForm):
     ingredient = forms.ModelChoiceField(
         queryset=Ingredient.objects.all(),

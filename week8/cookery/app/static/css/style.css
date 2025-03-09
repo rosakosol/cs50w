@@ -87,6 +87,8 @@ i {
 }
 
 #id_cuisine {
+  max-height: 200px;
+  overflow-y: auto;
   margin-bottom: 1rem;
 }
 
