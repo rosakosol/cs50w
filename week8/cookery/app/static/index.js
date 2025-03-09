@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
     starRating();
     fadeMessage();
+    showFilterForm();
     averageRating();
     existingRating();
     initEditButton();
@@ -48,6 +49,22 @@ function fadeMessage() {
 
         }, 3000); // Wait 3 seconds before hiding the alert
     }
+}
+
+function showFilterForm() {
+    const filterForm = document.querySelector(".filter-content")
+    const filterButton = document.querySelector(".filter-btn")
+
+    filterButton.addEventListener("click", function() {
+        if (filterForm.style.display === "none") {
+            filterForm.style.display = "block"
+            filterButton.innerHTML = `<i class="bi bi-funnel-fill"></i>`
+        } else {
+            filterForm.style.display = "none"
+            filterButton.innerHTML = `<i class="bi bi-funnel"></i>`
+        }
+    })
+
 }
 
 
