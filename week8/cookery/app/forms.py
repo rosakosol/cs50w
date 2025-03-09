@@ -108,6 +108,8 @@ class RecipeFilterForm(forms.ModelForm):
         fields = ["tags", "cuisine", "meal_type"]
         widgets = {
             "tags": forms.CheckboxSelectMultiple(),
+            "cuisine": forms.Select(attrs={"class": "form-select"}),
+            "meal_type": forms.Select(attrs={"class": "form-select"})
         }
         
     # Initialise form so all fields are optional
@@ -116,6 +118,14 @@ class RecipeFilterForm(forms.ModelForm):
 
         for field in self.fields.values():
             field.required = False
+            
+        
+        # Change default choice with placeholder text
+        if self.fields['cuisine'].choices:
+            self.fields['cuisine'].choices = [('', 'Select Cuisine')] + list(self.fields['cuisine'].choices)[1:]
+
+        if self.fields['meal_type'].choices:
+            self.fields['meal_type'].choices = [('', 'Select Meal Type')] + list(self.fields['meal_type'].choices)[1:]
         
         
         
@@ -128,7 +138,13 @@ class SortForm(forms.Form):
         ("created_at", "Oldest to Newest"),
     ]
     
-    sort_by = forms.ChoiceField(choices=SORT_CHOICES, required=False)
+    sort_by = forms.ChoiceField(
+        choices=SORT_CHOICES, 
+        widget=forms.Select(attrs={"class": "form-select"}),
+        required=False
+    )
+    
+    
     
 class FavouriteForm(forms.Form):
     recipe_id = forms.IntegerField(widget=forms.HiddenInput())

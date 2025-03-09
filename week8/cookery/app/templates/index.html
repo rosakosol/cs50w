@@ -4,16 +4,22 @@
 {% block body %}
 
 <div class="container mt-5">
-    <h2>Home</h2>
+    <div class="container text-center mb-5">
+        <h2>Welcome to Cookery</h2>
+        <h3>Find inspiration for your next meal</h3>
+    </div>
+
 
     <!-- Filter and sort form -->
-    <form method="get" action="{% url 'index' %}">
-        {% csrf_token %}
-        {{ filter_form.as_p }}
-        {{ sort_form.as_p }}
-        <button type="submit" name="form_type" value="filter" class="btn btn-primary">Filter Recipes</button>
-    </form>
-
+    <div class="container filter-container p-3 mb-5 rounded">
+        <form method="get" action="{% url 'index' %}">
+            {% csrf_token %}
+            <h5>Filter and Sort</h5>
+            {{ filter_form.as_p }}
+            {{ sort_form.as_p }}
+            <button type="submit" name="form_type" value="filter" class="btn btn-primary mt-3">Search Recipes</button>
+        </form>
+    </div>
 
     <!-- Row to display recipes in 3-column grid -->
     <div class="row">
