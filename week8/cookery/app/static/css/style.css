@@ -144,6 +144,10 @@ textarea {
     height: 500px;
   }
 }
+textarea {
+  height: 500px;
+}
+
 .star-rating input[type=radio] {
   display: none;
 }
