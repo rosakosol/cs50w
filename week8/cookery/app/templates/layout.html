@@ -18,11 +18,11 @@
       <a class="navbar-brand" href="{% url 'index' %}">
         <img src="{% static 'images/logo.png' %}" alt="Cookery Logo" class="p-2 mt-2">
       </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarScroll">
-        <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+      <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav me-auto my-2 my-lg-0">
           <li class="nav-item p-md-3">
               <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'index' %}">All Recipes</a>
           </li>
