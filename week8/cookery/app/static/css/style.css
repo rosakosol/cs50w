@@ -68,11 +68,13 @@ textarea {
   .navbar {
     height: 100px;
   }
+  .navbar li {
+    font-size: 14px;
+  }
 }
 .dropdown-menu {
   display: flex;
   flex-wrap: wrap;
-  padding: 20px;
   background-color: #f8f9fa;
 }
 
@@ -82,6 +84,14 @@ textarea {
 
 .search-bar {
   max-width: 300px;
+}
+
+input::-moz-placeholder {
+  font-size: 14px;
+}
+
+input::placeholder {
+  font-size: 14px;
 }
 
 @media (max-width: 768px) {

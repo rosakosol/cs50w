@@ -30,9 +30,9 @@
             <a class="nav-link dropdown-toggle {% if request.path == '/' %}active{% endif %}" href="{% url 'index' %}" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 View Recipes By
             </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <div class="dropdown-menu p-3" aria-labelledby="navbarDropdown">
               <div class="p-md-3">
-                <h5>Healthy</h5>
+                <strong>Healthy</strong>
                 <ul class="list-unstyled">
                   <li><a class="dropdown-item" href="#">Vegan/Vegetarian</a></li>
                   <li><a class="dropdown-item" href="#">Gluten-Free</a></li>
@@ -40,7 +40,7 @@
                 </ul>
               </div>
               <div class="p-md-3">
-                <h5>Easy</h5>
+                <strong>Healthy</strong>
                 <ul class="list-unstyled">
                   <li><a class="dropdown-item" href="#">One Pan Meals</a></li>
                   <li><a class="dropdown-item" href="#">15min Recipes</a></li>
@@ -48,7 +48,7 @@
                 </ul>
               </div>
               <div class="p-md-3">
-                <h5>Meal Prep</h5>
+                <strong>Healthy</strong>
                 <ul class="list-unstyled">
                   <li><a class="dropdown-item" href="#">Low Calorie</a></li>
                   <li><a class="dropdown-item" href="#">Salads</a></li>
@@ -77,10 +77,8 @@
         </ul>
 
         <!-- Searchbar-->
-        <form class="d-flex" role="search">
-          <form action="{% url 'search' %}" method="get" class="d-flex">
+          <form action="{% url 'search' %}" method="get" class="d-flex search-form" role="search">
             <input type="text" class="form-control search-bar me-2" name="q" placeholder="Search">
-            <button class="btn btn-outline-success" type="submit">Search</button>
         </form>
 
 
