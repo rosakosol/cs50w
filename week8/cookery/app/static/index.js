@@ -129,7 +129,7 @@ function existingRating() {
 // Initialise edit button on author posts
 function initEditButton() {
     // Function to edit posts
-    const editButton = document.querySelector(".edit-btn");
+    const editButton = document.querySelector(".edit-btn")
 
     if (editButton) {
         editButton.addEventListener("click", handleEditButton); 
@@ -137,27 +137,69 @@ function initEditButton() {
 
 }
 
+
 // Function to handle edit button click and create text area, save button
 function handleEditButton() {
     const recipeId = this.dataset.recipeId; 
 
     // Select the elements for name, description, and instructions
-    const recipeNameElement = document.querySelector(`#recipe-name-${recipeId}`);
-    const recipeDescriptionElement = document.querySelector(`#recipe-description-${recipeId}`);
-    const recipeInstructionsElement = document.querySelector(`#recipe-instructions-${recipeId}`);
-    const recipeContainer = document.querySelector(".recipe-container")
+    var recipeNameElement = document.querySelector(`#recipe-name-${recipeId}`);
+    var recipeDescriptionElement = document.querySelector(`#recipe-description-${recipeId}`);
+    var recipeInstructionsElement = document.querySelector(`#recipe-instructions-${recipeId}`);
+    var recipeContentContainer = document.querySelector(".recipe-content-container");
 
-    const originalName = recipeNameElement.textContent.trim();
-    const originalDescription = recipeDescriptionElement.textContent.trim();
-    const originalInstructions = recipeInstructionsElement.textContent.trim();
+    var originalName = recipeNameElement.textContent.trim();
+    var originalDescription = recipeDescriptionElement.innerHTML.trim();
+    var originalInstructions = recipeInstructionsElement.innerHTML.trim(); 
 
     // Avoid re-editing if already in editing mode
     if (!recipeNameElement.querySelector("input")) { 
-
+        
         // Replace content with input fields for editing
         recipeNameElement.innerHTML = `<input type="text" value="${originalName}">`;
-        recipeDescriptionElement.innerHTML = `<textarea>${originalDescription}</textarea>`;
-        recipeInstructionsElement.innerHTML = `<textarea>${originalInstructions}</textarea>`;
+        recipeDescriptionElement.innerHTML = `<div id="description-editor"></div>`;
+        recipeInstructionsElement.innerHTML = `<div id="instructions-editor"></div>`;
+
+        // Initialize Quill text editors
+        let quill1 = new Quill('#description-editor', {
+            theme: 'snow',
+            modules: {
+                toolbar: [
+                    [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
+                    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                    [{ 'align': [] }],
+                    ['bold', 'italic', 'underline'],
+                    ['link'],
+                    ['blockquote'],
+                    [{ 'color': [] }, { 'background': [] }],
+                    [{ 'script': 'sub' }, { 'script': 'super' }],
+                    ['image', 'video'],
+                    ['clean']
+                ]
+            }
+        });
+
+        let quill2 = new Quill('#instructions-editor', {
+            theme: 'snow',
+            modules: {
+                toolbar: [
+                    [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
+                    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                    [{ 'align': [] }],
+                    ['bold', 'italic', 'underline'],
+                    ['link'],
+                    ['blockquote'],
+                    [{ 'color': [] }, { 'background': [] }],
+                    [{ 'script': 'sub' }, { 'script': 'super' }],
+                    ['image', 'video'],
+                    ['clean']
+                ]
+            }
+        });
+
+        console.log(originalDescription);
+        quill1.clipboard.dangerouslyPasteHTML(originalDescription);
+        
 
         // Create the save button
         const saveButton = document.createElement("button");
@@ -165,13 +207,15 @@ function handleEditButton() {
         saveButton.classList.add("btn", "btn-success");
 
         // Add button to recipe container
-        recipeContainer.appendChild(saveButton);
+        recipeContentContainer.appendChild(saveButton);
 
         // Handle saving the updated post
         saveButton.addEventListener("click", function() {
-            const updatedName = recipeNameElement.querySelector("input").value;
-            const updatedDescription = recipeDescriptionElement.querySelector("textarea").value;
-            const updatedInstructions = recipeInstructionsElement.querySelector("textarea").value;
+            var updatedName = recipeNameElement.querySelector("input").value;
+
+            // Get the HTML content from the Quill editor
+            var updatedDescription = quill1.root.innerHTML
+            var updatedInstructions = quill2.root.innerHTML
 
             // Send data to the backend
             fetch(`/edit_recipe/${recipeId}/`, {
@@ -188,11 +232,14 @@ function handleEditButton() {
             })
             .then(response => response.json())
             .then(data => {
+                console.log(data)
                 if (data.success) {
-                    // Update the content in the recipe
+                    // Update the content in the recipe 
                     recipeNameElement.innerHTML = `<h2>${data.updated_name}</h2>`;
-                    recipeDescriptionElement.innerHTML = `<p>${data.updated_description}</p>`;
-                    recipeInstructionsElement.innerHTML = `<p>${data.updated_instructions}</p>`;
+                    recipeDescriptionElement.innerHTML = data.updated_description;
+                    recipeInstructionsElement.innerHTML = data.updated_instructions;
+
+                    console.log("Description" + data.updated_description)
 
                     // Remove the save button after saving
                     saveButton.remove();
@@ -207,6 +254,7 @@ function handleEditButton() {
         });
     }
 }
+
 
 // Initialise the delete button click event
 function initDeleteButton() {

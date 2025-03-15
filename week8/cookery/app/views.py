@@ -217,10 +217,6 @@ def add_recipe_view(request):
                 image_alt_text = create_form.cleaned_data["image_alt_text"]
                 meal_type = create_form.cleaned_data["meal_type"]
                 tags = create_form.cleaned_data["tags"]
-                
-                print(tags)
-                print(cuisine)
-                print(meal_type)
 
 
                 # Create a new Recipe instance
@@ -291,7 +287,6 @@ def edit_recipe(request, recipe_id):
         try:
             # Parse the JSON data from the request body
             data = json.loads(request.body)
-            print(data)
             new_name = data.get("name", recipe.name)  # Default to current name if not provided
             new_description = data.get("description", recipe.description)  # Default to current description if not provided
             new_instructions = data.get("instructions", recipe.instructions)  # Default to current instructions if not provided
@@ -299,15 +294,11 @@ def edit_recipe(request, recipe_id):
             # Update the recipe fields
             recipe.name = new_name
             recipe.description = new_description
-            recipe.instructions = new_instructions 
-            
-            cuisine_id = data.get("cuisine")
-            
-            if cuisine_id:
-                recipe.cuisine = get_object_or_404(Cuisine, id=cuisine_id)
+            recipe.instructions = new_instructions
             
             # Save the updated recipe
             recipe.save()
+            
             
             # Return a JSON response with success and updated data
             return JsonResponse({
@@ -315,7 +306,6 @@ def edit_recipe(request, recipe_id):
                 "updated_name": recipe.name,
                 "updated_description": recipe.description,
                 "updated_instructions": recipe.instructions,
-                "updated_cuisine": recipe.cuisine.name
             })
         except json.JSONDecodeError:
             return JsonResponse({
@@ -386,7 +376,11 @@ def favourites_view(request):
         })
     
     else:
-        return render(request, "access_denied.html")
+        return render(request, "access_denied.html", {
+            "all_cuisines": all_cuisines,
+            "all_tags": all_tags,
+            "all_meal_types": all_meal_types,
+        })
        
         
     
