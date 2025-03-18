@@ -389,6 +389,9 @@ def favourites_view(request):
 # Sort recipes on index page
 def sort(request):
     user = request.user
+    all_meal_types = MealType.objects.all()
+    all_cuisines = Cuisine.objects.all().order_by("name")
+    all_tags = Tag.objects.all().order_by("name")
     filter_form = RecipeFilterForm()
     sort_by = request.GET.get("sort_by", "")  # Default sorting
     
@@ -410,7 +413,11 @@ def sort(request):
         # If no recipes, paginator is none and return no results page
     else:
         page_obj = None
-        return render(request, "no_results.html")
+        return render(request, "no_results.html", {
+            "all_cuisines": all_cuisines,
+            "all_tags": all_tags,
+            "all_meal_types": all_meal_types
+        })
         
     # Else render index page with search results
     return render(request, "index.html", {
@@ -448,7 +455,11 @@ def search(request):
             # If no recipes, paginator is none and return no results page
         else:
             page_obj = None
-            return render(request, "no_results.html")
+            return render(request, "no_results.html", {
+                "all_cuisines": all_cuisines,
+                "all_tags": all_tags,
+                "all_meal_types": all_meal_types 
+            })
             
         # Else render index page with search results
         return render(request, "search.html", {
