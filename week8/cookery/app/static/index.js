@@ -149,19 +149,15 @@ function handleEditButton() {
     var recipeContentContainer = document.querySelector(".recipe-content-container");
 
     var originalName = recipeNameElement.textContent.trim();
-    var originalDescription = recipeDescriptionElement.innerHTML.trim();
-    var originalInstructions = recipeInstructionsElement.innerHTML.trim(); 
 
     // Avoid re-editing if already in editing mode
     if (!recipeNameElement.querySelector("input")) { 
         
         // Replace content with input fields for editing
         recipeNameElement.innerHTML = `<input type="text" value="${originalName}">`;
-        recipeDescriptionElement.innerHTML = `<div id="description-editor"></div>`;
-        recipeInstructionsElement.innerHTML = `<div id="instructions-editor"></div>`;
 
         // Initialize Quill text editors
-        let quill1 = new Quill('#description-editor', {
+        let quill1 = new Quill('.description-editor', {
             theme: 'snow',
             modules: {
                 toolbar: [
@@ -179,7 +175,7 @@ function handleEditButton() {
             }
         });
 
-        let quill2 = new Quill('#instructions-editor', {
+        let quill2 = new Quill('.instructions-editor', {
             theme: 'snow',
             modules: {
                 toolbar: [
@@ -196,9 +192,6 @@ function handleEditButton() {
                 ]
             }
         });
-
-        console.log(originalDescription);
-        quill1.clipboard.dangerouslyPasteHTML(originalDescription);
         
 
         // Create the save button
@@ -232,14 +225,11 @@ function handleEditButton() {
             })
             .then(response => response.json())
             .then(data => {
-                console.log(data)
                 if (data.success) {
                     // Update the content in the recipe 
                     recipeNameElement.innerHTML = `<h2>${data.updated_name}</h2>`;
                     recipeDescriptionElement.innerHTML = data.updated_description;
                     recipeInstructionsElement.innerHTML = data.updated_instructions;
-
-                    console.log("Description" + data.updated_description)
 
                     // Remove the save button after saving
                     saveButton.remove();

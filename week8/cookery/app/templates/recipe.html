@@ -121,7 +121,7 @@
     
     <div class="container recipe-content-container pt-5 pt-md-0 ps-md-5 pe-md-5 pb-5">
         <!-- Display recipe description -->
-        <div>        
+        <div class="description-editor">        
             <p id="recipe-description-{{ recipe.id }}">
                 {{ recipe.description | safe }}
             </p>
@@ -141,9 +141,11 @@
         <div class="mt-5">
             <!-- Display recipe instructions -->
             <h3>Instructions</h3>
-            <p id="recipe-instructions-{{ recipe.id }}">
-                {{ recipe.instructions | safe }}
-            </p>
+            <div class="instructions-editor">
+                <p id="recipe-instructions-{{ recipe.id }}" >
+                    {{ recipe.instructions | safe }}
+                </p>
+            </div>
         </div>
     </div>
 </div>
