@@ -45,33 +45,48 @@
                 {% endfor %}
             {% endif %}
 
-            <!-- Display star rating container if logged in -->
-            {% if user.is_authenticated %}
-            <div class="star-rating-container d-flex me-3">
-                <form class="star-rating-form" method="post">
-                    {% csrf_token %}
-                    <!-- Render the 'value' field -->
-                    <div class="form-group">
-                        <div class="star-rating mb-2">
-                            <!-- Star Rating Form -->
-                            {% for choice in rating_form.value.field.choices %}
-                                <input type="radio" id="rating_{{ choice.0 }}" name="{{ rating_form.value.name }}" value="{{ choice.0 }}" class="star-rating-input">
-                                <label for="rating_{{ choice.0 }}" class="star-rating-label">
-                                    <i class="bi bi-star-fill"></i>
-                                </label>
-                            {% endfor %}
+            <div class="d-flex">
+                <!-- Display star rating container if logged in -->
+                {% if user.is_authenticated %}
+                <div class="star-rating-container d-flex me-3">
+                    <form class="star-rating-form" method="post">
+                        {% csrf_token %}
+                        <!-- Render the 'value' field -->
+                        <div class="form-group m-0">
+                            <div class="star-rating mb-2">
+                                <!-- Star Rating Form -->
+                                {% for choice in rating_form.value.field.choices %}
+                                    <input type="radio" id="rating_{{ choice.0 }}" name="{{ rating_form.value.name }}" value="{{ choice.0 }}" class="star-rating-input">
+                                    <label for="rating_{{ choice.0 }}" class="star-rating-label">
+                                        <i class="bi bi-star-fill"></i>
+                                    </label>
+                                {% endfor %}
+                            </div>
                         </div>
-                    </div>
-                    <button class="btn btn-primary rating-btn" name="form_type" value="rating" type="submit">{% if existing_rating %}Update Rating{% else %}Submit Rating{% endif %}</button>
-                </form>
-            </div>
+                        <button class="btn btn-primary rating-btn" name="form_type" value="rating" type="submit">{% if existing_rating %}Update Rating{% else %}Submit Rating{% endif %}</button>
+                    </form>
+                </div>
 
-            <!-- Display servings, cook time and prep time-->
-            <div class="d-flex w-25">
-                <img src="{% static 'images/servings.png' %}" class="recipe-icons">
-                <img src="{% static 'images/prep-time.png' %}" class="recipe-icons">
-                <img src="{% static 'images/cook-time.png' %}" class="recipe-icons">
-                
+                <!-- Display servings, cook time and prep time-->
+                <div class="d-flex">
+                    <div class="me-4">
+                        <small>Servings</small>
+                        <img src="{% static 'images/servings.png' %}" class="recipe-icons">
+                        <small>{{ recipe.servings }}</small>
+                    </div>
+
+                    <div class="me-4">
+                        <small>Prep Time</small>
+                        <img src="{% static 'images/prep-time.png' %}" class="recipe-icons">
+                        <small>{{ recipe.prep_time }} mins</small>
+                    </div>
+
+                    <div>
+                        <small>Cooking Time</small>
+                        <img src="{% static 'images/cook-time.png' %}" class="recipe-icons">
+                        <small>{{ recipe.cook_time }} mins</small>
+                    </div>
+                </div>
             </div>
 
             {% endif %}
@@ -134,7 +149,7 @@
         </div>
 
         <!-- Display recipe description -->
-        <div id="recipe-description-{{ recipe.id }}" data-recipe-description="{{ recipe.description | escapejs }}">
+        <div id="recipe-description-{{ recipe.id }}" data-recipe-description="{{ recipe.description }}">
             {{ recipe.description | safe }}
         </div>
 
@@ -155,7 +170,7 @@
             <div id="instructions-editor">
             </div>
 
-            <div id="recipe-instructions-{{ recipe.id }}" data-recipe-instructions="{{ recipe.instructions | escapejs }}">
+            <div id="recipe-instructions-{{ recipe.id }}" data-recipe-instructions="{{ recipe.instructions }}">
                 {{ recipe.instructions | safe }}
             </div>
         </div>
