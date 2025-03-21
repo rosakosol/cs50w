@@ -120,11 +120,13 @@
 
     
     <div class="container recipe-content-container pt-5 pt-md-0 ps-md-5 pe-md-5 pb-5">
+        <!-- Quill text editor for description -->
+        <div id="description-editor">        
+        </div>
+
         <!-- Display recipe description -->
-        <div class="description-editor">        
-            <p id="recipe-description-{{ recipe.id }}">
-                {{ recipe.description | safe }}
-            </p>
+        <div id="recipe-description-{{ recipe.id }}" data-recipe-description="{{ recipe.description | safe }}">
+            {{ recipe.description | safe }}
         </div>
 
         <div class="mt-5">
@@ -141,10 +143,11 @@
         <div class="mt-5">
             <!-- Display recipe instructions -->
             <h3>Instructions</h3>
-            <div class="instructions-editor">
-                <p id="recipe-instructions-{{ recipe.id }}" >
-                    {{ recipe.instructions | safe }}
-                </p>
+            <div id="instructions-editor">
+            </div>
+
+            <div id="recipe-instructions-{{ recipe.id }}" data-recipe-instructions="{{ recipe.instructions | safe }}">
+                {{ recipe.instructions | safe }}
             </div>
         </div>
     </div>

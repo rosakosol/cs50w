@@ -287,8 +287,8 @@ def edit_recipe(request, recipe_id):
         try:
             # Parse the JSON data from the request body
             data = json.loads(request.body)
-            new_name = data.get("name", recipe.name)  # Default to current name if not provided
-            new_description = data.get("description", recipe.description)  # Default to current description if not provided
+            new_name = data.get("name", recipe.name)
+            new_description = data.get("description", recipe.description)
             new_instructions = data.get("instructions", recipe.instructions)  # Default to current instructions if not provided
             
             # Update the recipe fields

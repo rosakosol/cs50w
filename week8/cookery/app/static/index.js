@@ -144,56 +144,75 @@ function handleEditButton() {
 
     // Select the elements for name, description, and instructions
     var recipeNameElement = document.querySelector(`#recipe-name-${recipeId}`);
+    var originalName = recipeNameElement.textContent.trim();
+
     var recipeDescriptionElement = document.querySelector(`#recipe-description-${recipeId}`);
+    var originalDescription = recipeDescriptionElement.getAttribute("data-recipe-description");
+
     var recipeInstructionsElement = document.querySelector(`#recipe-instructions-${recipeId}`);
+    var originalInstructions = recipeInstructionsElement.getAttribute("data-recipe-instructions");
+
+    // Get recipe container to append/remove Save button
     var recipeContentContainer = document.querySelector(".recipe-content-container");
 
-    var originalName = recipeNameElement.textContent.trim();
+    // Initialize Quill text editors
+    let quill1 = new Quill('#description-editor', {
+        theme: 'snow',
+        modules: {
+            toolbar: [
+                [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
+                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                [{ 'align': [] }],
+                ['bold', 'italic', 'underline'],
+                ['link'],
+                ['blockquote'],
+                [{ 'color': [] }, { 'background': [] }],
+                [{ 'script': 'sub' }, { 'script': 'super' }],
+                ['image', 'video'],
+                ['clean']
+            ]
+        }
+    });
+
+    let quill2 = new Quill('#instructions-editor', {
+        theme: 'snow',
+        modules: {
+            toolbar: [
+                [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
+                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                [{ 'align': [] }],
+                ['bold', 'italic', 'underline'],
+                ['link'],
+                ['blockquote'],
+                [{ 'color': [] }, { 'background': [] }],
+                [{ 'script': 'sub' }, { 'script': 'super' }],
+                ['image', 'video'],
+                ['clean']
+            ]
+        }
+    });
+
+    const toolbars = document.querySelectorAll(".ql-toolbar");
+    const editors = document.querySelectorAll(".ql-container");
 
     // Avoid re-editing if already in editing mode
     if (!recipeNameElement.querySelector("input")) { 
-        
+        // Ensure Quill editors are visible
+        editors.forEach((editor) => {
+            editor.style.display = "block";
+        })
+
+        // Hide original recipe description div once in editing mode
+        recipeDescriptionElement.style.display = "none";
+        recipeInstructionsElement.style.display = "none";
+
         // Replace content with input fields for editing
         recipeNameElement.innerHTML = `<input type="text" value="${originalName}">`;
 
-        // Initialize Quill text editors
-        let quill1 = new Quill('.description-editor', {
-            theme: 'snow',
-            modules: {
-                toolbar: [
-                    [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
-                    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                    [{ 'align': [] }],
-                    ['bold', 'italic', 'underline'],
-                    ['link'],
-                    ['blockquote'],
-                    [{ 'color': [] }, { 'background': [] }],
-                    [{ 'script': 'sub' }, { 'script': 'super' }],
-                    ['image', 'video'],
-                    ['clean']
-                ]
-            }
-        });
-
-        let quill2 = new Quill('.instructions-editor', {
-            theme: 'snow',
-            modules: {
-                toolbar: [
-                    [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
-                    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                    [{ 'align': [] }],
-                    ['bold', 'italic', 'underline'],
-                    ['link'],
-                    ['blockquote'],
-                    [{ 'color': [] }, { 'background': [] }],
-                    [{ 'script': 'sub' }, { 'script': 'super' }],
-                    ['image', 'video'],
-                    ['clean']
-                ]
-            }
-        });
+        // Place original description in text editor
+        quill1.root.innerHTML = originalDescription;
+        quill2.root.innerHTML = originalInstructions;
         
-
         // Create the save button
         const saveButton = document.createElement("button");
         saveButton.textContent = "Save";
@@ -220,7 +239,7 @@ function handleEditButton() {
                 body: JSON.stringify({
                     name: updatedName,
                     description: updatedDescription,
-                    instructions: updatedInstructions
+                    instructions: updatedInstructions,
                 })
             })
             .then(response => response.json())
@@ -228,8 +247,22 @@ function handleEditButton() {
                 if (data.success) {
                     // Update the content in the recipe 
                     recipeNameElement.innerHTML = `<h2>${data.updated_name}</h2>`;
+
+                    // Hide all Quill editors
+                    toolbars.forEach((toolbar) => {
+                        toolbar.style.display = "none";
+                    })
+
+                    editors.forEach((editor) => {
+                        editor.style.display = "none";
+                    })
+
+                    // Restore updated content
                     recipeDescriptionElement.innerHTML = data.updated_description;
+                    recipeDescriptionElement.style.display = "block";
+
                     recipeInstructionsElement.innerHTML = data.updated_instructions;
+                    recipeInstructionsElement.style.display = "block";
 
                     // Remove the save button after saving
                     saveButton.remove();
