@@ -125,7 +125,7 @@
         </div>
 
         <!-- Display recipe description -->
-        <div id="recipe-description-{{ recipe.id }}" data-recipe-description="{{ recipe.description | safe }}">
+        <div id="recipe-description-{{ recipe.id }}" data-recipe-description="{{ recipe.description | escapejs }}">
             {{ recipe.description | safe }}
         </div>
 
@@ -146,7 +146,7 @@
             <div id="instructions-editor">
             </div>
 
-            <div id="recipe-instructions-{{ recipe.id }}" data-recipe-instructions="{{ recipe.instructions | safe }}">
+            <div id="recipe-instructions-{{ recipe.id }}" data-recipe-instructions="{{ recipe.instructions | escapejs }}">
                 {{ recipe.instructions | safe }}
             </div>
         </div>
