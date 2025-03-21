@@ -177,6 +177,10 @@ textarea {
   color: gold;
 }
 
+.recipe-icons {
+  width: 25px;
+}
+
 .alert {
   position: absolute !important;
   top: 200px;

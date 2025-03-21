@@ -352,24 +352,66 @@ def favourites_view(request):
     all_meal_types = MealType.objects.all()
     all_cuisines = Cuisine.objects.all().order_by("name")
     all_tags = Tag.objects.all().order_by("name")
+    form_type = request.GET.get("form_type")
+    sort_form = SortForm(request.GET)
+ 
     
     if user.is_authenticated:
-        favourites = Recipe.objects.filter(favourites__user=user)
+        recipes = Recipe.objects.filter(favourites__user=user)
+        
+        # If user accessing filter form 
+        if form_type == "filter":
+            # Filter form 
+            filter_form = RecipeFilterForm(request.GET)
+
+            # If the form is valid, filter the recipes
+            if filter_form.is_valid():
+                # Dictionary for filters
+                filter_data = {
+                    "tags__in": filter_form.cleaned_data.get("tags"),
+                    "cuisine__in": filter_form.cleaned_data.get("cuisine"),
+                    "meal_type__in": filter_form.cleaned_data.get("meal_type")
+                }
+                
+                # Loop through filtered data and return recipes
+                for field, value in filter_data.items():
+                    if value:
+                        recipes = recipes.filter(**{field: value})
+                        
+                # Make sure the result is distinct with no dupe recipes
+                recipes = recipes.distinct()
+                
+        else:
+            filter_form = RecipeFilterForm()
+
+        
+        if sort_form.is_valid():
+            sort_by = sort_form.cleaned_data.get("sort_by")
+            if sort_by == "name_asc":
+                recipes = recipes.order_by("name")
+            elif sort_by == "name_desc":
+                recipes = recipes.order_by("-name")
+            elif sort_by == "oldest":
+                recipes = recipes.order_by("created_at")
+            elif sort_by == "newest":
+                recipes = recipes.order_by("-created_at")
 
         # If there are any recipes, paginate
-        if favourites:
-            paginator = Paginator(favourites, 6)
+        if recipes:
+            paginator = Paginator(recipes, 6)
             page_number = request.GET.get("page", 1)
             page_obj = paginator.get_page(page_number)
             
         # If no recipes, paginator is none
         else:
-            favourites = []
+            recipes = []
             page_obj = None      
         
         return render(request, "favourites.html", {
             "user": user,
-            "favourites": favourites,
+            "recipes": recipes,
+            "filter_form": filter_form,
+            "sort_form": sort_form,
             "page_obj": page_obj,
             "all_cuisines": all_cuisines,
             "all_tags": all_tags,
