@@ -174,6 +174,7 @@ def recipe(request, recipe_name):
         favourite_form = None
         is_favourited = False
     
+    print(recipe.generate_schema())
     
     return render(request, "recipe.html", {
         "user": user,

@@ -74,43 +74,45 @@
                     {% endif %}
                 </div>
 
-                <!-- Servings -->
-                <div class="form-group">
-                    <label for="{{ create_form.servings.id_for_label }}">Servings</label>
-                    {{ create_form.servings }}
-                    {% if create_form.servings.errors %}
-                        <div class="invalid-feedback">
-                            {% for error in create_form.servings.errors %}
-                                <p>{{ error }}</p>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
+                <div class="d-flex justify-content-between m-0">
+                    <!-- Servings -->
+                    <div class="form-group me-2 w-100">
+                        <label for="{{ create_form.servings.id_for_label }}">Servings</label>
+                        {{ create_form.servings }}
+                        {% if create_form.servings.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in create_form.servings.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
 
-                <!-- Cook Time -->
-                <div class="form-group">
-                    <label for="{{ create_form.cook_time.id_for_label }}">Cook Time</label>
-                    {{ create_form.cook_time }}
-                    {% if create_form.cook_time.errors %}
-                        <div class="invalid-feedback">
-                            {% for error in create_form.cook_time.errors %}
-                                <p>{{ error }}</p>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
+                    <!-- Cook Time -->
+                    <div class="form-group me-2 w-100">
+                        <label for="{{ create_form.cook_time.id_for_label }}">Cook Time</label>
+                        {{ create_form.cook_time }}
+                        {% if create_form.cook_time.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in create_form.cook_time.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
 
-                <!-- Prep Time -->
-                <div class="form-group">
-                    <label for="{{ create_form.prep_time.id_for_label }}">Prep Time</label>
-                    {{ create_form.prep_time }}
-                    {% if create_form.prep_time.errors %}
-                        <div class="invalid-feedback">
-                            {% for error in create_form.prep_time.errors %}
-                                <p>{{ error }}</p>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
+                    <!-- Prep Time -->
+                    <div class="form-group w-100">
+                        <label for="{{ create_form.prep_time.id_for_label }}">Prep Time</label>
+                        {{ create_form.prep_time }}
+                        {% if create_form.prep_time.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in create_form.prep_time.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
                 </div>
                 <hr/>
                 <!-- Recipe Ingredient formset -->

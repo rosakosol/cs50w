@@ -107,15 +107,29 @@ class Recipe(models.Model):
         return self.total_calories() / self.servings
     
     def generate_schema(self):
+        ingredients = []
+        
+        # Get ingredients for the recipe
+        for ri in self.ingredients.all():
+            ingredients_schema = {
+                    "@type": "HowToItem",
+                    "name": ri.ingredient.name,
+                    "quantity": {
+                        "@type": "Quantity",
+                        "value": ri.quantity,
+                        "unitCode": ri.unit.name
+                    }
+            } 
+            ingredients.append(ingredients_schema)
+        
         return {
         "@context": "http://schema.org",
         "@type": "Recipe",
         "author": f"{self.user.first_name} {self.user.last_name}",
         "name": self.name,
-        # Cuisine
-        # Ingredients
+        "recipeIngredient": ingredients,
         "description": self.description,
-        "recipeInstructions": self.instructions.split('\n'),  # assuming instructions are also stored this way
+        "recipeInstructions": self.instructions, 
         "recipeYield": self.servings,
         "cookTime": f"PT{self.cook_time}M",
         "prepTime": f"PT{self.prep_time}M",
