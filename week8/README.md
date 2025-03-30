@@ -36,8 +36,6 @@
 <!-- ABOUT THE PROJECT -->
 ## About
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
-
 This is a Django web app that allows users to create, edit, and delete recipes. Users can:
 
 ### Features
@@ -90,13 +88,53 @@ Finally, users can share recipes with friends and family via email, Facebook or 
 graphic contents.
 
 <!-- Distinctiveness and Complexity -->
-## File Contents
+## File/Folder Contents
+* app/static
+  *  bootstrap/_breakpoints.scss
+      * This contains breakpoint variables from Bootstrap
+  *  css/print.css
+      * This contains all styling applied only when the website is in print form (CTRL + P)
+  * css/style.css
+      * This all styling applied to the website
+  * images/
+      * This contains images and icons for styling such as the logo, favicon, and background
+  * index.js
+      * This contains all Javascript functions that enables features such as star rating for recipes, editing recipes and deleting recipes
 
+* app/templates
+  * access_denied.html
+    * This page displays when a user attempts to access a page without the correct authorisation
 
-* 
-* 
-* 
-*
+  * add_recipe.html
+    * This page displays the add recipe form
+
+  * favourites.html
+    * This page displays a user's favourite recipes
+
+  * index.html
+    * This page displays the default home page displaying all recipes
+
+  * layout.html
+    * This is a template displaying the navbar and footer
+
+  * login.html
+    * This page displays the login form
+
+  * no_results.html
+    * This page displays when no search results are found
+
+  * recipe.html
+    * This page displays a detailed single recipe view
+
+  * register.html
+    * This page displays the registration form
+
+  * search.html
+    * This page displays the search results for recipes
+
+* media/images
+  * This contains images uploaded when creating a new recipe
+
 
 
 ## Prerequisites
@@ -104,6 +142,8 @@ graphic contents.
 
 * Python 3.x
 * Django
+* pip install python-decouple
+* pip install pillow
 
 
 ## Installation
