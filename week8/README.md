@@ -146,25 +146,38 @@ graphic contents.
 * pip install pillow
 
 
-## Installation
+## How to run the webapp
 
 1. Clone the repo
    ```sh
    git clone https://github.com/me50/rosak456/blob/web50/projects/2020/x/capstone/
    ```
-3. Change directory
+2. Change directory
    ```sh
    cd cookery
    ```
-4. Setup database
+
+3. Generate secret key
    ```sh
-   python manage.py migrate
+   python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
    ```
-5. Create superuser
+
+4. Create .env file in root directory and paste secret key like so:
+   ```sh
+   SECRET_KEY='XXXX'
+   ```
+
+5. Make migrations
+    ```sh
+    python manage.py makemigrations cookery
+    python manage.py migrate
+    ```  
+
+6. Create superuser
    ```sh
    python manage.py createsuperuser
    ```
-6. Run server
+7. Run server
     ```sh
     python manage.py runserver
     ```
