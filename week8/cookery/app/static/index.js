@@ -216,7 +216,7 @@ function handleEditButton() {
         // Create the save button
         const saveButton = document.createElement("button");
         saveButton.textContent = "Save";
-        saveButton.classList.add("btn", "btn-success");
+        saveButton.classList.add("btn", "btn-success", "mt-4");
 
         // Add button to recipe container
         recipeContentContainer.appendChild(saveButton);
