@@ -75,13 +75,12 @@
         <ul class="nav flex-column">
             <li class="nav-item mb-2"><a href="{% url 'index' %}" class="nav-link p-0 text-body-secondary">All Recipes</a></li>
             {% if user.is_authenticated %}
-            <li class="nav-item mb-2"><a href="{% url 'add_recipe' %}" class="nav-link p-0 text-body-secondary">Add New Recipe</a></li>
-            <li class="nav-item mb-2"><a href="{% url 'favourites' %}" class="nav-link p-0 text-body-secondary">Favourites</a></li>
-            {% endif %}
-            <li class="nav-item mb-2"><a href="{% url 'login' %}" class="nav-link p-0 text-body-secondary">Login</a></li>
-            <li class="nav-item mb-2"><a href="{% url 'register' %}" class="nav-link p-0 text-body-secondary">Register</a></li>
-            {% if user.is_authenticated %}
-            <li class="nav-item mb-2"><a href="{% url 'logout' %}" class="nav-link p-0 text-body-secondary">Logout</a></li>
+              <li class="nav-item mb-2"><a href="{% url 'add_recipe' %}" class="nav-link p-0 text-body-secondary">Add New Recipe</a></li>
+              <li class="nav-item mb-2"><a href="{% url 'favourites' %}" class="nav-link p-0 text-body-secondary">Favourites</a></li>
+              <li class="nav-item mb-2"><a href="{% url 'logout' %}" class="nav-link p-0 text-body-secondary">Logout</a></li>
+            {% else %}
+              <li class="nav-item mb-2"><a href="{% url 'login' %}" class="nav-link p-0 text-body-secondary">Login</a></li>
+              <li class="nav-item mb-2"><a href="{% url 'register' %}" class="nav-link p-0 text-body-secondary">Register</a></li>
             {% endif %}
         </ul>
 
