@@ -6,7 +6,7 @@ from app.models import Recipe, Cuisine, Tag, Unit, Ingredient, RecipeIngredient,
 
 
 class Command(BaseCommand):
-    help = 'Populates initial Ingredients, Cuisines, and MealTypes'
+    help = 'Populates initial Ingredients, Cuisines, Mealtypes, Units and Tags'
 
     def handle(self, *args, **kwargs):
         ingredients = [
@@ -46,6 +46,10 @@ class Command(BaseCommand):
         units = [
             "grams", "kilograms", "milliliters", "liters", "cup", "tablespoon", "teaspoon", "piece", "pinch", "dash"
         ]
+        
+        tags = [
+            "High-Protein", "Low-Carb", "Healthy", "Vegetarian", "Vegan", "Quick", "Gluten-Free"
+        ]
 
 
         for name in ingredients:
@@ -67,5 +71,10 @@ class Command(BaseCommand):
             obj, created = Unit.objects.get_or_create(name=name)
             if created:
                 self.stdout.write(self.style.SUCCESS(f"Added Unit: {name}"))
+                
+        for name in tags:
+            obj, created = Tag.objects.get_or_create(name=name)
+            if created:
+                self.stdout.write(self.style.SUCCESS(f"Added Tag: {name}"))
 
-        self.stdout.write(self.style.SUCCESS("Populated Ingredients, Cuisines, MealTypes and Units"))
+        self.stdout.write(self.style.SUCCESS("Populated Ingredients, Cuisines, MealTypes, Units and Tags"))
