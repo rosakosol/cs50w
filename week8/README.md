@@ -167,11 +167,6 @@ graphic contents.
    SECRET_KEY='XXXX'
    ```
 
-4. Load demo data
-   ```sh
-   python manage.py loaddata data.json
-   ```
-
 5. Make migrations
     ```sh
     python manage.py makemigrations app
