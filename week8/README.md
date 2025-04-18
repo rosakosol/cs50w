@@ -174,7 +174,7 @@ graphic contents.
 
 5. Make migrations
     ```sh
-    python manage.py makemigrations cookery
+    python manage.py makemigrations app
     python manage.py migrate
     ```  
 
@@ -182,7 +182,13 @@ graphic contents.
    ```sh
    python manage.py createsuperuser
    ```
-7. Run server
+
+7. Populate data
+   ```sh
+   python manage.py populate_data
+   ```
+
+8. Run server
     ```sh
     python manage.py runserver
     ```
